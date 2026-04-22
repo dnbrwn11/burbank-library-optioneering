@@ -1,0 +1,2233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>PCL Architectural Program Tool — Burbank Central Library</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* =========================
+   PCL BRAND SYSTEM
+   ========================= */
+:root {
+  --pcl-red: #CE2027;
+  --pcl-red-dark: #A01820;
+  --pcl-red-darker: #7A1218;
+  --pcl-black: #1A1A1A;
+  --pcl-dark: #2D2D2D;
+  --pcl-gray: #6D6D6D;
+  --pcl-gray-light: #B0B0B0;
+  --pcl-light: #F5F5F5;
+  --pcl-light-2: #EAEAEA;
+  --pcl-white: #FFFFFF;
+  --pcl-green: #2E7D32;
+  --pcl-yellow: #E8A020;
+  --pcl-shadow: 0 2px 4px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06);
+  --pcl-shadow-lg: 0 10px 25px rgba(0,0,0,0.15);
+  --cat-public: #1E5F8E;
+  --cat-kids: #8E4DA8;
+  --cat-staff: #5A7542;
+  --cat-special: #C17B00;
+  --cat-parking: #555555;
+  --cat-support: #8B6F47;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--pcl-light);
+  color: var(--pcl-black);
+  font-size: 14px;
+  line-height: 1.45;
+  overflow-x: hidden;
+}
+
+button { font-family: inherit; cursor: pointer; border: none; }
+input, select, textarea { font-family: inherit; font-size: 14px; }
+
+/* =========================
+   TOP NAV
+   ========================= */
+.topnav {
+  background: var(--pcl-black);
+  color: var(--pcl-white);
+  display: flex;
+  align-items: center;
+  height: 56px;
+  padding: 0 20px;
+  border-bottom: 3px solid var(--pcl-red);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.logo-block {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.logo-mark {
+  background: var(--pcl-red);
+  color: var(--pcl-white);
+  font-weight: 800;
+  font-size: 20px;
+  letter-spacing: 1px;
+  padding: 6px 12px;
+  line-height: 1;
+}
+.logo-text {
+  font-weight: 600;
+  font-size: 15px;
+  letter-spacing: 0.3px;
+  color: var(--pcl-white);
+}
+.logo-sub {
+  font-size: 11px;
+  color: var(--pcl-gray-light);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+.nav-tabs {
+  display: flex;
+  margin-left: 40px;
+  gap: 2px;
+}
+.nav-tab {
+  background: transparent;
+  color: var(--pcl-gray-light);
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  border-bottom: 2px solid transparent;
+  transition: all 0.15s;
+}
+.nav-tab:hover { color: var(--pcl-white); }
+.nav-tab.active {
+  color: var(--pcl-white);
+  border-bottom-color: var(--pcl-red);
+}
+.nav-right {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 12px;
+  color: var(--pcl-gray-light);
+}
+.project-pill {
+  background: var(--pcl-dark);
+  color: var(--pcl-white);
+  padding: 6px 12px;
+  border-left: 3px solid var(--pcl-red);
+  font-weight: 500;
+  font-size: 12px;
+  letter-spacing: 0.3px;
+}
+
+/* =========================
+   BUDGET STICKY BAR
+   ========================= */
+.budget-bar {
+  background: var(--pcl-white);
+  border-bottom: 1px solid var(--pcl-light-2);
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  padding: 14px 24px;
+  gap: 8px;
+  position: sticky;
+  top: 56px;
+  z-index: 90;
+  box-shadow: var(--pcl-shadow);
+}
+.budget-cell {
+  padding: 0 16px;
+  border-left: 3px solid var(--pcl-light-2);
+}
+.budget-cell.accent { border-left-color: var(--pcl-red); }
+.budget-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--pcl-gray);
+  font-weight: 600;
+}
+.budget-value {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--pcl-black);
+  margin-top: 2px;
+  transition: color 0.3s;
+}
+.budget-value.positive { color: var(--pcl-green); }
+.budget-value.warn { color: var(--pcl-yellow); }
+.budget-value.negative { color: var(--pcl-red); }
+.budget-sub {
+  font-size: 11px;
+  color: var(--pcl-gray);
+  margin-top: 2px;
+}
+
+/* =========================
+   MAIN LAYOUT
+   ========================= */
+.main {
+  display: grid;
+  grid-template-columns: 260px 1fr 340px;
+  height: calc(100vh - 56px - 75px);
+  overflow: hidden;
+}
+.sidebar {
+  background: var(--pcl-white);
+  border-right: 1px solid var(--pcl-light-2);
+  overflow-y: auto;
+  padding: 20px;
+}
+.content {
+  overflow-y: auto;
+  padding: 20px 24px;
+  background: var(--pcl-light);
+}
+.rightpanel {
+  background: var(--pcl-white);
+  border-left: 1px solid var(--pcl-light-2);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+/* =========================
+   SECTION HEADERS
+   ========================= */
+.section-header {
+  border-left: 4px solid var(--pcl-red);
+  padding: 4px 0 4px 12px;
+  margin-bottom: 14px;
+}
+.section-header h2 {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--pcl-black);
+}
+.section-header p {
+  font-size: 12px;
+  color: var(--pcl-gray);
+  margin-top: 2px;
+}
+
+/* =========================
+   SIDEBAR WIDGETS
+   ========================= */
+.widget {
+  margin-bottom: 28px;
+}
+.widget-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--pcl-light-2);
+  font-size: 13px;
+}
+.widget-row:last-child { border-bottom: none; }
+.widget-row .k { color: var(--pcl-gray); font-weight: 500; }
+.widget-row .v { font-weight: 600; color: var(--pcl-black); font-variant-numeric: tabular-nums; }
+.slider-wrap {
+  padding: 12px 0 6px;
+}
+.slider-wrap input[type="range"] {
+  width: 100%;
+  accent-color: var(--pcl-red);
+}
+.slider-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  color: var(--pcl-gray);
+  margin-top: 4px;
+}
+.variance-badge {
+  padding: 4px 8px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: inline-block;
+}
+.variance-badge.good { background: #E8F5E9; color: var(--pcl-green); }
+.variance-badge.warn { background: #FFF8E1; color: var(--pcl-yellow); }
+.variance-badge.bad { background: #FFEBEE; color: var(--pcl-red); }
+
+.warning-banner {
+  background: #FFF3E0;
+  border-left: 4px solid var(--pcl-yellow);
+  padding: 8px 10px;
+  font-size: 12px;
+  color: #8B5A00;
+  margin-top: 8px;
+  display: none;
+}
+.warning-banner.show { display: block; }
+.warning-banner.critical { background: #FFEBEE; border-left-color: var(--pcl-red); color: var(--pcl-red-darker); }
+
+/* =========================
+   BUTTONS
+   ========================= */
+.btn {
+  background: var(--pcl-red);
+  color: var(--pcl-white);
+  padding: 9px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  transition: background 0.15s;
+  border: none;
+}
+.btn:hover { background: var(--pcl-red-dark); }
+.btn:active { background: var(--pcl-red-darker); }
+.btn:disabled { background: var(--pcl-gray-light); cursor: not-allowed; }
+
+.btn-ghost {
+  background: var(--pcl-white);
+  color: var(--pcl-black);
+  border: 1px solid var(--pcl-light-2);
+  padding: 8px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+}
+.btn-ghost:hover { background: var(--pcl-light); border-color: var(--pcl-gray-light); }
+.btn-ghost.active { background: var(--pcl-black); color: var(--pcl-white); border-color: var(--pcl-black); }
+
+.btn-dark {
+  background: var(--pcl-black);
+  color: var(--pcl-white);
+  padding: 9px 16px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+}
+.btn-dark:hover { background: var(--pcl-dark); }
+
+.btn-sm { padding: 5px 10px; font-size: 11px; }
+.btn-icon {
+  background: transparent;
+  color: var(--pcl-gray);
+  padding: 4px 6px;
+  border-radius: 0;
+}
+.btn-icon:hover { color: var(--pcl-red); background: var(--pcl-light); }
+
+/* =========================
+   TOOLBAR
+   ========================= */
+.toolbar {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+  background: var(--pcl-white);
+  padding: 12px;
+  border: 1px solid var(--pcl-light-2);
+}
+.toolbar-group {
+  display: flex;
+  gap: 2px;
+  align-items: center;
+  padding-right: 12px;
+  border-right: 1px solid var(--pcl-light-2);
+}
+.toolbar-group:last-child { border-right: none; }
+.toolbar-label {
+  font-size: 10px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--pcl-gray);
+  margin-right: 8px;
+  font-weight: 600;
+}
+
+/* =========================
+   PROGRAM TABLE
+   ========================= */
+.card {
+  background: var(--pcl-white);
+  border: 1px solid var(--pcl-light-2);
+  box-shadow: var(--pcl-shadow);
+  margin-bottom: 24px;
+}
+.card-head {
+  padding: 14px 16px;
+  background: var(--pcl-black);
+  color: var(--pcl-white);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.card-head h3 {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+.card-body { padding: 0; }
+
+.program-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+.program-table thead th {
+  background: var(--pcl-red);
+  color: var(--pcl-white);
+  text-align: left;
+  padding: 10px 8px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  position: sticky;
+  top: 0;
+  white-space: nowrap;
+}
+.program-table thead th.num { text-align: right; }
+
+.category-header td {
+  background: var(--pcl-black);
+  color: var(--pcl-white);
+  padding: 8px 12px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.category-header .cat-swatch {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+.program-table tbody tr {
+  border-bottom: 1px solid var(--pcl-light-2);
+  transition: background 0.15s;
+}
+.program-table tbody tr:nth-child(even of .data-row) { background: var(--pcl-light); }
+.program-table tbody tr.data-row:hover { background: #FFF5F5; }
+.program-table tbody tr.data-row.preview-add { background: #E8F5E9 !important; border-left: 4px solid var(--pcl-green); }
+.program-table tbody tr.data-row.preview-del { background: #FFEBEE !important; border-left: 4px solid var(--pcl-red); text-decoration: line-through; opacity: 0.75; }
+.program-table tbody tr.data-row.preview-mod { background: #FFF8E1 !important; border-left: 4px solid var(--pcl-yellow); }
+
+.program-table td {
+  padding: 8px;
+  vertical-align: middle;
+}
+.program-table td.num { text-align: right; font-variant-numeric: tabular-nums; }
+.program-table td.edit { cursor: text; }
+.program-table td.edit:hover { background: #FFF5F5; outline: 1px solid var(--pcl-red); }
+.program-table input.inline, .program-table select.inline {
+  width: 100%;
+  padding: 4px 6px;
+  border: 1px solid var(--pcl-red);
+  background: var(--pcl-white);
+  font-size: 13px;
+  outline: none;
+}
+.program-table select.inline { padding: 3px 4px; }
+.cat-border {
+  display: inline-block;
+  width: 4px;
+  height: 22px;
+  margin-right: 6px;
+  vertical-align: middle;
+}
+.bench-icon {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  width: 16px;
+  height: 16px;
+  line-height: 16px;
+  text-align: center;
+  margin-left: 6px;
+  cursor: help;
+}
+.bench-icon.low { color: #1565C0; }
+.bench-icon.ok { color: var(--pcl-green); }
+.bench-icon.high { color: var(--pcl-red); }
+
+.phase-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.phase-Phase1 { background: var(--pcl-black); color: var(--pcl-white); }
+.phase-Phase2 { background: var(--pcl-gray); color: var(--pcl-white); }
+.phase-Optional { background: #FFF3E0; color: #8B5A00; border: 1px solid #E8A020; }
+.phase-Alternate { background: #FFEBEE; color: var(--pcl-red); border: 1px solid var(--pcl-red); }
+
+.drag-handle {
+  cursor: grab;
+  color: var(--pcl-gray-light);
+  user-select: none;
+  padding: 0 4px;
+}
+.drag-handle:active { cursor: grabbing; }
+.data-row.dragging { opacity: 0.4; }
+.data-row.drop-target { border-top: 3px solid var(--pcl-red); }
+
+.add-row-btn {
+  padding: 8px 12px;
+  background: var(--pcl-light);
+  color: var(--pcl-gray);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  border-top: 1px dashed var(--pcl-gray-light);
+  display: block;
+  width: 100%;
+  text-align: left;
+}
+.add-row-btn:hover { background: var(--pcl-light-2); color: var(--pcl-red); }
+
+/* =========================
+   RIGHT PANEL — AI ASSISTANT
+   ========================= */
+.rp-header {
+  background: var(--pcl-black);
+  color: var(--pcl-white);
+  padding: 14px 16px;
+  border-bottom: 3px solid var(--pcl-red);
+}
+.rp-header h3 {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+.rp-header p {
+  font-size: 11px;
+  color: var(--pcl-gray-light);
+  margin-top: 4px;
+}
+.rp-body {
+  padding: 16px;
+  flex: 1;
+  overflow-y: auto;
+}
+.ai-textarea {
+  width: 100%;
+  min-height: 90px;
+  padding: 10px;
+  border: 1px solid var(--pcl-light-2);
+  font-size: 13px;
+  resize: vertical;
+  background: var(--pcl-light);
+}
+.ai-textarea:focus { border-color: var(--pcl-red); outline: none; background: var(--pcl-white); }
+.chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 10px 0;
+}
+.chip {
+  background: var(--pcl-light);
+  border: 1px solid var(--pcl-light-2);
+  padding: 5px 10px;
+  font-size: 11px;
+  color: var(--pcl-dark);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.chip:hover { background: var(--pcl-red); color: var(--pcl-white); border-color: var(--pcl-red); }
+
+.preview-actions {
+  display: none;
+  padding: 12px;
+  background: #FFF8E1;
+  border: 1px solid var(--pcl-yellow);
+  margin-top: 12px;
+}
+.preview-actions.show { display: block; }
+.preview-actions h4 {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #8B5A00;
+  margin-bottom: 6px;
+}
+.preview-actions p { font-size: 12px; color: var(--pcl-dark); margin-bottom: 10px; }
+.preview-actions .btn-row { display: flex; gap: 8px; }
+
+.ai-error {
+  background: #FFEBEE;
+  border-left: 4px solid var(--pcl-red);
+  padding: 8px 10px;
+  font-size: 12px;
+  color: var(--pcl-red-darker);
+  margin-top: 10px;
+  display: none;
+}
+.ai-error.show { display: block; }
+
+/* =========================
+   SPINNER
+   ========================= */
+.spinner {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255,255,255,0.4);
+  border-top-color: var(--pcl-white);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  vertical-align: middle;
+  margin-right: 6px;
+}
+.spinner.dark { border-color: rgba(0,0,0,0.2); border-top-color: var(--pcl-red); }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* =========================
+   MODAL
+   ========================= */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(26,26,26,0.6);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+.modal-backdrop.show { display: flex; }
+.modal {
+  background: var(--pcl-white);
+  width: 90%;
+  max-width: 640px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--pcl-shadow-lg);
+}
+.modal-head {
+  background: var(--pcl-black);
+  color: var(--pcl-white);
+  padding: 14px 18px;
+  border-bottom: 3px solid var(--pcl-red);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.modal-head h3 {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+.modal-close {
+  background: transparent;
+  color: var(--pcl-white);
+  font-size: 20px;
+  line-height: 1;
+  padding: 0;
+  width: 28px;
+  height: 28px;
+}
+.modal-close:hover { color: var(--pcl-red); }
+.modal-body {
+  padding: 20px;
+  overflow-y: auto;
+  flex: 1;
+}
+.modal-foot {
+  padding: 12px 18px;
+  border-top: 1px solid var(--pcl-light-2);
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  background: var(--pcl-light);
+}
+
+.form-group {
+  margin-bottom: 14px;
+}
+.form-group label {
+  display: block;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--pcl-gray);
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+.form-group input, .form-group select, .form-group textarea {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid var(--pcl-light-2);
+  background: var(--pcl-white);
+  font-size: 13px;
+}
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+  border-color: var(--pcl-red);
+  outline: none;
+}
+
+.narrative-box {
+  background: var(--pcl-light);
+  padding: 18px;
+  border-left: 4px solid var(--pcl-red);
+  font-size: 13px;
+  line-height: 1.7;
+  white-space: pre-wrap;
+  font-family: 'Inter', sans-serif;
+}
+.narrative-box h2 {
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--pcl-red);
+  margin: 18px 0 8px;
+}
+.narrative-box h2:first-child { margin-top: 0; }
+.narrative-box ul { margin: 0 0 12px 20px; }
+.narrative-box li { margin-bottom: 6px; }
+.narrative-box p { margin-bottom: 10px; }
+
+/* =========================
+   SCENARIOS
+   ========================= */
+.scenario-card {
+  border: 1px solid var(--pcl-light-2);
+  padding: 10px;
+  margin-bottom: 8px;
+  background: var(--pcl-white);
+}
+.scenario-card.active { border-left: 4px solid var(--pcl-red); background: #FFF5F5; }
+.scenario-card .name {
+  font-weight: 600;
+  font-size: 13px;
+}
+.scenario-card .stats {
+  font-size: 11px;
+  color: var(--pcl-gray);
+  margin-top: 2px;
+}
+.scenario-card .actions {
+  margin-top: 6px;
+  display: flex;
+  gap: 4px;
+}
+
+.compare-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+.compare-table th, .compare-table td {
+  padding: 8px;
+  border-bottom: 1px solid var(--pcl-light-2);
+  text-align: left;
+}
+.compare-table th {
+  background: var(--pcl-red);
+  color: var(--pcl-white);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.compare-table td.num { text-align: right; font-variant-numeric: tabular-nums; }
+.delta-pos { color: var(--pcl-red); font-weight: 600; }
+.delta-neg { color: var(--pcl-green); font-weight: 600; }
+
+/* =========================
+   ADJACENCY MATRIX
+   ========================= */
+.adjacency-wrap {
+  overflow: auto;
+  max-height: 75vh;
+  background: var(--pcl-white);
+  border: 1px solid var(--pcl-light-2);
+}
+.adj-table {
+  border-collapse: collapse;
+  font-size: 11px;
+}
+.adj-table th, .adj-table td {
+  border: 1px solid var(--pcl-light-2);
+  padding: 0;
+  text-align: center;
+  min-width: 32px;
+  height: 32px;
+}
+.adj-table thead th {
+  background: var(--pcl-black);
+  color: var(--pcl-white);
+  padding: 6px;
+  vertical-align: bottom;
+  white-space: nowrap;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+.adj-table thead th.rot {
+  height: 120px;
+  min-width: 32px;
+  max-width: 32px;
+}
+.adj-table thead th.rot > div {
+  transform: rotate(-60deg);
+  transform-origin: left bottom;
+  white-space: nowrap;
+  padding-left: 24px;
+  width: 30px;
+}
+.adj-table tbody th {
+  background: var(--pcl-light);
+  color: var(--pcl-black);
+  text-align: left;
+  padding: 6px 10px;
+  font-weight: 500;
+  white-space: nowrap;
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  font-size: 11px;
+}
+.adj-cell {
+  cursor: pointer;
+  transition: transform 0.1s;
+}
+.adj-cell:hover { transform: scale(1.2); }
+.adj-must { background: #1B5E20; }
+.adj-should { background: #A5D6A7; }
+.adj-separate { background: var(--pcl-red); }
+.adj-none { background: var(--pcl-light); }
+.adj-diag { background: var(--pcl-black); }
+
+.adj-legend {
+  display: flex;
+  gap: 16px;
+  padding: 12px;
+  background: var(--pcl-white);
+  border-bottom: 1px solid var(--pcl-light-2);
+  font-size: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.adj-legend .swatch {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  margin-right: 6px;
+  vertical-align: middle;
+  border: 1px solid rgba(0,0,0,0.1);
+}
+
+/* =========================
+   CHANGE LOG (BOTTOM)
+   ========================= */
+.changelog {
+  background: var(--pcl-white);
+  border-top: 1px solid var(--pcl-light-2);
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  max-height: 50vh;
+  display: flex;
+  flex-direction: column;
+  transform: translateY(calc(100% - 40px));
+  transition: transform 0.25s;
+  z-index: 95;
+  box-shadow: 0 -4px 12px rgba(0,0,0,0.08);
+}
+.changelog.open { transform: translateY(0); }
+.changelog-head {
+  background: var(--pcl-black);
+  color: var(--pcl-white);
+  padding: 10px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  border-top: 3px solid var(--pcl-red);
+}
+.changelog-head h3 {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+.changelog-body {
+  overflow-y: auto;
+  padding: 12px 16px;
+  flex: 1;
+}
+.changelog-entry {
+  padding: 8px 0;
+  border-bottom: 1px solid var(--pcl-light-2);
+  font-size: 12px;
+  display: grid;
+  grid-template-columns: 150px 90px 1fr 180px;
+  gap: 10px;
+  align-items: center;
+}
+.changelog-entry .ts { color: var(--pcl-gray); font-variant-numeric: tabular-nums; }
+.changelog-entry .op {
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 10px;
+  letter-spacing: 0.5px;
+}
+.changelog-entry .op.add { color: var(--pcl-green); }
+.changelog-entry .op.del { color: var(--pcl-red); }
+.changelog-entry .op.mod { color: var(--pcl-yellow); }
+.changelog-entry .op.sys { color: var(--pcl-gray); }
+.changelog-entry input.note {
+  padding: 4px 6px;
+  border: 1px solid var(--pcl-light-2);
+  font-size: 11px;
+  width: 100%;
+}
+
+/* =========================
+   TAB VIEW
+   ========================= */
+.view { display: none; }
+.view.active { display: block; }
+
+/* =========================
+   PRINT
+   ========================= */
+@media print {
+  .topnav, .budget-bar, .sidebar, .rightpanel, .toolbar, .changelog, .card-head, .add-row-btn, .btn-icon {
+    display: none !important;
+  }
+  .main { grid-template-columns: 1fr !important; height: auto !important; overflow: visible !important; }
+  .content { padding: 0 !important; background: white !important; }
+  body { background: white !important; }
+  .program-table { font-size: 11px; }
+  .program-table thead th { background: #000 !important; color: #fff !important; -webkit-print-color-adjust: exact; }
+  .category-header td { background: #444 !important; color: #fff !important; -webkit-print-color-adjust: exact; }
+}
+
+/* =========================
+   RESPONSIVE
+   ========================= */
+@media (max-width: 1200px) {
+  .main { grid-template-columns: 220px 1fr 300px; }
+  .budget-bar { grid-template-columns: repeat(3, 1fr); }
+  .budget-bar .budget-cell:nth-child(n+4) { border-top: 1px solid var(--pcl-light-2); padding-top: 10px; margin-top: 10px; }
+}
+@media (max-width: 900px) {
+  .main { grid-template-columns: 1fr; }
+  .sidebar, .rightpanel { display: none; }
+  .sidebar.mobile-open, .rightpanel.mobile-open {
+    display: block; position: fixed; top: 56px; bottom: 0; width: 85%; z-index: 200; box-shadow: var(--pcl-shadow-lg);
+  }
+  .sidebar.mobile-open { left: 0; }
+  .rightpanel.mobile-open { right: 0; }
+  .nav-tabs { display: none; }
+}
+
+.mobile-toggle { display: none; }
+@media (max-width: 900px) {
+  .mobile-toggle { display: inline-block; }
+}
+
+/* util */
+.hidden { display: none !important; }
+.num { font-variant-numeric: tabular-nums; }
+.text-right { text-align: right; }
+.muted { color: var(--pcl-gray); }
+.tiny { font-size: 11px; }
+</style>
+</head>
+<body>
+
+<!-- ============ NAV ============ -->
+<div class="topnav">
+  <div class="logo-block">
+    <div class="logo-mark">PCL</div>
+    <div>
+      <div class="logo-text">Architectural Program Tool</div>
+      <div class="logo-sub">Preconstruction · Design-Build</div>
+    </div>
+  </div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" data-view="program">Program</button>
+    <button class="nav-tab" data-view="scenarios">Scenarios</button>
+    <button class="nav-tab" data-view="adjacency">Adjacency</button>
+  </div>
+  <div class="nav-right">
+    <div class="project-pill">Burbank Central Library · Progressive DB</div>
+  </div>
+</div>
+
+<!-- ============ BUDGET BAR ============ -->
+<div class="budget-bar">
+  <div class="budget-cell accent">
+    <div class="budget-label">Programmed Cost (Mid)</div>
+    <div class="budget-value" id="b-programmed">$0</div>
+    <div class="budget-sub" id="b-range">Range: $0 – $0</div>
+  </div>
+  <div class="budget-cell">
+    <div class="budget-label">Target GMP</div>
+    <div class="budget-value">$155,000,000</div>
+    <div class="budget-sub">Progressive Design-Build</div>
+  </div>
+  <div class="budget-cell accent">
+    <div class="budget-label">Variance</div>
+    <div class="budget-value" id="b-variance">$0</div>
+    <div class="budget-sub" id="b-variance-pct">0.0%</div>
+  </div>
+  <div class="budget-cell">
+    <div class="budget-label">Cost / GSF</div>
+    <div class="budget-value" id="b-psf">$0</div>
+    <div class="budget-sub" id="b-gsf">0 GSF</div>
+  </div>
+  <div class="budget-cell">
+    <div class="budget-label">Phase 1 Cost</div>
+    <div class="budget-value" id="b-phase1">$0</div>
+    <div class="budget-sub" id="b-phase1-sf">0 SF</div>
+  </div>
+  <div class="budget-cell">
+    <div class="budget-label">Phase 2 Cost</div>
+    <div class="budget-value" id="b-phase2">$0</div>
+    <div class="budget-sub" id="b-phase2-sf">0 SF</div>
+  </div>
+</div>
+
+<!-- ============ MAIN ============ -->
+<div class="main">
+
+  <!-- ============ LEFT SIDEBAR ============ -->
+  <aside class="sidebar" id="sidebar">
+
+    <div class="widget">
+      <div class="section-header"><h2>Gross-to-Net</h2><p>Building efficiency</p></div>
+      <div class="widget-row"><span class="k">Total Net SF</span><span class="v" id="g-nsf">0</span></div>
+      <div class="slider-wrap">
+        <div class="widget-row" style="border:none;padding-bottom:4px;">
+          <span class="k">Efficiency Factor</span>
+          <span class="v" id="g-eff-val">68%</span>
+        </div>
+        <input type="range" min="60" max="80" value="68" id="g-eff" />
+        <div class="slider-labels"><span>60%</span><span>68%</span><span>80%</span></div>
+      </div>
+      <div class="widget-row"><span class="k">Calculated Gross SF</span><span class="v" id="g-gsf">0</span></div>
+      <div class="widget-row">
+        <span class="k">Target GSF</span>
+        <input type="number" id="g-target" value="87500" style="width:80px;text-align:right;border:1px solid var(--pcl-light-2);padding:4px;font-size:12px;" />
+      </div>
+      <div class="widget-row">
+        <span class="k">Variance</span>
+        <span class="v"><span class="variance-badge" id="g-var">0</span></span>
+      </div>
+      <div class="warning-banner" id="g-warn">⚠ GSF variance exceeds ±5% of target. Review efficiency factor or program scope.</div>
+    </div>
+
+    <div class="widget">
+      <div class="section-header"><h2>Program Filters</h2><p>Phase & scope view</p></div>
+      <div style="display:flex;flex-direction:column;gap:6px;">
+        <button class="btn-ghost active" data-filter="all">Show All</button>
+        <button class="btn-ghost" data-filter="Phase 1">Phase 1 Only</button>
+        <button class="btn-ghost" data-filter="Phase 2">Phase 2 Only</button>
+        <button class="btn-ghost" data-filter="Optional">Optionals & Alternates</button>
+      </div>
+    </div>
+
+    <div class="widget">
+      <div class="section-header"><h2>Export</h2><p>Downloads & reports</p></div>
+      <div style="display:flex;flex-direction:column;gap:6px;">
+        <button class="btn-ghost" onclick="exportCSV()">⤓ Program CSV</button>
+        <button class="btn-ghost" onclick="exportChangelogCSV()">⤓ Change Log CSV</button>
+        <button class="btn-ghost" onclick="window.print()">⎙ Stakeholder PDF</button>
+      </div>
+    </div>
+
+  </aside>
+
+  <!-- ============ CONTENT ============ -->
+  <section class="content">
+
+    <!-- PROGRAM VIEW -->
+    <div class="view active" id="view-program">
+
+      <div class="toolbar">
+        <div class="toolbar-group">
+          <span class="toolbar-label">Scenario</span>
+          <span id="current-scenario" style="font-weight:600;font-size:13px;">Baseline Program</span>
+        </div>
+        <div class="toolbar-group">
+          <button class="btn-dark btn-sm" onclick="saveScenario()">Save Scenario</button>
+          <button class="btn-ghost btn-sm" onclick="resetBaseline()">Reset Baseline</button>
+        </div>
+        <div class="toolbar-group" style="margin-left:auto;">
+          <span class="toolbar-label">Rows</span>
+          <span id="row-count" class="tiny" style="font-weight:600;">0</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <h3>Burbank Central Library — Architectural Program</h3>
+          <div class="tiny" style="opacity:0.75;">Click any cell to edit · Drag ⋮⋮ to reorder</div>
+        </div>
+        <div class="card-body">
+          <table class="program-table" id="program-table">
+            <thead>
+              <tr>
+                <th style="width:28px"></th>
+                <th>Space Name</th>
+                <th class="num">Qty</th>
+                <th class="num">Unit SF</th>
+                <th class="num">Total SF</th>
+                <th class="num">$/SF Low</th>
+                <th class="num">$/SF Mid</th>
+                <th class="num">$/SF High</th>
+                <th class="num">Total Cost</th>
+                <th>Phase</th>
+                <th>Notes</th>
+                <th style="width:60px;"></th>
+              </tr>
+            </thead>
+            <tbody id="program-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCENARIOS VIEW -->
+    <div class="view" id="view-scenarios">
+      <div class="card">
+        <div class="card-head"><h3>Scenario Manager</h3></div>
+        <div class="card-body" style="padding:16px;">
+          <div id="scenario-list"></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-head"><h3>Side-by-Side Comparison</h3></div>
+        <div class="card-body" style="padding:0;overflow-x:auto;">
+          <table class="compare-table" id="compare-table">
+            <thead>
+              <tr>
+                <th>Scenario</th>
+                <th class="num">Net SF</th>
+                <th class="num">Gross SF</th>
+                <th class="num">Total Cost (Mid)</th>
+                <th class="num">$/GSF</th>
+                <th class="num">Δ vs Baseline ($)</th>
+                <th class="num">Δ vs Target GMP</th>
+              </tr>
+            </thead>
+            <tbody id="compare-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ADJACENCY VIEW -->
+    <div class="view" id="view-adjacency">
+      <div class="card">
+        <div class="card-head">
+          <h3>Adjacency Matrix</h3>
+          <button class="btn-ghost btn-sm" onclick="exportAdjacency()" style="background:white;">⤓ Export for Architects</button>
+        </div>
+        <div class="adj-legend">
+          <span><span class="swatch adj-must"></span> Must Be Adjacent</span>
+          <span><span class="swatch adj-should"></span> Should Be Adjacent</span>
+          <span><span class="swatch adj-separate"></span> Should Be Separated</span>
+          <span><span class="swatch adj-none"></span> No Requirement</span>
+          <span class="muted tiny" style="margin-left:auto;">Click a cell to cycle through states</span>
+        </div>
+        <div class="adjacency-wrap" id="adj-wrap"></div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ============ RIGHT PANEL ============ -->
+  <aside class="rightpanel" id="rightpanel">
+    <div class="rp-header">
+      <h3>AI Program Assistant</h3>
+      <p>Powered by Claude · claude-opus-4-5</p>
+    </div>
+    <div class="rp-body">
+
+      <div class="section-header" style="margin-bottom:10px;">
+        <h2>Describe a Change</h2>
+      </div>
+      <textarea class="ai-textarea" id="ai-input" placeholder="e.g. 'Add a 2,000 SF esports lounge to Teen Zone' or 'Remove the rooftop terrace and add 4,000 SF of outdoor reading courtyard instead'"></textarea>
+
+      <div class="chip-row">
+        <span class="chip" data-example="Add a 2,000 SF esports room to the Teen Zone">+ Esports room</span>
+        <span class="chip" data-example="Remove the rooftop terrace">− Rooftop terrace</span>
+        <span class="chip" data-example="Split the Performing Arts Theater into two smaller 3,500 SF black box theaters">Split theater</span>
+        <span class="chip" data-example="Increase all meeting rooms by 20%">+20% meeting rooms</span>
+        <span class="chip" data-example="Add a teaching kitchen of 1,800 SF">+ Teaching kitchen</span>
+      </div>
+
+      <button class="btn" style="width:100%;" id="ai-submit" onclick="submitAiSuggestion()">
+        <span id="ai-submit-label">Suggest Changes</span>
+      </button>
+
+      <div class="ai-error" id="ai-error"></div>
+
+      <div class="preview-actions" id="preview-actions">
+        <h4 id="preview-title">Pending Changes</h4>
+        <p id="preview-summary"></p>
+        <div class="btn-row">
+          <button class="btn btn-sm" onclick="acceptPreview()">✓ Accept Changes</button>
+          <button class="btn-ghost btn-sm" onclick="rejectPreview()">✕ Reject</button>
+        </div>
+      </div>
+
+      <div style="margin-top:28px;">
+        <div class="section-header"><h2>Generate</h2></div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <button class="btn-dark" onclick="openGenerateModal()">⚡ Generate New Baseline</button>
+          <button class="btn-dark" onclick="generateNarrative()" id="narr-btn">📄 Generate Stakeholder Narrative</button>
+        </div>
+      </div>
+
+    </div>
+  </aside>
+
+</div>
+
+<!-- ============ CHANGE LOG ============ -->
+<div class="changelog" id="changelog">
+  <div class="changelog-head" onclick="toggleChangelog()">
+    <h3>Change Log · <span id="changelog-count">0</span> entries</h3>
+    <span id="changelog-arrow">▲</span>
+  </div>
+  <div class="changelog-body" id="changelog-body"></div>
+</div>
+
+<!-- ============ MODAL: GENERATE ============ -->
+<div class="modal-backdrop" id="generate-modal">
+  <div class="modal">
+    <div class="modal-head">
+      <h3>Generate New Baseline Program</h3>
+      <button class="modal-close" onclick="closeModal('generate-modal')">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label>Building Type</label>
+        <select id="gen-type">
+          <option>Civic Library</option>
+          <option>Community Center</option>
+          <option>City Hall</option>
+          <option>Recreation Center</option>
+          <option>Mixed-Use Civic</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Total Target GSF</label>
+        <input type="number" id="gen-sf" value="87500" />
+      </div>
+      <div class="form-group">
+        <label>Total Budget (USD)</label>
+        <input type="number" id="gen-budget" value="155000000" />
+      </div>
+      <div class="form-group">
+        <label>Description & Special Requirements</label>
+        <textarea id="gen-desc" rows="4" placeholder="Context, stakeholder priorities, unique programmatic requirements...">Burbank Central Library progressive design-build replacement. Serves 108K residents. City priorities: children's & teen programs, digital/maker tech, community meeting space, a performance venue, city office co-location, and a rooftop amenity. 1-acre public plaza adjacent. 310-stall parking structure.</textarea>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-ghost" onclick="closeModal('generate-modal')">Cancel</button>
+      <button class="btn" id="gen-submit" onclick="submitGenerate()"><span id="gen-submit-label">Generate Program</span></button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ MODAL: NARRATIVE ============ -->
+<div class="modal-backdrop" id="narrative-modal">
+  <div class="modal" style="max-width:780px;">
+    <div class="modal-head">
+      <h3>Stakeholder Program Narrative</h3>
+      <button class="modal-close" onclick="closeModal('narrative-modal')">×</button>
+    </div>
+    <div class="modal-body">
+      <div id="narrative-content" class="narrative-box">Generating...</div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-ghost" onclick="copyNarrative()">📋 Copy</button>
+      <button class="btn" onclick="closeModal('narrative-modal')">Close</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* =============================================================
+   STATE
+   ============================================================= */
+const CATEGORIES = ['Public Spaces','Children & Teen','Staff & Operations','Special Facilities','Parking & Circulation','Support Spaces'];
+const PHASES = ['Phase 1','Phase 2','Optional','Alternate'];
+const CAT_COLORS = {
+  'Public Spaces': 'var(--cat-public)',
+  'Children & Teen': 'var(--cat-kids)',
+  'Staff & Operations': 'var(--cat-staff)',
+  'Special Facilities': 'var(--cat-special)',
+  'Parking & Circulation': 'var(--cat-parking)',
+  'Support Spaces': 'var(--cat-support)'
+};
+const TARGET_GMP = 155000000;
+
+// PLA civic library benchmark ranges (per-unit SF)
+const BENCHMARKS = {
+  "Children's Library": [6000, 12000],
+  "Teen Zone": [1800, 4500],
+  "Adult Reading Room": [8000, 16000],
+  "Digital Media Lab": [1500, 3500],
+  "Makerspace": [2000, 5000],
+  "Podcast/Recording Studio": [200, 500],
+  "Community Meeting Room (Large)": [1200, 2400],
+  "Community Meeting Room (Small)": [350, 800],
+  "Performing Arts Theater": [5000, 12000],
+  "Café": [1200, 3000],
+  "Rooftop Terrace": [2500, 6000],
+  "City Offices": [8000, 20000],
+  "Staff Workroom": [1500, 3500],
+  "Collections/Stacks": [4000, 10000]
+};
+
+function baselineProgram() {
+  return [
+    // Public Spaces
+    { id: 's1',  category: 'Public Spaces',     name: "Adult Reading Room",        qty: 1, unitSF: 12000, unitCostLow: 750, unitCostMid: 900,  unitCostHigh: 1050, phase: 'Phase 1', notes: 'Central reading area with lounge seating & individual study' },
+    { id: 's2',  category: 'Public Spaces',     name: 'Café',                       qty: 1, unitSF: 2200,  unitCostLow: 900, unitCostMid: 1100, unitCostHigh: 1300, phase: 'Phase 1', notes: 'Lobby-adjacent, revenue-generating' },
+    { id: 's3',  category: 'Public Spaces',     name: 'Rooftop Terrace',            qty: 1, unitSF: 4500,  unitCostLow: 450, unitCostMid: 600,  unitCostHigh: 750,  phase: 'Phase 2', notes: 'Events, reading, city views' },
+    { id: 's4',  category: 'Public Spaces',     name: "Community Meeting Room (Large)", qty: 2, unitSF: 1800, unitCostLow: 700, unitCostMid: 850, unitCostHigh: 1000, phase: 'Phase 1', notes: 'Divisible, A/V equipped' },
+    { id: 's5',  category: 'Public Spaces',     name: "Community Meeting Room (Small)", qty: 4, unitSF: 600,  unitCostLow: 650, unitCostMid: 800, unitCostHigh: 950,  phase: 'Phase 1', notes: 'Bookable study & meeting' },
+    // Children & Teen
+    { id: 's6',  category: 'Children & Teen',   name: "Children's Library",         qty: 1, unitSF: 8500,  unitCostLow: 800, unitCostMid: 950,  unitCostHigh: 1100, phase: 'Phase 1', notes: 'Story time, early literacy, family space' },
+    { id: 's7',  category: 'Children & Teen',   name: 'Teen Zone',                  qty: 1, unitSF: 3200,  unitCostLow: 750, unitCostMid: 900,  unitCostHigh: 1050, phase: 'Phase 1', notes: 'Tech, collaboration, homework' },
+    // Special Facilities
+    { id: 's8',  category: 'Special Facilities',name: 'Digital Media Lab',          qty: 1, unitSF: 2800,  unitCostLow: 900, unitCostMid: 1100, unitCostHigh: 1300, phase: 'Phase 1', notes: 'Video edit, graphics, VR' },
+    { id: 's9',  category: 'Special Facilities',name: 'Makerspace',                 qty: 1, unitSF: 3500,  unitCostLow: 850, unitCostMid: 1050, unitCostHigh: 1250, phase: 'Phase 1', notes: '3D printing, woodshop, textiles' },
+    { id: 's10', category: 'Special Facilities',name: 'Podcast/Recording Studio',   qty: 3, unitSF: 300,   unitCostLow: 1100, unitCostMid: 1300, unitCostHigh: 1500, phase: 'Phase 1', notes: 'Acoustic treatment, A/V equipped' },
+    { id: 's11', category: 'Special Facilities',name: 'Performing Arts Theater',    qty: 1, unitSF: 8000,  unitCostLow: 1200, unitCostMid: 1500, unitCostHigh: 1800, phase: 'Phase 2', notes: '250-seat, fly tower, black-box capable' },
+    // Staff & Operations
+    { id: 's12', category: 'Staff & Operations',name: 'City Offices',               qty: 1, unitSF: 14000, unitCostLow: 600, unitCostMid: 750,  unitCostHigh: 900,  phase: 'Phase 1', notes: 'Co-located city departments' },
+    { id: 's13', category: 'Staff & Operations',name: 'Staff Workroom',             qty: 1, unitSF: 2400,  unitCostLow: 550, unitCostMid: 700,  unitCostHigh: 850,  phase: 'Phase 1', notes: 'Library staff ops, sorting, IT' },
+    // Support
+    { id: 's14', category: 'Support Spaces',    name: 'Collections/Stacks',         qty: 1, unitSF: 6000,  unitCostLow: 500, unitCostMid: 650,  unitCostHigh: 800,  phase: 'Phase 1', notes: 'Open & closed stacks' },
+    // Parking & Circulation (EXCLUDED from building GSF)
+    { id: 's15', category: 'Parking & Circulation', name: 'Parking Structure (310 stalls)', qty: 1, unitSF: 93000, unitCostLow: 120, unitCostMid: 160, unitCostHigh: 200, phase: 'Phase 1', notes: 'Excluded from building GSF' },
+    { id: 's16', category: 'Parking & Circulation', name: 'Public Plaza (1 acre)',          qty: 1, unitSF: 43560, unitCostLow: 80,  unitCostMid: 125, unitCostHigh: 170, phase: 'Phase 1', notes: 'Excluded from building GSF · hardscape, landscape, lighting' }
+  ];
+}
+
+const state = {
+  program: baselineProgram(),
+  efficiency: 68,
+  targetGSF: 87500,
+  filter: 'all',
+  scenarios: [],
+  currentScenario: 'Baseline Program',
+  changelog: [],
+  adjacency: {}, // "idA|idB" -> 0..3
+  pendingPreview: null,
+  view: 'program',
+  idCounter: 100
+};
+
+/* =============================================================
+   PERSISTENCE
+   ============================================================= */
+function saveState() {
+  try {
+    localStorage.setItem('pcl_state_v1', JSON.stringify({
+      program: state.program,
+      efficiency: state.efficiency,
+      targetGSF: state.targetGSF,
+      scenarios: state.scenarios,
+      currentScenario: state.currentScenario,
+      changelog: state.changelog,
+      adjacency: state.adjacency
+    }));
+  } catch(e) { console.warn('localStorage save failed', e); }
+}
+function loadState() {
+  try {
+    const raw = localStorage.getItem('pcl_state_v1');
+    if (!raw) return;
+    const d = JSON.parse(raw);
+    if (Array.isArray(d.program)) state.program = d.program;
+    if (typeof d.efficiency === 'number') state.efficiency = d.efficiency;
+    if (typeof d.targetGSF === 'number') state.targetGSF = d.targetGSF;
+    if (Array.isArray(d.scenarios)) state.scenarios = d.scenarios;
+    if (typeof d.currentScenario === 'string') state.currentScenario = d.currentScenario;
+    if (Array.isArray(d.changelog)) state.changelog = d.changelog;
+    if (d.adjacency && typeof d.adjacency === 'object') state.adjacency = d.adjacency;
+  } catch(e) { console.warn('localStorage load failed', e); }
+}
+
+/* =============================================================
+   CALCULATIONS
+   ============================================================= */
+function isParkingOrPlaza(sp) { return sp.category === 'Parking & Circulation'; }
+function spaceTotalSF(sp) { return (sp.qty || 0) * (sp.unitSF || 0); }
+function spaceTotalCost(sp) { return spaceTotalSF(sp) * (sp.unitCostMid || 0); }
+
+function totals() {
+  let netSF = 0, totalMid = 0, totalLow = 0, totalHigh = 0;
+  let p1Cost = 0, p2Cost = 0, p1SF = 0, p2SF = 0;
+  state.program.forEach(sp => {
+    const sf = spaceTotalSF(sp);
+    const cost = sf * (sp.unitCostMid || 0);
+    const costLow = sf * (sp.unitCostLow || 0);
+    const costHigh = sf * (sp.unitCostHigh || 0);
+    totalMid += cost; totalLow += costLow; totalHigh += costHigh;
+    if (!isParkingOrPlaza(sp)) netSF += sf;
+    if (sp.phase === 'Phase 1') { p1Cost += cost; p1SF += sf; }
+    else if (sp.phase === 'Phase 2') { p2Cost += cost; p2SF += sf; }
+  });
+  const gsf = Math.round(netSF / (state.efficiency / 100));
+  return { netSF, gsf, totalMid, totalLow, totalHigh, p1Cost, p2Cost, p1SF, p2SF };
+}
+
+function fmt$(n) { return '$' + Math.round(n).toLocaleString(); }
+function fmtSF(n) { return Math.round(n).toLocaleString() + ' SF'; }
+
+/* =============================================================
+   RENDER — PROGRAM TABLE
+   ============================================================= */
+function renderTable() {
+  const tbody = document.getElementById('program-tbody');
+  tbody.innerHTML = '';
+
+  // Group by category in preferred order
+  const groups = {};
+  CATEGORIES.forEach(c => groups[c] = []);
+  state.program.forEach(sp => {
+    if (!groups[sp.category]) groups[sp.category] = [];
+    groups[sp.category].push(sp);
+  });
+
+  let rowCount = 0;
+  CATEGORIES.forEach(cat => {
+    const rows = groups[cat];
+    // category header
+    const catTr = document.createElement('tr');
+    catTr.className = 'category-header';
+    catTr.innerHTML = `<td colspan="12"><span class="cat-swatch" style="background:${CAT_COLORS[cat]}"></span>${cat} <span style="opacity:0.6;font-weight:400;margin-left:8px;">${rows.length} ${rows.length === 1 ? 'space' : 'spaces'}</span></td>`;
+    tbody.appendChild(catTr);
+
+    rows.forEach(sp => {
+      if (!passesFilter(sp)) return;
+      rowCount++;
+      const tr = buildRow(sp);
+      tbody.appendChild(tr);
+    });
+
+    // add-row button
+    const addTr = document.createElement('tr');
+    addTr.innerHTML = `<td colspan="12" style="padding:0;"><button class="add-row-btn" onclick="addRow('${cat}')">+ Add space to ${cat}</button></td>`;
+    tbody.appendChild(addTr);
+  });
+
+  document.getElementById('row-count').textContent = state.program.length;
+  updateBudget();
+  renderChangelog();
+}
+
+function passesFilter(sp) {
+  if (state.filter === 'all') return true;
+  if (state.filter === 'Optional') return sp.phase === 'Optional' || sp.phase === 'Alternate';
+  return sp.phase === state.filter;
+}
+
+function buildRow(sp) {
+  const tr = document.createElement('tr');
+  tr.className = 'data-row';
+  tr.dataset.id = sp.id;
+  tr.draggable = true;
+  const sf = spaceTotalSF(sp);
+  const cost = sf * (sp.unitCostMid || 0);
+  const phaseClass = 'phase-' + sp.phase.replace(/\s/g, '');
+  const bench = benchmarkIndicator(sp);
+
+  tr.innerHTML = `
+    <td><span class="drag-handle">⋮⋮</span><span class="cat-border" style="background:${CAT_COLORS[sp.category]}"></span></td>
+    <td class="edit" data-field="name">${escape(sp.name)}${bench}</td>
+    <td class="edit num" data-field="qty">${sp.qty}</td>
+    <td class="edit num" data-field="unitSF">${(sp.unitSF||0).toLocaleString()}</td>
+    <td class="num"><strong>${sf.toLocaleString()}</strong></td>
+    <td class="edit num" data-field="unitCostLow">$${sp.unitCostLow||0}</td>
+    <td class="edit num" data-field="unitCostMid">$${sp.unitCostMid||0}</td>
+    <td class="edit num" data-field="unitCostHigh">$${sp.unitCostHigh||0}</td>
+    <td class="num"><strong>${fmt$(cost)}</strong></td>
+    <td><select class="inline phase-select" data-field="phase">${PHASES.map(p => `<option ${p===sp.phase?'selected':''}>${p}</option>`).join('')}</select></td>
+    <td class="edit" data-field="notes" style="max-width:240px;font-size:12px;color:var(--pcl-gray);">${escape(sp.notes||'')}</td>
+    <td style="text-align:right;white-space:nowrap;">
+      <button class="btn-icon" title="Change category" onclick="changeCategory('${sp.id}')">⇅</button>
+      <button class="btn-icon" title="Delete" onclick="deleteRow('${sp.id}')" style="color:var(--pcl-red);">🗑</button>
+    </td>
+  `;
+
+  // phase select
+  tr.querySelector('.phase-select').addEventListener('change', (e) => {
+    updateField(sp.id, 'phase', e.target.value);
+  });
+
+  // edit-in-place
+  tr.querySelectorAll('td.edit').forEach(td => {
+    td.addEventListener('click', (e) => startEdit(td, sp));
+  });
+
+  // drag
+  tr.addEventListener('dragstart', (e) => { tr.classList.add('dragging'); e.dataTransfer.effectAllowed = 'move'; e.dataTransfer.setData('text/plain', sp.id); });
+  tr.addEventListener('dragend', () => { tr.classList.remove('dragging'); document.querySelectorAll('.drop-target').forEach(el => el.classList.remove('drop-target')); });
+  tr.addEventListener('dragover', (e) => { e.preventDefault(); tr.classList.add('drop-target'); });
+  tr.addEventListener('dragleave', () => tr.classList.remove('drop-target'));
+  tr.addEventListener('drop', (e) => {
+    e.preventDefault();
+    const fromId = e.dataTransfer.getData('text/plain');
+    const toId = sp.id;
+    reorderRows(fromId, toId);
+  });
+
+  return tr;
+}
+
+function escape(s) { return String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+function startEdit(td, sp) {
+  if (td.querySelector('input')) return;
+  const field = td.dataset.field;
+  const cur = sp[field] == null ? '' : sp[field];
+  const isNum = ['qty','unitSF','unitCostLow','unitCostMid','unitCostHigh'].includes(field);
+  const inp = document.createElement('input');
+  inp.type = isNum ? 'number' : 'text';
+  inp.className = 'inline';
+  inp.value = cur;
+  td.innerHTML = '';
+  td.appendChild(inp);
+  inp.focus();
+  inp.select();
+  const commit = () => {
+    const val = isNum ? Number(inp.value) : inp.value;
+    updateField(sp.id, field, val);
+  };
+  inp.addEventListener('blur', commit);
+  inp.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') { inp.blur(); }
+    if (e.key === 'Escape') { renderTable(); }
+  });
+}
+
+function benchmarkIndicator(sp) {
+  const bm = BENCHMARKS[sp.name];
+  if (!bm) return '';
+  const sf = sp.unitSF || 0;
+  if (sf < bm[0]) return `<span class="bench-icon low" title="Below PLA typical range: ${bm[0].toLocaleString()}–${bm[1].toLocaleString()} SF">↓</span>`;
+  if (sf > bm[1]) return `<span class="bench-icon high" title="Above PLA typical range: ${bm[0].toLocaleString()}–${bm[1].toLocaleString()} SF">↑</span>`;
+  return `<span class="bench-icon ok" title="Within PLA typical range: ${bm[0].toLocaleString()}–${bm[1].toLocaleString()} SF">✓</span>`;
+}
+
+/* =============================================================
+   MUTATIONS
+   ============================================================= */
+function newId() { return 'u' + (++state.idCounter); }
+
+function updateField(id, field, val) {
+  const sp = state.program.find(s => s.id === id);
+  if (!sp) return;
+  const old = sp[field];
+  if (old === val) return;
+  sp[field] = val;
+  logChange('mod', sp.name, `${field}: ${old} → ${val}`);
+  saveState();
+  renderTable();
+}
+
+function addRow(category) {
+  const sp = {
+    id: newId(),
+    category,
+    name: 'New Space',
+    qty: 1,
+    unitSF: 500,
+    unitCostLow: 700,
+    unitCostMid: 850,
+    unitCostHigh: 1000,
+    phase: 'Phase 1',
+    notes: ''
+  };
+  state.program.push(sp);
+  logChange('add', sp.name, `added to ${category}`);
+  saveState();
+  renderTable();
+}
+
+function deleteRow(id) {
+  const sp = state.program.find(s => s.id === id);
+  if (!sp) return;
+  if (!confirm(`Delete "${sp.name}"? This cannot be undone (but will be logged).`)) return;
+  state.program = state.program.filter(s => s.id !== id);
+  logChange('del', sp.name, `removed from ${sp.category}`);
+  saveState();
+  renderTable();
+}
+
+function changeCategory(id) {
+  const sp = state.program.find(s => s.id === id);
+  if (!sp) return;
+  const next = prompt('Move to which category?\n' + CATEGORIES.map((c,i) => `${i+1}. ${c}`).join('\n'), sp.category);
+  if (!next) return;
+  const match = CATEGORIES.find(c => c.toLowerCase() === next.toLowerCase()) || CATEGORIES[parseInt(next,10) - 1];
+  if (!match) { alert('Not a valid category'); return; }
+  const old = sp.category;
+  sp.category = match;
+  logChange('mod', sp.name, `category: ${old} → ${match}`);
+  saveState();
+  renderTable();
+}
+
+function reorderRows(fromId, toId) {
+  if (fromId === toId) return;
+  const fromIdx = state.program.findIndex(s => s.id === fromId);
+  const toIdx = state.program.findIndex(s => s.id === toId);
+  if (fromIdx < 0 || toIdx < 0) return;
+  const [moved] = state.program.splice(fromIdx, 1);
+  state.program.splice(toIdx, 0, moved);
+  saveState();
+  renderTable();
+}
+
+/* =============================================================
+   BUDGET BAR
+   ============================================================= */
+function updateBudget() {
+  const t = totals();
+  document.getElementById('b-programmed').textContent = fmt$(t.totalMid);
+  document.getElementById('b-range').textContent = `Range: ${fmt$(t.totalLow)} – ${fmt$(t.totalHigh)}`;
+
+  const variance = t.totalMid - TARGET_GMP;
+  const pct = TARGET_GMP ? (variance / TARGET_GMP) * 100 : 0;
+  const vEl = document.getElementById('b-variance');
+  vEl.textContent = (variance >= 0 ? '+' : '') + fmt$(variance);
+  document.getElementById('b-variance-pct').textContent = (pct >= 0 ? '+' : '') + pct.toFixed(1) + '%';
+  vEl.classList.remove('positive','warn','negative');
+  const pctAbs = Math.abs(pct);
+  if (pctAbs <= 5) vEl.classList.add('positive');
+  else if (pctAbs <= 10) vEl.classList.add('warn');
+  else vEl.classList.add('negative');
+
+  const psf = t.gsf ? t.totalMid / t.gsf : 0;
+  document.getElementById('b-psf').textContent = fmt$(psf);
+  document.getElementById('b-gsf').textContent = fmtSF(t.gsf);
+
+  document.getElementById('b-phase1').textContent = fmt$(t.p1Cost);
+  document.getElementById('b-phase1-sf').textContent = fmtSF(t.p1SF);
+  document.getElementById('b-phase2').textContent = fmt$(t.p2Cost);
+  document.getElementById('b-phase2-sf').textContent = fmtSF(t.p2SF);
+
+  // sidebar
+  document.getElementById('g-nsf').textContent = fmtSF(t.netSF);
+  document.getElementById('g-gsf').textContent = fmtSF(t.gsf);
+  const diff = t.gsf - state.targetGSF;
+  const diffPct = state.targetGSF ? (diff / state.targetGSF) * 100 : 0;
+  const vBadge = document.getElementById('g-var');
+  vBadge.textContent = (diff >= 0 ? '+' : '') + fmtSF(diff) + ' (' + (diffPct >= 0 ? '+' : '') + diffPct.toFixed(1) + '%)';
+  vBadge.classList.remove('good','warn','bad');
+  const diffAbs = Math.abs(diffPct);
+  if (diffAbs <= 5) vBadge.classList.add('good');
+  else if (diffAbs <= 10) vBadge.classList.add('warn');
+  else vBadge.classList.add('bad');
+
+  const warn = document.getElementById('g-warn');
+  if (diffAbs > 5) {
+    warn.classList.add('show');
+    if (diffAbs > 10) warn.classList.add('critical');
+    else warn.classList.remove('critical');
+  } else warn.classList.remove('show');
+
+  renderScenarios();
+}
+
+/* =============================================================
+   CHANGE LOG
+   ============================================================= */
+function logChange(op, name, detail) {
+  state.changelog.unshift({
+    ts: new Date().toISOString(),
+    op,
+    name,
+    detail,
+    note: ''
+  });
+  if (state.changelog.length > 500) state.changelog.length = 500;
+  saveState();
+}
+
+function renderChangelog() {
+  document.getElementById('changelog-count').textContent = state.changelog.length;
+  const body = document.getElementById('changelog-body');
+  body.innerHTML = '';
+  state.changelog.slice(0, 100).forEach((c, i) => {
+    const e = document.createElement('div');
+    e.className = 'changelog-entry';
+    const d = new Date(c.ts);
+    const ts = d.toLocaleString([], { year:'numeric', month:'short', day:'numeric', hour:'2-digit', minute:'2-digit', second:'2-digit' });
+    const opLabel = c.op === 'add' ? 'ADD' : c.op === 'del' ? 'DELETE' : c.op === 'mod' ? 'MODIFY' : 'SYSTEM';
+    e.innerHTML = `
+      <span class="ts">${ts}</span>
+      <span class="op ${c.op}">${opLabel}</span>
+      <span><strong>${escape(c.name)}</strong> — <span class="muted">${escape(c.detail)}</span></span>
+      <input type="text" class="note" placeholder="Note…" value="${escape(c.note||'')}" data-idx="${i}" />
+    `;
+    e.querySelector('input.note').addEventListener('change', (ev) => {
+      state.changelog[ev.target.dataset.idx].note = ev.target.value;
+      saveState();
+    });
+    body.appendChild(e);
+  });
+}
+
+function toggleChangelog() {
+  const cl = document.getElementById('changelog');
+  cl.classList.toggle('open');
+  document.getElementById('changelog-arrow').textContent = cl.classList.contains('open') ? '▼' : '▲';
+}
+
+/* =============================================================
+   SCENARIOS
+   ============================================================= */
+function saveScenario() {
+  const name = prompt('Name this scenario:', `Option ${String.fromCharCode(65 + state.scenarios.length)} — ${new Date().toLocaleDateString()}`);
+  if (!name) return;
+  const t = totals();
+  const scenario = {
+    name,
+    createdAt: new Date().toISOString(),
+    program: JSON.parse(JSON.stringify(state.program)),
+    efficiency: state.efficiency,
+    targetGSF: state.targetGSF,
+    stats: { netSF: t.netSF, gsf: t.gsf, totalMid: t.totalMid, psf: t.gsf ? t.totalMid / t.gsf : 0 }
+  };
+  state.scenarios.push(scenario);
+  state.currentScenario = name;
+  document.getElementById('current-scenario').textContent = name;
+  logChange('sys', 'Scenario', `saved "${name}"`);
+  saveState();
+  renderTable();
+  renderScenarios();
+}
+
+function loadScenario(idx) {
+  const s = state.scenarios[idx];
+  if (!s) return;
+  if (!confirm(`Load "${s.name}"? Your current unsaved changes will be replaced.`)) return;
+  state.program = JSON.parse(JSON.stringify(s.program));
+  state.efficiency = s.efficiency;
+  state.targetGSF = s.targetGSF;
+  state.currentScenario = s.name;
+  document.getElementById('g-eff').value = state.efficiency;
+  document.getElementById('g-eff-val').textContent = state.efficiency + '%';
+  document.getElementById('g-target').value = state.targetGSF;
+  document.getElementById('current-scenario').textContent = s.name;
+  logChange('sys', 'Scenario', `loaded "${s.name}"`);
+  saveState();
+  renderTable();
+}
+
+function branchScenario(idx) {
+  const s = state.scenarios[idx];
+  if (!s) return;
+  const name = prompt('Name the new scenario (branching from "' + s.name + '"):', s.name + ' – v2');
+  if (!name) return;
+  const branched = JSON.parse(JSON.stringify(s));
+  branched.name = name;
+  branched.createdAt = new Date().toISOString();
+  state.scenarios.push(branched);
+  saveState();
+  renderScenarios();
+}
+
+function deleteScenario(idx) {
+  const s = state.scenarios[idx];
+  if (!s) return;
+  if (!confirm(`Delete scenario "${s.name}"?`)) return;
+  state.scenarios.splice(idx, 1);
+  saveState();
+  renderScenarios();
+}
+
+function renderScenarios() {
+  const list = document.getElementById('scenario-list');
+  if (!list) return;
+  list.innerHTML = '';
+  if (state.scenarios.length === 0) {
+    list.innerHTML = '<p class="muted tiny">No saved scenarios yet. Click "Save Scenario" on the Program tab to snapshot the current program.</p>';
+  } else {
+    state.scenarios.forEach((s, i) => {
+      const div = document.createElement('div');
+      div.className = 'scenario-card' + (s.name === state.currentScenario ? ' active' : '');
+      div.innerHTML = `
+        <div class="name">${escape(s.name)}</div>
+        <div class="stats">${fmtSF(s.stats.gsf)} · ${fmt$(s.stats.totalMid)} · ${fmt$(s.stats.psf)}/GSF</div>
+        <div class="actions">
+          <button class="btn-ghost btn-sm" onclick="loadScenario(${i})">Load</button>
+          <button class="btn-ghost btn-sm" onclick="branchScenario(${i})">Branch</button>
+          <button class="btn-ghost btn-sm" onclick="deleteScenario(${i})" style="color:var(--pcl-red);">Delete</button>
+        </div>`;
+      list.appendChild(div);
+    });
+  }
+
+  // comparison table
+  const tbody = document.getElementById('compare-tbody');
+  if (tbody) {
+    tbody.innerHTML = '';
+    const t = totals();
+    // current row
+    const curRow = renderCompareRow({ name: state.currentScenario + ' (current)', stats: { netSF: t.netSF, gsf: t.gsf, totalMid: t.totalMid, psf: t.gsf ? t.totalMid / t.gsf : 0 } }, null, true);
+    tbody.appendChild(curRow);
+    const baseline = state.scenarios[0];
+    state.scenarios.forEach((s) => {
+      tbody.appendChild(renderCompareRow(s, baseline, false));
+    });
+  }
+}
+
+function renderCompareRow(s, baseline, isCurrent) {
+  const tr = document.createElement('tr');
+  const deltaBase = baseline ? s.stats.totalMid - baseline.stats.totalMid : 0;
+  const deltaBaseCls = deltaBase > 0 ? 'delta-pos' : deltaBase < 0 ? 'delta-neg' : '';
+  const deltaGmp = s.stats.totalMid - TARGET_GMP;
+  const deltaGmpCls = deltaGmp > 0 ? 'delta-pos' : 'delta-neg';
+  tr.innerHTML = `
+    <td>${isCurrent ? '<strong>' : ''}${escape(s.name)}${isCurrent ? '</strong>' : ''}</td>
+    <td class="num">${fmtSF(s.stats.netSF)}</td>
+    <td class="num">${fmtSF(s.stats.gsf)}</td>
+    <td class="num">${fmt$(s.stats.totalMid)}</td>
+    <td class="num">${fmt$(s.stats.psf)}</td>
+    <td class="num ${deltaBaseCls}">${baseline ? (deltaBase >= 0 ? '+' : '') + fmt$(deltaBase) : '—'}</td>
+    <td class="num ${deltaGmpCls}">${(deltaGmp >= 0 ? '+' : '') + fmt$(deltaGmp)}</td>
+  `;
+  return tr;
+}
+
+/* =============================================================
+   AI: SUGGEST / GENERATE / NARRATIVE
+   ============================================================= */
+async function submitAiSuggestion() {
+  const input = document.getElementById('ai-input').value.trim();
+  if (!input) return;
+  const btn = document.getElementById('ai-submit');
+  const label = document.getElementById('ai-submit-label');
+  const errEl = document.getElementById('ai-error');
+  errEl.classList.remove('show');
+  btn.disabled = true;
+  label.innerHTML = '<span class="spinner"></span>Thinking...';
+  try {
+    const res = await fetch('/api/suggest', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ currentProgram: { spaces: state.program }, request: input })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Suggestion failed');
+    showPreview(data);
+  } catch (e) {
+    errEl.textContent = 'AI error: ' + e.message;
+    errEl.classList.add('show');
+  } finally {
+    btn.disabled = false;
+    label.textContent = 'Suggest Changes';
+  }
+}
+
+function showPreview(data) {
+  state.pendingPreview = data;
+  const pa = document.getElementById('preview-actions');
+  document.getElementById('preview-title').textContent = `Pending Changes (${data.changes.length})`;
+  document.getElementById('preview-summary').textContent = data.summary || '';
+  pa.classList.add('show');
+
+  // apply preview highlighting to existing rows; insert ghost rows for adds
+  const tbody = document.getElementById('program-tbody');
+  data.changes.forEach(ch => {
+    if (ch.op === 'delete' || ch.op === 'modify') {
+      const tr = tbody.querySelector(`tr[data-id="${ch.targetId}"]`);
+      if (tr) tr.classList.add(ch.op === 'delete' ? 'preview-del' : 'preview-mod');
+    }
+    if (ch.op === 'add' && ch.space) {
+      // insert a ghost row at the end of its category
+      const fakeRow = buildRow({ ...ch.space, id: '__preview_' + ch.space.id });
+      fakeRow.classList.add('preview-add');
+      fakeRow.querySelectorAll('button').forEach(b => b.style.display = 'none');
+      // find the add-row button for that category and insert before it
+      const addBtns = tbody.querySelectorAll('.add-row-btn');
+      let inserted = false;
+      addBtns.forEach(btn => {
+        if (inserted) return;
+        if (btn.textContent.includes(ch.space.category)) {
+          btn.closest('tr').before(fakeRow);
+          inserted = true;
+        }
+      });
+      if (!inserted) tbody.appendChild(fakeRow);
+    }
+  });
+}
+
+function acceptPreview() {
+  if (!state.pendingPreview) return;
+  const changes = state.pendingPreview.changes;
+  changes.forEach(ch => {
+    if (ch.op === 'delete') {
+      const sp = state.program.find(s => s.id === ch.targetId);
+      if (sp) {
+        state.program = state.program.filter(s => s.id !== ch.targetId);
+        logChange('del', sp.name, 'AI: removed');
+      }
+    } else if (ch.op === 'modify') {
+      const idx = state.program.findIndex(s => s.id === ch.targetId);
+      if (idx >= 0 && ch.space) {
+        const oldName = state.program[idx].name;
+        state.program[idx] = { ...state.program[idx], ...ch.space, id: state.program[idx].id };
+        logChange('mod', ch.space.name, `AI: ${ch.rationale || 'modified'}`);
+      }
+    } else if (ch.op === 'add' && ch.space) {
+      const sp = { ...ch.space, id: ch.space.id || newId() };
+      state.program.push(sp);
+      logChange('add', sp.name, `AI: ${ch.rationale || 'added'}`);
+    }
+  });
+  state.pendingPreview = null;
+  document.getElementById('preview-actions').classList.remove('show');
+  document.getElementById('ai-input').value = '';
+  saveState();
+  renderTable();
+}
+
+function rejectPreview() {
+  state.pendingPreview = null;
+  document.getElementById('preview-actions').classList.remove('show');
+  renderTable();
+}
+
+function openGenerateModal() {
+  document.getElementById('generate-modal').classList.add('show');
+}
+function closeModal(id) { document.getElementById(id).classList.remove('show'); }
+
+async function submitGenerate() {
+  const btn = document.getElementById('gen-submit');
+  const label = document.getElementById('gen-submit-label');
+  btn.disabled = true;
+  label.innerHTML = '<span class="spinner"></span>Generating...';
+  const body = {
+    buildingType: document.getElementById('gen-type').value,
+    totalSF: Number(document.getElementById('gen-sf').value),
+    budget: Number(document.getElementById('gen-budget').value),
+    description: document.getElementById('gen-desc').value
+  };
+  try {
+    const res = await fetch('/api/generate-program', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Generation failed');
+    if (!confirm(`AI generated ${data.program.spaces.length} program items. Replace current program?`)) return;
+    state.program = data.program.spaces.map(s => ({
+      id: s.id || newId(),
+      category: s.category,
+      name: s.name,
+      qty: Number(s.qty || 1),
+      unitSF: Number(s.unitSF || 0),
+      unitCostLow: Number(s.unitCostLow || 0),
+      unitCostMid: Number(s.unitCostMid || 0),
+      unitCostHigh: Number(s.unitCostHigh || 0),
+      phase: s.phase || 'Phase 1',
+      notes: s.notes || ''
+    }));
+    state.currentScenario = `AI Baseline — ${body.buildingType}`;
+    document.getElementById('current-scenario').textContent = state.currentScenario;
+    logChange('sys', 'AI Generate', `new baseline: ${body.buildingType}, ${body.totalSF} GSF, $${body.budget.toLocaleString()}`);
+    saveState();
+    renderTable();
+    closeModal('generate-modal');
+  } catch (e) {
+    alert('Generation failed: ' + e.message);
+  } finally {
+    btn.disabled = false;
+    label.textContent = 'Generate Program';
+  }
+}
+
+async function generateNarrative() {
+  const btn = document.getElementById('narr-btn');
+  btn.disabled = true;
+  const oldText = btn.innerHTML;
+  btn.innerHTML = '<span class="spinner"></span>Generating narrative...';
+  const content = document.getElementById('narrative-content');
+  content.innerHTML = 'Generating stakeholder narrative...';
+  document.getElementById('narrative-modal').classList.add('show');
+  try {
+    const res = await fetch('/api/narrative', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        program: { spaces: state.program, totals: totals(), efficiency: state.efficiency, targetGSF: state.targetGSF },
+        scenarioName: state.currentScenario
+      })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Narrative generation failed');
+    content.innerHTML = renderMarkdown(data.narrative);
+    content.dataset.raw = data.narrative;
+  } catch (e) {
+    content.innerHTML = '<p style="color:var(--pcl-red);">Error: ' + escape(e.message) + '</p>';
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = oldText;
+  }
+}
+
+function renderMarkdown(md) {
+  // minimal md -> html
+  const lines = md.split('\n');
+  let html = '';
+  let inList = false;
+  lines.forEach(line => {
+    if (/^##\s+/.test(line)) {
+      if (inList) { html += '</ul>'; inList = false; }
+      html += '<h2>' + escape(line.replace(/^##\s+/, '')) + '</h2>';
+    } else if (/^\s*[-*]\s+/.test(line)) {
+      if (!inList) { html += '<ul>'; inList = true; }
+      html += '<li>' + escape(line.replace(/^\s*[-*]\s+/, '')) + '</li>';
+    } else if (line.trim() === '') {
+      if (inList) { html += '</ul>'; inList = false; }
+    } else {
+      if (inList) { html += '</ul>'; inList = false; }
+      html += '<p>' + escape(line) + '</p>';
+    }
+  });
+  if (inList) html += '</ul>';
+  return html;
+}
+
+function copyNarrative() {
+  const raw = document.getElementById('narrative-content').dataset.raw || document.getElementById('narrative-content').innerText;
+  navigator.clipboard.writeText(raw).then(() => {
+    const btn = event.target;
+    const old = btn.textContent;
+    btn.textContent = '✓ Copied';
+    setTimeout(() => btn.textContent = old, 1500);
+  });
+}
+
+/* =============================================================
+   ADJACENCY
+   ============================================================= */
+function adjKey(a, b) { return a < b ? a + '|' + b : b + '|' + a; }
+const ADJ_STATES = [
+  { cls: 'adj-none',     label: 'No Requirement' },
+  { cls: 'adj-must',     label: 'Must Be Adjacent' },
+  { cls: 'adj-should',   label: 'Should Be Adjacent' },
+  { cls: 'adj-separate', label: 'Should Be Separated' }
+];
+
+function renderAdjacency() {
+  const wrap = document.getElementById('adj-wrap');
+  const spaces = state.program.filter(s => !isParkingOrPlaza(s));
+  let html = '<table class="adj-table"><thead><tr><th style="position:sticky;left:0;z-index:3;"></th>';
+  spaces.forEach(s => {
+    html += `<th class="rot"><div>${escape(s.name)}</div></th>`;
+  });
+  html += '</tr></thead><tbody>';
+  spaces.forEach((ra, ri) => {
+    html += `<tr><th>${escape(ra.name)}</th>`;
+    spaces.forEach((rb, ci) => {
+      if (ri === ci) {
+        html += '<td class="adj-diag"></td>';
+      } else {
+        const k = adjKey(ra.id, rb.id);
+        const st = state.adjacency[k] || 0;
+        html += `<td class="adj-cell ${ADJ_STATES[st].cls}" data-a="${ra.id}" data-b="${rb.id}" title="${ADJ_STATES[st].label}: ${escape(ra.name)} ↔ ${escape(rb.name)}"></td>`;
+      }
+    });
+    html += '</tr>';
+  });
+  html += '</tbody></table>';
+  wrap.innerHTML = html;
+  wrap.querySelectorAll('.adj-cell').forEach(cell => {
+    cell.addEventListener('click', () => {
+      const k = adjKey(cell.dataset.a, cell.dataset.b);
+      const cur = state.adjacency[k] || 0;
+      const next = (cur + 1) % ADJ_STATES.length;
+      if (next === 0) delete state.adjacency[k]; else state.adjacency[k] = next;
+      saveState();
+      renderAdjacency();
+    });
+  });
+}
+
+function exportAdjacency() {
+  const spaces = state.program.filter(s => !isParkingOrPlaza(s));
+  const byId = Object.fromEntries(spaces.map(s => [s.id, s.name]));
+  let lines = ['# PCL Architectural Program — Adjacency Requirements', `# Project: Burbank Central Library`, `# Generated: ${new Date().toLocaleString()}`, ''];
+  const groups = { 1: [], 2: [], 3: [] };
+  Object.entries(state.adjacency).forEach(([k, v]) => {
+    if (!v) return;
+    const [a, b] = k.split('|');
+    if (!byId[a] || !byId[b]) return;
+    groups[v].push(`  - ${byId[a]} ↔ ${byId[b]}`);
+  });
+  lines.push('## Must Be Adjacent'); lines.push(...(groups[1].length ? groups[1] : ['  (none)']));
+  lines.push(''); lines.push('## Should Be Adjacent'); lines.push(...(groups[2].length ? groups[2] : ['  (none)']));
+  lines.push(''); lines.push('## Should Be Separated'); lines.push(...(groups[3].length ? groups[3] : ['  (none)']));
+  const blob = new Blob([lines.join('\n')], { type: 'text/plain' });
+  downloadBlob(blob, 'adjacency-requirements.txt');
+}
+
+/* =============================================================
+   EXPORTS
+   ============================================================= */
+function csvRow(cells) {
+  return cells.map(c => {
+    const s = String(c == null ? '' : c);
+    return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+  }).join(',');
+}
+
+function exportCSV() {
+  const rows = [['Category','Space Name','Qty','Unit SF','Total SF','Unit Cost Low ($/SF)','Unit Cost Mid ($/SF)','Unit Cost High ($/SF)','Total Cost Mid','Phase','Notes']];
+  state.program.forEach(sp => {
+    const sf = spaceTotalSF(sp);
+    rows.push([sp.category, sp.name, sp.qty, sp.unitSF, sf, sp.unitCostLow, sp.unitCostMid, sp.unitCostHigh, Math.round(sf * sp.unitCostMid), sp.phase, sp.notes || '']);
+  });
+  const t = totals();
+  rows.push([]);
+  rows.push(['TOTALS']);
+  rows.push(['Net SF', '', '', '', t.netSF]);
+  rows.push(['Efficiency', '', '', '', state.efficiency + '%']);
+  rows.push(['Gross SF', '', '', '', t.gsf]);
+  rows.push(['Total Cost (Mid)', '', '', '', '', '', '', '', t.totalMid]);
+  rows.push(['Cost / GSF', '', '', '', '', '', '', '', t.gsf ? Math.round(t.totalMid/t.gsf) : 0]);
+  const csv = rows.map(csvRow).join('\n');
+  downloadBlob(new Blob([csv], { type: 'text/csv' }), `pcl-program-${ymd()}.csv`);
+}
+
+function exportChangelogCSV() {
+  const rows = [['Timestamp','Operation','Space Name','Detail','User Note']];
+  state.changelog.forEach(c => rows.push([c.ts, c.op, c.name, c.detail, c.note || '']));
+  downloadBlob(new Blob([rows.map(csvRow).join('\n')], { type: 'text/csv' }), `pcl-changelog-${ymd()}.csv`);
+}
+
+function downloadBlob(blob, filename) {
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = filename; document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+function ymd() {
+  const d = new Date();
+  return d.toISOString().slice(0,10);
+}
+
+function resetBaseline() {
+  if (!confirm('Reset program to default Burbank Library baseline? Current program will be discarded (unless saved as scenario).')) return;
+  state.program = baselineProgram();
+  state.currentScenario = 'Baseline Program';
+  document.getElementById('current-scenario').textContent = state.currentScenario;
+  logChange('sys', 'Program', 'reset to Burbank baseline');
+  saveState();
+  renderTable();
+}
+
+/* =============================================================
+   VIEW SWITCHING
+   ============================================================= */
+function setView(view) {
+  state.view = view;
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.toggle('active', t.dataset.view === view));
+  document.querySelectorAll('.view').forEach(v => v.classList.toggle('active', v.id === 'view-' + view));
+  if (view === 'adjacency') renderAdjacency();
+  if (view === 'scenarios') renderScenarios();
+}
+
+/* =============================================================
+   INIT
+   ============================================================= */
+function init() {
+  loadState();
+  document.getElementById('g-eff').value = state.efficiency;
+  document.getElementById('g-eff-val').textContent = state.efficiency + '%';
+  document.getElementById('g-target').value = state.targetGSF;
+  document.getElementById('current-scenario').textContent = state.currentScenario;
+
+  // efficiency slider
+  document.getElementById('g-eff').addEventListener('input', (e) => {
+    state.efficiency = Number(e.target.value);
+    document.getElementById('g-eff-val').textContent = state.efficiency + '%';
+    saveState();
+    updateBudget();
+  });
+  document.getElementById('g-target').addEventListener('input', (e) => {
+    state.targetGSF = Number(e.target.value) || 0;
+    saveState();
+    updateBudget();
+  });
+
+  // filters
+  document.querySelectorAll('[data-filter]').forEach(b => {
+    b.addEventListener('click', () => {
+      document.querySelectorAll('[data-filter]').forEach(x => x.classList.remove('active'));
+      b.classList.add('active');
+      state.filter = b.dataset.filter;
+      renderTable();
+    });
+  });
+
+  // nav tabs
+  document.querySelectorAll('.nav-tab').forEach(t => t.addEventListener('click', () => setView(t.dataset.view)));
+
+  // chips
+  document.querySelectorAll('.chip').forEach(c => c.addEventListener('click', () => {
+    document.getElementById('ai-input').value = c.dataset.example;
+    document.getElementById('ai-input').focus();
+  }));
+
+  // modal backdrop close
+  document.querySelectorAll('.modal-backdrop').forEach(m => {
+    m.addEventListener('click', (e) => { if (e.target === m) m.classList.remove('show'); });
+  });
+
+  renderTable();
+  renderScenarios();
+  renderChangelog();
+}
+
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
