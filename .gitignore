@@ -1,0 +1,21 @@
+# Environment variables - NEVER commit these
+.env
+**/.env
+.env.local
+.env.production
+
+# Node modules - always reinstall with npm install
+node_modules/
+**/node_modules/
+
+# Build outputs
+dist/
+build/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
