@@ -23,21 +23,31 @@ function onEffChange(v){setText('g-eff-val',v+'%');updateGTN()}
 /* ════════════════════════════════════
    ESCALATION CALCULATOR
 ════════════════════════════════════ */
+const ESC_SEASON_LABELS={
+  'Q1 2027':'Winter 2027','Q2 2027':'Spring 2027','Q3 2027':'Summer 2027',
+  'Q4 2027':'Fall 2027','Q1 2028':'Winter 2028','Q2 2028':'Spring 2028'
+};
 function updateEscalation(){
   const startQ=document.getElementById('esc-start')?.value||'Q3 2027';
   const rate=parseFloat(document.getElementById('esc-rate')?.value||5)/100;
   const startMonths=ESC_OFFSETS[startQ]||15;
   const midpointMonths=startMonths+12;
   const factor=Math.pow(1+rate,midpointMonths/12);
-  const{costMid}=calcTotals();
-  const escDirect=costMid*factor;
-  const escTotal=TARGET_GMP*factor;
-  const delta=escTotal-TARGET_GMP;
-  setText('esc-months',midpointMonths+' mo');
+  const escPct=(factor-1)*100;
+  const escDollar=CONTINGENCY_BASE*(factor-1);
+  // Update escalation state and persist
+  escalationLump=escDollar;
+  localStorage.setItem('pcl_esc_lump',escalationLump);
+  // Update panel
+  setText('esc-months',midpointMonths+' months');
+  const subEl=document.getElementById('esc-months-sub');
+  if(subEl)subEl.textContent='('+startMonths+' mo to start + 12 mo to midpoint)';
   setText('esc-factor',factor.toFixed(3)+'×');
-  setText('esc-direct',fmt$(escDirect));
-  setText('esc-total',fmt$(escTotal));
-  setText('esc-delta','+'+ fmt$(delta));
-  if(document.getElementById('show-escalated')?.checked)updateBudget();
+  setText('esc-pct',escPct.toFixed(2)+'%');
+  setText('esc-dollar',fmt$(escDollar));
+  // Update budget bar Construction Start label
+  setText('bb-start-val',ESC_SEASON_LABELS[startQ]||startQ);
+  // Refresh budget bar
+  updateBudget();
 }
 

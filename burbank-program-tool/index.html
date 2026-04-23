@@ -129,7 +129,7 @@
     </div>
     <div class="bb-cell" style="display:flex;flex-direction:column;justify-content:center">
       <div class="bb-label">Construction Start</div>
-      <div class="bb-start-val">Summer 2027</div>
+      <div class="bb-start-val" id="bb-start-val">Summer 2027</div>
     </div>
   </div>
   <!-- ROW 2: Cost stack controls -->
@@ -380,23 +380,32 @@
         <div class="esc-field" style="margin-top:8px">
           <label>Construction Start</label>
           <select id="esc-start" onchange="updateEscalation()">
-            <option>Q1 2027</option><option>Q2 2027</option>
-            <option selected>Q3 2027</option><option>Q4 2027</option>
-            <option>Q1 2028</option><option>Q2 2028</option>
+            <option value="Q1 2027">Q1 2027 (January 2027)</option>
+            <option value="Q2 2027">Q2 2027 (April 2027)</option>
+            <option value="Q3 2027" selected>Q3 2027 (July 2027)</option>
+            <option value="Q4 2027">Q4 2027 (October 2027)</option>
+            <option value="Q1 2028">Q1 2028 (January 2028)</option>
+            <option value="Q2 2028">Q2 2028 (April 2028)</option>
           </select>
         </div>
+        <div class="wr"><span class="k">Construction Duration</span><span class="v" style="color:var(--dim);font-size:12px">24 months (locked)</span></div>
         <div class="esc-field">
           <label>Annual Escalation Rate (%)</label>
           <input type="number" id="esc-rate" value="5.0" min="0" max="15" step="0.5" oninput="updateEscalation()">
         </div>
-        <div class="wr"><span class="k">Months to Midpoint</span><span class="v" id="esc-months" style="color:var(--dim);font-size:12px">27 mo</span></div>
-        <div class="wr"><span class="k">Escalation Factor</span><span class="v" id="esc-factor" style="color:var(--pcl-green);font-weight:700;font-size:16px">1.12×</span></div>
-        <div class="wr"><span class="k">Escalated Direct Cost</span><span class="v" id="esc-direct" style="color:var(--pcl-green);font-size:13px">$0</span></div>
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)">
-          <span style="color:var(--dim);font-size:12px;font-weight:400">Escalated Total Budget</span>
-          <span id="esc-total" class="esc-total-highlight">$0</span>
+        <div class="wr">
+          <span class="k">Months to Midpoint</span>
+          <span class="v" style="text-align:right">
+            <span id="esc-months" style="color:var(--dim);font-size:12px">27 months</span>
+            <span id="esc-months-sub" style="display:block;color:var(--dim);font-size:10px;opacity:0.7">(15 mo to start + 12 mo to midpoint)</span>
+          </span>
         </div>
-        <div class="wr"><span class="k">Delta vs $163M Base</span><span class="v" id="esc-delta" style="color:var(--dim);font-size:12px">+$0</span></div>
+        <div class="wr"><span class="k">Escalation Factor</span><span class="v" id="esc-factor" style="color:var(--pcl-green);font-weight:700;font-size:16px">1.117×</span></div>
+        <div class="wr"><span class="k">Escalation %</span><span class="v" id="esc-pct" style="color:var(--pcl-green);font-size:13px">11.65%</span></div>
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--border)">
+          <span style="color:var(--dim);font-size:12px;font-weight:400">Escalation $<br><span style="font-size:10px;opacity:0.7">Applied to $94,945,200 cost base</span></span>
+          <span id="esc-dollar" class="esc-total-highlight">$11,061,116</span>
+        </div>
       </div>
     </div>
 
