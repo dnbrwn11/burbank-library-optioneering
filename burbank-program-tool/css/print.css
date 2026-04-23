@@ -1,0 +1,17 @@
+/* PRINT — DEFAULT (program table view) */
+@media print{
+  #viz-drawer,#viz-tab,#print-summary{display:none!important}
+  .nav,.team-strip,.ribbon,.budget-bar,.mob-banner,.right-sb,.toolbar,.tab-bar,.tab-pane,.footer,.modal-bg,.spread-ctrl,.bsys-panel{display:none!important}
+  .main{display:block}.content-col{padding:0;overflow:visible}
+  body{background:#FFF;color:#000;font-size:11px}
+  .panel{border:1px solid #999;box-shadow:none;margin-bottom:10px;page-break-inside:avoid}
+  .ph{border-bottom:2px solid #006330}
+  .prog-tbl{font-size:10px}
+  .prog-tbl thead th{background:#006330!important;color:#FFF!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .cat-row td{background:#EEE!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .data-row{background:#FFF!important}
+  .col-hide{display:table-cell!important}
+  .add-row-btn,.btn-icon,.drag-h{display:none!important}
+  .detail-row{display:none!important}
+  #page-wrapper{margin-left:0!important}
+}
