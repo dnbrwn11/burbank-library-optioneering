@@ -146,4 +146,9 @@
 .note-allowance{background:#E8F5E9;color:#2E7D32;border:1px solid #A5D6A7}
 .note-tbc{background:#F3E5F5;color:#6A1B9A;border:1px solid #CE93D8}
 .note-nic,.note-by-owner,.note-excluded{background:#FFF3E0;color:#E65100;border:1px solid #FFCC80}
+/* SUPPLEMENTAL ELEMENTS */
+.supp-add-btn:hover{text-decoration:underline}
+.supp-subtotal-row td{height:32px}
+.supp-inp::-webkit-outer-spin-button,.supp-inp::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.supp-inp[type=number]{-moz-appearance:textfield}
 

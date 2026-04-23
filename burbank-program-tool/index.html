@@ -104,7 +104,7 @@
     <div class="bb-cell">
       <div class="bb-label">Direct Costs</div>
       <div class="bb-value" id="bb-direct">$0</div>
-      <div class="bb-sub">Space + Parking + Site Work</div>
+      <div class="bb-sub" id="bb-direct-sub">Space + Parking + Site Work</div>
     </div>
     <div class="bb-cell">
       <div class="bb-label">Programmed Total</div>
@@ -131,6 +131,11 @@
       <div class="bb-label">Construction Start</div>
       <div class="bb-start-val" id="bb-start-val">Summer 2027</div>
     </div>
+  </div>
+  <!-- SUPPLEMENTAL LINE (hidden when $0) -->
+  <div id="bb-supp-line" style="display:none;background:#5A3500;align-items:center;gap:12px;padding:5px 24px;border-bottom:1px solid rgba(0,0,0,0.2)">
+    <span style="font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:10px;text-transform:uppercase;letter-spacing:0.1em;color:#E8A020">Supplemental Elements</span>
+    <span id="bb-supp-amt" style="font-family:'Barlow',sans-serif;font-weight:700;font-size:16px;color:#E8A020">+$0</span>
   </div>
   <!-- ROW 2: Cost stack controls -->
   <div class="bb-row2">

@@ -26,12 +26,15 @@ function calcTotals(){
   /* Add fixed Building Systems structural/envelope component */
   mid+=LIBRARY_BSYS_TOTAL;
   libCost+=LIBRARY_BSYS_TOTAL;
+  const suppTotal=getSuppTotal();
+  mid+=suppTotal;
   console.log('Building systems (excluded):',Math.round(bsysSkipped));
   console.log('Program spaces:',Math.round(progCost));
   console.log('Parking:',Math.round(parkCost));
   console.log('Site work:',Math.round(siteCost));
+  console.log('Supplemental total:',Math.round(suppTotal));
   console.log('Direct costs:',Math.round(mid));
-  console.log('Target direct costs:',108775455);
+  console.log('Expected:',108775455);
   console.log('Delta:',Math.round(mid-108775455));
   return{nsf,costMid:mid,parkingSF,libCost};
 }
@@ -76,6 +79,14 @@ function updateBudget(){
   if(cdInp&&document.activeElement!==cdInp)cdInp.value='$'+Math.round(contingencyLump).toLocaleString('en-US');
   setText('bb-ce-total',fmt$(combinedCE));
   setText('bb-gc-pct','('+gcPctOfDirect+'%)');
+  /* Supplemental elements line */
+  const suppTotal=getSuppTotal();
+  const suppLine=document.getElementById('bb-supp-line');
+  if(suppLine)suppLine.style.display=suppTotal>0?'flex':'none';
+  const suppAmt=document.getElementById('bb-supp-amt');
+  if(suppAmt)suppAmt.textContent='+'+fmt$(suppTotal);
+  const dcSub=document.getElementById('bb-direct-sub');
+  if(dcSub)dcSub.textContent=suppTotal>0?'Space + Parking + Site Work + Supplements':'Space + Parking + Site Work';
   /* Progress bar */
   const fillPct=Math.min(pct,110);
   const fill=document.getElementById('bb-fill');

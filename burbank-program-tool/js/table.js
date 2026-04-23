@@ -42,6 +42,7 @@ function renderTable(){
       const str=document.createElement('tr');str.className='bsys-subtotal-row';
       str.innerHTML=`<td colspan="7" style="text-align:right;padding-right:8px;font-size:10px;color:#4A7B9D;font-weight:700;font-family:'Barlow Condensed',sans-serif;letter-spacing:0.06em">BUILDING SYSTEMS REFERENCE SUBTOTAL</td><td class="num" style="font-weight:700;color:#4A7B9D">$${bsRefTotal.toLocaleString()}</td><td colspan="3"></td>`;
       tbody.appendChild(str);
+      renderSuppSection(tbody);
       return;
     }
 
@@ -121,6 +122,81 @@ function renderTable(){
   setupEditCells();
 }
 function toggleDetail(id){const dr=document.getElementById('dr-'+id);if(dr)dr.classList.toggle('show')}
+
+/* ════════════════════════════════════
+   SUPPLEMENTAL BUILDING ELEMENTS
+════════════════════════════════════ */
+function renderSuppSection(tbody){
+  const DIVS=['Div 02','Div 03','Div 04','Div 05','Div 06','Div 07','Div 08','Div 09','Div 10','Div 11','Div 12','Div 14','Div 21','Div 22','Div 23','Div 26','Div 31','Div 32','Other'];
+  /* Section header */
+  const hdr=document.createElement('tr');
+  hdr.innerHTML=`<td colspan="11" style="padding:0"><div style="background:#FFFBF0;border-left:4px solid #E8A020;padding:8px 16px">
+    <div style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:0.1em;color:#E8A020">SUPPLEMENTAL BUILDING ELEMENTS</div>
+    <div style="font-family:'Barlow',sans-serif;font-weight:300;font-size:10px;color:#856404;margin-top:2px">Add-alternate scope items not in PCL Cost Model baseline · Included in Direct Costs when populated</div>
+  </div></td>`;
+  tbody.appendChild(hdr);
+  /* Element rows */
+  supplementalElements.forEach(e=>{
+    const cost=calcSuppCost(e);
+    const isLS=e.unit==='/LS';
+    const qtyDisp=isLS?'Lump Sum':`${e.qty||0} ${e.unit.replace('/','').trim()}`;
+    const tr=document.createElement('tr');
+    tr.className='data-row';tr.dataset.suppid=e.id;
+    tr.style.cssText='border-left:3px solid #E8A020;background:#FFFEF5';
+    tr.innerHTML=`
+      <td style="text-align:center;color:#E8A020;font-size:13px;padding:0 8px">✏</td>
+      <td style="padding:0;width:4px"><div style="width:4px;min-height:44px;height:100%;background:#E8A020"></div></td>
+      <td><input type="text" class="supp-inp" value="${escHtml(e.description)}" placeholder="Description..."
+        oninput="onSuppDescInput('${e.id}',this.value)"
+        style="width:100%;background:transparent;border:none;font-family:'Barlow',sans-serif;font-size:12px;color:var(--text);outline:none;padding:0"></td>
+      <td class="num"><input type="number" class="supp-inp" value="${isLS?'':e.qty||''}" placeholder="${isLS?'—':''}"
+        ${isLS?'disabled':''}
+        oninput="updateSuppField('${e.id}','qty',parseFloat(this.value)||0)"
+        style="width:56px;background:transparent;border:none;text-align:right;font-family:'Barlow',sans-serif;font-size:12px;outline:none;${isLS?'color:#9A9A9A':''}" ></td>
+      <td class="num col-hide">
+        <select class="supp-sel" onchange="updateSuppUnit('${e.id}',this.value)"
+          style="background:transparent;border:none;font-family:'Barlow',sans-serif;font-size:11px;color:#666;outline:none;cursor:pointer">
+          ${['/SF','/LF','/LS','/EA'].map(u=>`<option value="${u}"${e.unit===u?' selected':''}>${u}</option>`).join('')}
+        </select>
+      </td>
+      <td class="num" style="color:#9A9A9A;font-size:11px">${escHtml(qtyDisp)}</td>
+      <td class="num"><input type="number" class="supp-inp" value="${e.unitCost||''}" placeholder="0"
+        oninput="updateSuppField('${e.id}','unitCost',parseFloat(this.value)||0)"
+        style="width:80px;background:transparent;border:none;text-align:right;font-family:'Barlow',sans-serif;font-size:12px;outline:none"></td>
+      <td class="num" style="font-weight:600;color:#E8A020">$${Math.round(cost).toLocaleString()}</td>
+      <td class="col-hide">
+        <select class="supp-sel" onchange="updateSuppField('${e.id}','div',this.value)"
+          style="background:transparent;border:none;font-family:'Barlow',sans-serif;font-size:11px;color:#666;outline:none;cursor:pointer">
+          ${DIVS.map(d=>`<option value="${d}"${e.div===d?' selected':''}>${d}</option>`).join('')}
+        </select>
+      </td>
+      <td class="col-hide"></td>
+      <td style="text-align:center;padding:0 4px">
+        <button onclick="deleteSuppElement('${e.id}')"
+          style="background:none;border:none;color:#CCCCCC;font-size:16px;cursor:pointer;padding:4px 8px;line-height:1"
+          title="Remove">×</button>
+      </td>`;
+    tbody.appendChild(tr);
+  });
+  /* Add button */
+  const addTr=document.createElement('tr');
+  addTr.innerHTML=`<td colspan="11" style="padding:0">
+    <button class="supp-add-btn" onclick="addSuppElement()"
+      style="background:none;border:none;font-family:'Barlow',sans-serif;font-weight:600;font-size:11px;color:#E8A020;cursor:pointer;padding:8px 0 8px 16px;letter-spacing:0.05em">
+      + ADD BUILDING ELEMENT
+    </button>
+  </td>`;
+  tbody.appendChild(addTr);
+  /* Subtotal row */
+  const tot=getSuppTotal();
+  const subTr=document.createElement('tr');
+  subTr.className='supp-subtotal-row';
+  subTr.innerHTML=`
+    <td colspan="7" style="text-align:right;padding:6px 8px 6px 0;font-size:10px;color:white;font-weight:700;font-family:'Barlow Condensed',sans-serif;letter-spacing:0.06em;background:#E8A020">SUPPLEMENTAL ELEMENTS SUBTOTAL</td>
+    <td class="num" style="font-weight:700;color:white;background:#E8A020;padding:6px 16px" id="supp-subtotal-val">$${Math.round(tot).toLocaleString()}</td>
+    <td colspan="3" style="background:#E8A020"></td>`;
+  tbody.appendChild(subTr);
+}
 
 function renderL2Rows(tbody,s,items,catColor){
   const borderColor=catColor+'66';

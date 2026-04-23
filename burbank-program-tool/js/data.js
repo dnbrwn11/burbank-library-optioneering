@@ -353,6 +353,7 @@ let chartUpdateTimeout=null;
 let adjEditMode=false;
 let lineItems={},expandedSpaces=new Set(),l3Expanded=new Set();
 let bsEditMode=false,bsEdits={},bsExpanded=new Set();
+let supplementalElements=[];
 let chipHideTimeout=null;
 /* Budget stack state */
 let targetBudget=155000000;
@@ -404,6 +405,8 @@ function init(){
   if(savedCL)contingencyLump=parseFloat(savedCL)||PCL_CONTINGENCY;
   const savedGC=localStorage.getItem('pcl_gc_lump');
   if(savedGC)gcLump=parseFloat(savedGC)||PCL_GCOHP;
+  const savedSupp=localStorage.getItem('pcl_supp_elems');
+  if(savedSupp){try{supplementalElements=JSON.parse(savedSupp)}catch{}}
   /* Restore target budget input */
   const tbInp=document.getElementById('bb-target-inp');
   if(tbInp)tbInp.value='$'+Math.round(targetBudget).toLocaleString('en-US');
@@ -499,6 +502,55 @@ function renderLog(){
     div.innerHTML=`<span class="log-ts">${escHtml(e.ts)}</span><span class="log-op ${e.op}">${e.op.toUpperCase()}</span><span>${escHtml(e.name?e.name+' — ':'')+escHtml(e.detail)}</span>`;
     body.appendChild(div);
   });
+}
+
+/* ════════════════════════════════════
+   SUPPLEMENTAL BUILDING ELEMENTS
+════════════════════════════════════ */
+function saveSupplElems(){localStorage.setItem('pcl_supp_elems',JSON.stringify(supplementalElements))}
+function calcSuppCost(e){return e.unit==='/LS'?(e.unitCost||0):(e.qty||0)*(e.unitCost||0)}
+function getSuppTotal(){return supplementalElements.reduce((s,e)=>s+calcSuppCost(e),0)}
+function onSuppDescInput(id,val){
+  const e=supplementalElements.find(x=>x.id===id);
+  if(e){e.description=val;saveSupplElems()}
+}
+function updateSuppField(id,field,value){
+  const e=supplementalElements.find(x=>x.id===id);if(!e)return;
+  const oldCost=calcSuppCost(e);
+  e[field]=value;saveSupplElems();
+  const newCost=calcSuppCost(e);
+  const row=document.querySelector(`tr[data-suppid="${id}"]`);
+  if(row){const cells=row.querySelectorAll('td');if(cells[7])cells[7].textContent='$'+Math.round(newCost).toLocaleString()}
+  const subEl=document.getElementById('supp-subtotal-val');
+  if(subEl)subEl.textContent='$'+Math.round(getSuppTotal()).toLocaleString();
+  updateBudget();
+  if(field!=='description'&&field!=='div'&&Math.round(newCost)!==Math.round(oldCost)){
+    logChange('edit','SUPPLEMENT',`${e.description||'(unnamed)'} $${Math.round(oldCost).toLocaleString()} → $${Math.round(newCost).toLocaleString()}`);
+  }
+}
+function updateSuppUnit(id,unit){
+  const e=supplementalElements.find(x=>x.id===id);if(!e)return;
+  const oldCost=calcSuppCost(e);
+  e.unit=unit;saveSupplElems();
+  const newCost=calcSuppCost(e);
+  renderTable();updateBudget();
+  if(Math.round(newCost)!==Math.round(oldCost)){
+    logChange('edit','SUPPLEMENT',`${e.description||'(unnamed)'} $${Math.round(oldCost).toLocaleString()} → $${Math.round(newCost).toLocaleString()}`);
+  }
+}
+function addSuppElement(){
+  const id='supp_'+Date.now();
+  supplementalElements.push({id,description:'',qty:1,unit:'/LS',unitCost:0,div:'Other'});
+  saveSupplElems();renderTable();updateBudget();
+  logChange('add','SUPPLEMENT','New supplemental element added');
+}
+function deleteSuppElement(id){
+  const e=supplementalElements.find(x=>x.id===id);
+  const desc=e?.description||'(unnamed)';
+  const cost=e?calcSuppCost(e):0;
+  supplementalElements=supplementalElements.filter(x=>x.id!==id);
+  saveSupplElems();renderTable();updateBudget();
+  logChange('del','SUPPLEMENT',`${desc} -$${Math.round(cost).toLocaleString()}`);
 }
 
 /* BOOT */
