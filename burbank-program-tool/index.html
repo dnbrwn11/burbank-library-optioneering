@@ -79,8 +79,10 @@ input,select,textarea{font-family:'Barlow',sans-serif;font-size:14px}
 .bb-section{display:flex;align-items:center;gap:10px;padding:0}
 .bb-section-right{margin-left:auto;flex-shrink:1;min-width:0;overflow:hidden}
 .bb-sec-label{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:10px;text-transform:uppercase;letter-spacing:0.1em;color:rgba(255,255,255,0.7);white-space:nowrap}
-.bb-cont-inp{background:transparent;border:none;border-bottom:1px solid rgba(255,223,27,0.5);color:var(--pcl-yellow);font-family:'Barlow',sans-serif;font-weight:700;font-size:16px;width:54px;text-align:center;padding:0 2px;outline:none}
+.bb-cont-inp{background:transparent;border:none;border-bottom:1px solid rgba(255,223,27,0.5);color:var(--pcl-yellow);font-family:'Barlow',sans-serif;font-weight:700;font-size:16px;width:62px;text-align:center;padding:0 2px;outline:none}
 .bb-cont-inp:focus{border-bottom-color:var(--pcl-yellow)}
+.bb-cont-dollar-inp{background:transparent;border:none;border-bottom:1px solid rgba(255,223,27,0.5);color:var(--pcl-yellow);font-family:'Barlow',sans-serif;font-weight:700;font-size:16px;width:116px;text-align:right;padding:0 2px;outline:none}
+.bb-cont-dollar-inp:focus{border-bottom-color:var(--pcl-yellow)}
 .bb-pct-unit{font-family:'Barlow',sans-serif;font-weight:700;font-size:14px;color:var(--pcl-yellow);margin-left:-4px}
 .bb-gc-inp{background:transparent;border:none;border-bottom:1px solid rgba(255,223,27,0.5);color:var(--pcl-yellow);font-family:'Barlow',sans-serif;font-weight:700;font-size:16px;width:112px;text-align:right;padding:0 2px;outline:none}
 .bb-gc-inp:focus{border-bottom-color:var(--pcl-yellow)}
@@ -562,10 +564,15 @@ body.drawer-open #page-wrapper{margin-left:560px}
   <div class="bb-row2">
     <div class="bb-section">
       <div class="bb-sec-label">Contingency &amp; Escalation</div>
-      <input class="bb-cont-inp" id="bb-cont-pct" type="number" step="0.25" min="0" max="30" value="14.64"
-        oninput="onContPctChange(this)">
-      <span class="bb-pct-unit">%</span>
-      <span class="bb-sec-amt" id="bb-cont-dollar">= $18,656,732</span>
+      <input class="bb-cont-inp" id="bb-cont-pct" type="text" value="17.15%"
+        onfocus="onContPctFocus(this)"
+        onblur="onContPctBlur(this)"
+        onkeydown="if(event.key==='Enter')this.blur()">
+      <span style="font-family:'Barlow',sans-serif;font-weight:300;font-size:13px;color:rgba(255,255,255,0.35);margin:0 5px">=</span>
+      <input class="bb-cont-dollar-inp" id="bb-cont-dollar-inp" type="text" value="$18,656,732"
+        onfocus="onContDollarFocus(this)"
+        onblur="onContDollarBlur(this)"
+        onkeydown="if(event.key==='Enter')this.blur()">
     </div>
     <div class="bb-row2-div"></div>
     <div class="bb-section">
@@ -1121,7 +1128,7 @@ let bsEditMode=false,bsEdits={},bsExpanded=new Set();
 let chipHideTimeout=null;
 /* Budget stack state */
 let targetBudget=155000000;
-let contingencyPct=14.64;
+let contingencyLump=18656732; // default = PCL Cost Model BE26-52-0187 lump
 let gcLump=35681012;
 
 /* ════════════════════════════════════
@@ -1151,18 +1158,15 @@ function init(){
   currentScenario=localStorage.getItem('pcl_cur_sc')||'Baseline — Full Program';
   const savedTB=localStorage.getItem('pcl_target_budget');
   if(savedTB)targetBudget=parseFloat(savedTB)||155000000;
-  const savedCP=localStorage.getItem('pcl_cont_pct');
-  if(savedCP)contingencyPct=parseFloat(savedCP)||14.64;
+  const savedCL=localStorage.getItem('pcl_cont_lump');
+  if(savedCL)contingencyLump=parseFloat(savedCL)||18656732;
   const savedGC=localStorage.getItem('pcl_gc_lump');
   if(savedGC)gcLump=parseFloat(savedGC)||35681012;
   /* Restore target budget input */
   const tbInp=document.getElementById('bb-target-inp');
   if(tbInp)tbInp.value='$'+Math.round(targetBudget).toLocaleString('en-US');
   if(localStorage.getItem('pcl_target_edited')==='1'){const sub=document.getElementById('bb-target-sub');if(sub)sub.style.display='none';}
-  /* Restore contingency % input */
-  const cpInp=document.getElementById('bb-cont-pct');
-  if(cpInp)cpInp.value=contingencyPct;
-  /* Restore GC lump input */
+  /* Restore GC lump input — % and contingency inputs are updated by updateBudget() */
   const gcInp=document.getElementById('bb-gc-inp');
   if(gcInp)gcInp.value='$'+Math.round(gcLump).toLocaleString('en-US');
   if(!scenarios['Baseline — Full Program']){
@@ -1533,13 +1537,14 @@ function getBench(name,usf){
 ════════════════════════════════════ */
 function updateBudget(){
   const{costMid,nsf,parkingSF,libCost}=calcTotals();
-  /* 4-layer cost stack */
+  /* 4-layer cost stack — Direct Costs = ALL program rows (library + parking + site work) */
   const directCosts=costMid;
-  const contingencyDollar=directCosts*(contingencyPct/100);
+  const contingencyDollar=contingencyLump; // stored as lump; % is derived display
   const programmedTotal=directCosts+contingencyDollar+gcLump;
   const variance=programmedTotal-targetBudget;
   const pct=targetBudget>0?programmedTotal/targetBudget*100:0;
   const gcPctOfDirect=directCosts>0?(gcLump/directCosts*100).toFixed(1):'0.0';
+  const contPctOfDirect=directCosts>0?(contingencyLump/directCosts*100).toFixed(2):'0.00';
   /* Row 1 cells */
   setText('bb-direct',fmt$(directCosts));
   setText('bb-programmed',fmt$(programmedTotal));
@@ -1549,8 +1554,11 @@ function updateBudget(){
   if(varEl){varEl.textContent=fmt$(Math.abs(variance));varEl.style.color=variance>0?'#FFDF1B':'#FFFFFF'}
   if(dirEl){dirEl.textContent=variance>0?'OVER':'UNDER';dirEl.style.color=variance>0?'#FFDF1B':'#FFFFFF'}
   setText('bb-variance-pct',((variance/targetBudget)*100).toFixed(1)+'%');
-  /* Row 2 */
-  setText('bb-cont-dollar','= '+fmt$(contingencyDollar));
+  /* Row 2 — update both contingency inputs (only when not focused) */
+  const cpInp=document.getElementById('bb-cont-pct');
+  if(cpInp&&document.activeElement!==cpInp)cpInp.value=contPctOfDirect+'%';
+  const cdInp=document.getElementById('bb-cont-dollar-inp');
+  if(cdInp&&document.activeElement!==cdInp)cdInp.value='$'+Math.round(contingencyLump).toLocaleString('en-US');
   setText('bb-gc-pct','('+gcPctOfDirect+'%)');
   /* Progress bar */
   const fillPct=Math.min(pct,110);
@@ -1571,9 +1579,24 @@ function onTargetBudgetBlur(inp){
   if(sub){sub.style.display='none';localStorage.setItem('pcl_target_edited','1')}
   updateBudget();
 }
-function onContPctChange(inp){
-  contingencyPct=parseFloat(inp.value)||0;
-  localStorage.setItem('pcl_cont_pct',contingencyPct);
+/* Contingency hybrid: edit % → recalculates lump; edit $ → recalculates % */
+function onContPctFocus(inp){
+  /* show raw number for editing */
+  const dc=calcTotals().costMid;
+  inp.value=dc>0?(contingencyLump/dc*100).toFixed(2):'0.00';
+}
+function onContPctBlur(inp){
+  const pct=parseFloat(inp.value)||0;
+  const dc=calcTotals().costMid;
+  contingencyLump=dc*(pct/100);
+  localStorage.setItem('pcl_cont_lump',contingencyLump);
+  updateBudget();
+}
+function onContDollarFocus(inp){inp.value=Math.round(contingencyLump).toString()}
+function onContDollarBlur(inp){
+  const raw=inp.value.replace(/[^0-9.]/g,'');
+  contingencyLump=parseFloat(raw)||0;
+  localStorage.setItem('pcl_cont_lump',contingencyLump);
   updateBudget();
 }
 function onGcLumpFocus(inp){inp.value=Math.round(gcLump).toString()}
@@ -2249,14 +2272,15 @@ function updatePrintSummary(){
   }
   // Full cost stack table
   const{costMid:dc}=calcTotals();
-  const contDollar=dc*(contingencyPct/100);
+  const contDollar=contingencyLump;
+  const contPctDisp=dc>0?(contingencyLump/dc*100).toFixed(2):'0.00';
   const progTotal=dc+contDollar+gcLump;
   const stackVariance=progTotal-targetBudget;
   const stackTbody=document.getElementById('ps-stack-tbody');
   if(stackTbody){
     const rows=[
       ['Direct Costs (Spaces + Parking + Site Work)',fmt$(dc),'Live program total'],
-      ['+ Contingency & Escalation ('+contingencyPct.toFixed(2)+'%)',fmt$(contDollar),'Applied to direct costs'],
+      ['+ Contingency & Escalation ('+contPctDisp+'%)',fmt$(contDollar),'Lump sum'],
       ['+ GC / GR / OHP / Design / CA',fmt$(gcLump),'Lump sum'],
       ['= PROGRAMMED TOTAL',fmt$(progTotal),''],
       ['TARGET BUDGET',fmt$(targetBudget),'Client approved'],
