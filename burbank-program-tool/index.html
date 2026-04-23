@@ -135,16 +135,36 @@
   <!-- ROW 2: Cost stack controls -->
   <div class="bb-row2">
     <div class="bb-section">
-      <div class="bb-sec-label">Contingency &amp; Escalation</div>
-      <input class="bb-cont-inp" id="bb-cont-pct" type="text" value="17.15%"
-        onfocus="onContPctFocus(this)"
-        onblur="onContPctBlur(this)"
-        onkeydown="if(event.key==='Enter')this.blur()">
-      <span style="font-family:'Barlow',sans-serif;font-weight:300;font-size:13px;color:rgba(255,255,255,0.35);margin:0 5px">=</span>
-      <input class="bb-cont-dollar-inp" id="bb-cont-dollar-inp" type="text" value="$18,656,732"
-        onfocus="onContDollarFocus(this)"
-        onblur="onContDollarBlur(this)"
-        onkeydown="if(event.key==='Enter')this.blur()">
+      <div style="display:flex;flex-direction:column;gap:5px">
+        <div style="display:flex;align-items:center;gap:5px">
+          <div class="bb-sec-label" style="min-width:88px">Escalation</div>
+          <input class="bb-cont-inp" id="bb-esc-pct" type="text" value="11.65%"
+            onfocus="onEscPctFocus(this)"
+            onblur="onEscPctBlur(this)"
+            onkeydown="if(event.key==='Enter')this.blur()">
+          <span style="font-family:'Barlow',sans-serif;font-weight:300;font-size:13px;color:rgba(255,255,255,0.35);margin:0 2px">=</span>
+          <input class="bb-cont-dollar-inp" id="bb-esc-dollar" type="text" value="$11,061,116"
+            onfocus="onEscDollarFocus(this)"
+            onblur="onEscDollarBlur(this)"
+            onkeydown="if(event.key==='Enter')this.blur()">
+        </div>
+        <div style="display:flex;align-items:center;gap:5px">
+          <div class="bb-sec-label" style="min-width:88px">Contingency</div>
+          <input class="bb-cont-inp" id="bb-cont-pct" type="text" value="8.00%"
+            onfocus="onContPctFocus(this)"
+            onblur="onContPctBlur(this)"
+            onkeydown="if(event.key==='Enter')this.blur()">
+          <span style="font-family:'Barlow',sans-serif;font-weight:300;font-size:13px;color:rgba(255,255,255,0.35);margin:0 2px">=</span>
+          <input class="bb-cont-dollar-inp" id="bb-cont-dollar-inp" type="text" value="$7,595,616"
+            onfocus="onContDollarFocus(this)"
+            onblur="onContDollarBlur(this)"
+            onkeydown="if(event.key==='Enter')this.blur()">
+        </div>
+        <div style="display:flex;align-items:center;gap:5px;border-top:1px solid rgba(255,255,255,0.15);padding-top:4px">
+          <div class="bb-sec-label" style="min-width:88px">C&amp;E Total</div>
+          <span id="bb-ce-total" style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:15px;color:#FFDF1B;letter-spacing:0.02em">$18,656,732</span>
+        </div>
+      </div>
     </div>
     <div class="bb-row2-div"></div>
     <div class="bb-section">
@@ -241,7 +261,7 @@
           <button id="bsys-edit-btn" class="adj-edit-btn" onclick="toggleBsEdit()">EDIT SYSTEMS</button>
         </div>
       </div>
-      <div class="bsys-warn">⚠ These totals are included in the space costs above. This breakdown is for reference only — not additive.</div>
+      <div class="bsys-warn">⚠ Building Systems ($28,943,369) is included in Direct Costs as a fixed reference amount per PCL Cost Model BE26-52-0187. Sub-items below are for scope visibility only — not additive to the program table above.</div>
       <div class="table-wrap" id="bsys-table-wrap"></div>
     </div>
 
@@ -475,8 +495,8 @@
         <select id="add-cat-sel">
           <option>Public Spaces</option><option>Children &amp; Teen</option>
           <option>Special Facilities</option><option>Staff &amp; Operations</option>
-          <option>Parking &amp; Circulation</option><option>Support Spaces</option>
-          <option>Site Work</option>
+          <option>Support Spaces</option><option>Parking Structure</option>
+          <option>Site Work &amp; Landscape</option>
         </select>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
@@ -578,3 +598,4 @@
 <script src="js/print.js"></script>
 </body>
 </html>
+c

@@ -33,14 +33,15 @@ function getChartTotals(){
   program.forEach(s=>{
     const ct=s.costType||'persf';
     const cost=calcSpaceCost(s);
-    if(s.category==='Site Work'){siteCost+=cost}
+    if(s.category==='Site Work & Landscape'){siteCost+=cost}
     else if(ct==='perstall'){parkCost+=cost}
     else{libCost+=cost}
   });
+  libCost+=LIBRARY_BSYS_TOTAL;
   const direct=libCost+parkCost+siteCost;
-  const cont=direct*CONTINGENCY_RATE;
+  const cont=escalationLump+contingencyLump;
   const withCont=direct+cont;
-  const gcOhp=withCont*GCOHP_RATE;
+  const gcOhp=gcLump;
   const total=withCont+gcOhp;
   return{libCost,parkCost,siteCost,direct,cont,gcOhp,total};
 }
@@ -54,7 +55,7 @@ function initDonut(){
   charts.donut=new Chart(ctx,{
     type:'doughnut',
     data:{
-      labels:['Library Building','Parking Structure','Site Work','Contingency & Escalation','GC/GR/OHP/Design/CA'],
+      labels:['Library Building','Parking Structure','Site Work & Landscape','Contingency & Escalation','GC/GR/OHP/Design/CA'],
       datasets:[{
         data:[libCost,parkCost,siteCost,cont,gcOhp],
         backgroundColor:['#006330','#6D6D6D','#8BC34A','#FFDF1B','#3D8B37'],

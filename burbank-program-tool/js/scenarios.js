@@ -25,7 +25,19 @@ function deleteScenario(n){
 }
 function resetBaseline(){
   if(!confirm('Reset to baseline? Unsaved changes will be lost.'))return;
-  program=cloneBase();currentScenario='Baseline — Full Program';
+  program=cloneBase();
+  lineItems={};
+  program.forEach(s=>{
+    if((s.costType||'persf')==='persf'){
+      const totalSF=(s.qty||1)*(s.unitSF||0);
+      lineItems[s.id]=buildDivLineItems(s.id,s.name,totalSF);
+    }
+  });
+  escalationLump=PCL_ESCALATION;
+  contingencyLump=PCL_CONTINGENCY;
+  localStorage.setItem('pcl_esc_lump',escalationLump);
+  localStorage.setItem('pcl_cont_lump',contingencyLump);
+  currentScenario='Baseline — Full Program';
   saveState();logChange('sys','','Reset to baseline');renderAll();
 }
 function renderScenarios(){
@@ -58,6 +70,7 @@ function compStats(prog){
     else if(ct==='perstall'){const tsf=(s.qty||1)*(s.unitSF||0);parkingSF+=tsf;costMid+=(s.qty||1)*(s.unitCostMid||0)}
     else{const tsf=(s.qty||1)*(s.unitSF||0);nsf+=tsf;costMid+=tsf*(s.unitCostMid||0)}
   });
+  costMid+=LIBRARY_BSYS_TOTAL;
   return{nsf,costMid,parkingSF};
 }
 

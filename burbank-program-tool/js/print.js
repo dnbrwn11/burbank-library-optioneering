@@ -34,7 +34,7 @@ function updatePrintSummary(){
     {label:'Library Building',value:'$79,445,200 ($814.82/GSF)'},
     {label:'Parking Structure',value:'$15,500,000 ($50K/stall)'},
     {label:'Site Work',value:'$13,830,255'},
-    {label:'Contingency (14.64%)',value:'$18,656,732'},
+    {label:'Escalation + Contingency ('+((escalationLump+contingencyLump)/CONTINGENCY_BASE*100).toFixed(2)+'%)',value:fmt$(escalationLump+contingencyLump)},
     {label:'GC/GR/OHP (28%)',value:'$35,681,012'},
     {label:'Construction Start',value:'Summer 2027'},
     {label:'Library GSF',value:(libGross||97500).toLocaleString()+' SF'},
@@ -46,8 +46,8 @@ function updatePrintSummary(){
   }
   // Full cost stack table
   const{costMid:dc}=calcTotals();
-  const contDollar=contingencyLump;
-  const contPctDisp=dc>0?(contingencyLump/dc*100).toFixed(2):'0.00';
+  const contDollar=escalationLump+contingencyLump;
+  const contPctDisp=CONTINGENCY_BASE>0?((contDollar/CONTINGENCY_BASE)*100).toFixed(2):'0.00';
   const progTotal=dc+contDollar+gcLump;
   const stackVariance=progTotal-targetBudget;
   const stackTbody=document.getElementById('ps-stack-tbody');

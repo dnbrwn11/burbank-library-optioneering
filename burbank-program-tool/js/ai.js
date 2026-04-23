@@ -27,7 +27,7 @@ function applyPreviewHL(changes){
     if(ch.op==='delete'){const s=program.find(x=>x.id===ch.targetId);if(s)s._preview='del'}
     else if(ch.op==='modify'){const s=program.find(x=>x.id===ch.targetId);if(s)s._preview='mod'}
     else if(ch.op==='add'&&ch.space){
-      const ct=ch.space.category==='Parking & Circulation'?'perstall':ch.space.category==='Site Work'?'lumpsum':'persf';
+      const ct=ch.space.category==='Parking Structure'?'perstall':ch.space.category==='Site Work & Landscape'?'lumpsum':'persf';
       const tmp=Object.assign({},ch.space,{_preview:'add',_temp:true,costType:ct});
       if(!tmp.id)tmp.id=uid();program.push(tmp);
     }
@@ -61,7 +61,7 @@ async function submitGenerate(){
     if(!res.ok)throw new Error(data.error||'API error');
     if(!data.program?.spaces?.length)throw new Error('No program returned.');
     program=data.program.spaces.map(s=>{
-      const ct=s.category==='Parking & Circulation'?'perstall':s.category==='Site Work'?'lumpsum':'persf';
+      const ct=s.category==='Parking Structure'?'perstall':s.category==='Site Work & Landscape'?'lumpsum':'persf';
       return{...s,costType:ct};
     });
     currentScenario='AI Generated — '+document.getElementById('gen-type').value;

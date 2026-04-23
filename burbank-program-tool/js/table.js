@@ -7,6 +7,45 @@ function renderTable(){
   const groups={};CAT_ORDER.forEach(c=>groups[c]=[]);
   program.forEach(s=>{if(groups[s.category])groups[s.category].push(s)});
   CAT_ORDER.forEach(cat=>{
+    /* ── BUILDING SYSTEMS: render from constant, not from program[] ── */
+    if(cat==='Building Systems'){
+      const cc=CAT_COLORS['Building Systems']||'#4A7B9D';
+      const ctr=document.createElement('tr');ctr.className='cat-row';
+      ctr.innerHTML=`<td colspan="11"><span style="display:inline-block;width:10px;height:10px;background:${cc};border-radius:1px;margin-right:8px;vertical-align:middle"></span>BUILDING SYSTEMS<span style="font-family:'Barlow',sans-serif;font-weight:300;font-size:10px;color:rgba(255,255,255,0.55);margin-left:10px">Whole-building elements · 97,500 GSF basis · PCL Cost Model BE26-52-0187</span></td>`;
+      tbody.appendChild(ctr);
+      /* Reference note */
+      const ntr=document.createElement('tr');
+      ntr.innerHTML=`<td colspan="11" style="padding:0"><div style="background:#FFF3CD;color:#856404;padding:8px 16px;font-family:'Barlow',sans-serif;font-weight:300;font-size:11px;line-height:1.6">⚠ REFERENCE ONLY — NOT ADDITIVE TO PROGRAM COSTS. Building Systems costs ($28.9M) represent whole-building structural, envelope, and conveying elements. These are allocated within program space costs above and shown here for reference only. Building Systems + Program Spaces = $79,445,200 library total. Do not add to Direct Costs.</div></td>`;
+      tbody.appendChild(ntr);
+      /* Locked data rows */
+      BUILDING_SYSTEMS.forEach(bs=>{
+        const e=bsEdits[bs.id]||{};
+        const total=e.total!==undefined?e.total:bs.total;
+        const psf=e.psf!==undefined?e.psf:bs.psf;
+        const tr=document.createElement('tr');tr.className='data-row';
+        tr.innerHTML=`
+          <td><span style="display:inline-block;width:16px"></span></td>
+          <td style="padding:0;width:4px"><div style="width:4px;min-height:36px;height:100%;background:${cc}"></div></td>
+          <td style="font-style:italic;color:#3A5F7A"><span style="font-size:10px;color:${cc};font-family:'Barlow Condensed',sans-serif;font-weight:700;margin-right:6px;letter-spacing:0.04em">Div ${escHtml(bs.div)}</span>${escHtml(bs.name.replace(/^Div \d\d /,''))}</td>
+          <td class="num" style="color:#9A9A9A;font-size:11px">97,500</td>
+          <td class="num col-hide" style="color:#9A9A9A;font-size:10px">GSF</td>
+          <td class="num" style="color:#9A9A9A">97,500 GSF</td>
+          <td class="num" style="color:#4A7B9D">$${parseFloat(psf).toFixed(2)}/GSF</td>
+          <td class="num" style="font-weight:600;color:#4A7B9D">$${parseInt(total).toLocaleString()}</td>
+          <td class="col-hide"></td>
+          <td class="col-hide" style="font-size:11px;color:#6D6D6D;font-style:italic">${escHtml(e.note!==undefined?e.note:bs.note)}</td>
+          <td style="text-align:center;color:#AAAAAA;font-size:11px">🔒</td>`;
+        tbody.appendChild(tr);
+      });
+      /* BS reference subtotal */
+      const bsRefTotal=BUILDING_SYSTEMS.reduce((s,bs)=>s+(bsEdits[bs.id]?.total??bs.total),0);
+      const str=document.createElement('tr');str.className='bsys-subtotal-row';
+      str.innerHTML=`<td colspan="7" style="text-align:right;padding-right:8px;font-size:10px;color:#4A7B9D;font-weight:700;font-family:'Barlow Condensed',sans-serif;letter-spacing:0.06em">BUILDING SYSTEMS REFERENCE SUBTOTAL</td><td class="num" style="font-weight:700;color:#4A7B9D">$${bsRefTotal.toLocaleString()}</td><td colspan="3"></td>`;
+      tbody.appendChild(str);
+      return;
+    }
+
+    /* ── PROGRAM SPACE CATEGORIES ── */
     const rows=groups[cat];if(!rows.length)return;
     const cc=CAT_COLORS[cat]||'#999';
     const ctr=document.createElement('tr');
@@ -33,7 +72,7 @@ function renderTable(){
       }
       const derivedPsf=hasL2&&tsf>0?cost/tsf:null;
       const psfHtml=hasL2
-        ?`<span style="font-style:italic;color:#3D8B37;cursor:help" title="Derived from line items below">${fmt$(derivedPsf)}/SF</span>`
+        ?`<span style="font-style:italic;color:#3D8B37;cursor:help" title="Derived from division breakdown below">${fmt$(derivedPsf)}/SF</span>`
         :(ct==='persf'?fmt$(s.unitCostMid||0)+'/SF':ct==='perstall'?fmt$(s.unitCostMid||0)+'/stall':'Lump Sum');
       const bench=(ct==='persf')?getBench(s.name,s.unitSF||0):'';
       const pvCls=s._preview?' p-'+s._preview:'';
@@ -42,7 +81,7 @@ function renderTable(){
       const psfA=hasL2?`class="num"`:ct!=='lumpsum'?`class="num editable" data-field="unitCostMid" data-id="${s.id}"`:`class="num muted"`;
       const chevron=ct==='persf'?`<span class="l2-chevron${isExpanded?' open':''}" onclick="toggleL2('${s.id}',event)">▶</span>`:`<span style="display:inline-block;width:16px"></span>`;
       const rawParentCost=tsf*(s.unitCostMid||0);
-      const l2Badge=hasL2?`<span class="l2-badge" onclick="event.stopPropagation()">L2</span><span class="l2-count" onclick="event.stopPropagation()">(${items.length} item${items.length===1?'':'s'})</span>`:'';
+      const l2Badge=hasL2?`<span class="l2-badge" onclick="event.stopPropagation()">DIV</span><span class="l2-count" onclick="event.stopPropagation()">(${items.length})</span>`:'';
       const modBadge=hasL2&&Math.abs(cost-rawParentCost)>1?`<span class="l2-mod-badge" onclick="event.stopPropagation()">MOD</span>`:'';
       const tr=document.createElement('tr');
       tr.className='data-row'+pvCls;tr.dataset.id=s.id;tr.dataset.cat=s.category;tr.draggable=true;
@@ -66,7 +105,7 @@ function renderTable(){
       const dtr=document.createElement('tr');
       dtr.className='detail-row';dtr.id='dr-'+s.id;
       let detailStr=`<strong>Cost Type:</strong> ${ct}`;
-      if(hasL2)detailStr+=` &nbsp;<strong>L2 Total:</strong> ${fmt$(cost)}`;
+      if(hasL2)detailStr+=` &nbsp;<strong>Division Total:</strong> ${fmt$(cost)}`;
       else if(ct==='persf')detailStr+=` &nbsp;<strong>$/SF:</strong> ${fmt$(s.unitCostMid||0)}`;
       if(s.notes)detailStr+=` &nbsp;<strong>Notes:</strong> ${escHtml(s.notes)}`;
       dtr.innerHTML=`<td colspan="11">${detailStr}</td>`;
@@ -95,7 +134,7 @@ function renderL2Rows(tbody,s,items,catColor){
       <td style="padding:0;width:4px"><div style="width:4px;height:34px;background:${borderColor};border-left:2px solid ${catColor}88"></div></td>
       <td class="l2-indent">
         <input class="l2-input" type="text" data-field="name" data-lid="${child.id}"
-          value="${escHtml(child.name||'')}" placeholder="Line item description"
+          value="${escHtml(child.name||'')}" placeholder="Division description"
           oninput="updateL2Field('${s.id}','${child.id}','name',this.value)">
       </td>
       <td class="num">
@@ -105,12 +144,12 @@ function renderL2Rows(tbody,s,items,catColor){
       </td>
       <td class="num col-hide">
         <select class="l2-sel" onchange="updateL2Type('${s.id}','${child.id}',this.value)">
-          ${['/LS','/SF','/EA','/LF'].map(t=>`<option${t===child.unitType?' selected':''}>${t}</option>`).join('')}
+          ${['/SF','/LS','/EA','/LF'].map(t=>`<option${t===child.unitType?' selected':''}>${t}</option>`).join('')}
         </select>
       </td>
       <td class="num col-hide" style="color:#9A9A9A;font-size:11px;text-align:center">${isLS?'—':'×'}</td>
       <td class="num">
-        <input class="l2-cost-input" type="number" min="0" value="${child.unitCost||0}"
+        <input class="l2-cost-input" type="number" min="0" step="0.01" value="${child.unitCost||0}"
           oninput="updateL2Field('${s.id}','${child.id}','unitCost',parseFloat(this.value)||0)">
       </td>
       <td class="num" style="font-weight:700;font-size:12px">${fmt$(total)}</td>
@@ -118,17 +157,17 @@ function renderL2Rows(tbody,s,items,catColor){
       <td class="col-hide" style="min-width:100px">
         <input class="l2-input" type="text" data-field="notes" data-lid="${child.id}"
           value="${escHtml(child.notes||'')}"
-          placeholder="allowance, NIC, by owner..."
+          placeholder="multiplier, notes..."
           style="font-style:italic;color:#6D6D6D;font-size:11px"
           oninput="updateL2Field('${s.id}','${child.id}','notes',this.value)"
           onfocus="showNoteChips(this,'${s.id}','${child.id}','notes')"
           onblur="hideNoteChips()">
       </td>
-      <td><button class="l2-del-btn" onclick="deleteL2('${s.id}','${child.id}')" title="Remove line item">✕</button></td>`;
+      <td><button class="l2-del-btn" onclick="deleteL2('${s.id}','${child.id}')" title="Remove">✕</button></td>`;
     tbody.appendChild(tr);
   });
   const addRow=document.createElement('tr');
-  addRow.innerHTML=`<td colspan="11"><button class="l2-add-btn" onclick="addL2Row('${s.id}')">+ ADD LINE ITEM</button></td>`;
+  addRow.innerHTML=`<td colspan="11"><button class="l2-add-btn" onclick="addL2Row('${s.id}')">+ ADD DIVISION ITEM</button></td>`;
   tbody.appendChild(addRow);
 }
 function toggleL2(sid,evt){
@@ -140,13 +179,16 @@ function toggleL2(sid,evt){
 function addL2Row(sid){
   const s=program.find(x=>x.id===sid);if(!s)return;
   if(!lineItems[sid])lineItems[sid]=[];
-  lineItems[sid].push({id:'l'+uid(),name:'',qty:(s.qty||1)*(s.unitSF||0),unitType:'/LS',unitCost:0,notes:''});
+  lineItems[sid].push({id:'l'+uid(),name:'',qty:(s.qty||1)*(s.unitSF||0),unitType:'/SF',unitCost:0,notes:''});
   if(!expandedSpaces.has(sid))expandedSpaces.add(sid);
   saveL2();saveExpanded();renderTable();updateBudget();updateGTN();
 }
 function deleteL2(sid,cid){
   if(!lineItems[sid])return;
   lineItems[sid]=lineItems[sid].filter(c=>c.id!==cid);
+  /* Sync parent unitCostMid */
+  const sp=program.find(x=>x.id===sid);
+  if(sp){const tsf=(sp.qty||1)*(sp.unitSF||0);const newTotal=lineItems[sid].reduce((s,c)=>s+(c.unitType==='/LS'?(c.unitCost||0):(c.qty||0)*(c.unitCost||0)),0);sp.unitCostMid=tsf>0?newTotal/tsf:0;saveState()}
   saveL2();renderTable();updateBudget();updateGTN();scheduleChartUpdate();
 }
 function updateL2Field(sid,cid,field,value){
@@ -165,8 +207,10 @@ function updateL2Field(sid,cid,field,value){
     const newTotal=items.reduce((sum,c)=>sum+(c.unitType==='/LS'?(c.unitCost||0):(c.qty||0)*(c.unitCost||0)),0);
     const sp=program.find(x=>x.id===sid);
     const tsf=sp?(sp.qty||1)*(sp.unitSF||0):1;
+    /* Sync unitCostMid for scenario comparisons */
+    if(sp){sp.unitCostMid=tsf>0?newTotal/tsf:0;saveState()}
     const pc=parentRow.querySelectorAll('td');
-    if(pc[6])pc[6].innerHTML=`<span style="font-style:italic;color:#3D8B37;cursor:help" title="Derived from line items below">${fmt$(tsf>0?newTotal/tsf:0)}/SF</span>`;
+    if(pc[6])pc[6].innerHTML=`<span style="font-style:italic;color:#3D8B37;cursor:help" title="Derived from division breakdown below">${fmt$(tsf>0?newTotal/tsf:0)}/SF</span>`;
     if(pc[7])pc[7].textContent=fmt$(newTotal);
   }
   updateBudget();updateGTN();scheduleChartUpdate();
@@ -206,7 +250,18 @@ function makeEditable(td,id,field){
     const oldVal=s[field];let nv;
     if(['qty','unitSF','unitCostMid'].includes(field))nv=parseFloat(input.value)||0;
     else nv=input.value;
-    if(String(nv)!==String(oldVal)){s[field]=nv;logChange('mod',s.name,`${field}: ${oldVal} → ${nv}`);saveState()}
+    if(String(nv)!==String(oldVal)){
+      s[field]=nv;
+      /* When qty or unitSF changes, rebuild division line items */
+      if(field==='qty'||field==='unitSF'){
+        const newTSF=(s.qty||1)*(s.unitSF||0);
+        if(lineItems[s.id]){
+          lineItems[s.id]=buildDivLineItems(s.id,s.name,newTSF);
+          saveL2();
+        }
+      }
+      logChange('mod',s.name,`${field}: ${oldVal} → ${nv}`);saveState()
+    }
     renderTable();updateBudget();updateGTN();updateEscalation();scheduleChartUpdate();
   }
   input.addEventListener('blur',commit);
@@ -232,7 +287,7 @@ function openAddRow(cat){
   ['add-name','add-notes'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('add-qty').value=1;
   document.getElementById('add-usf').value=1000;
-  document.getElementById('add-mid').value=300;
+  document.getElementById('add-mid').value=768;
   openModal('add-modal');
 }
 function confirmAddRow(){
@@ -240,15 +295,28 @@ function confirmAddRow(){
   if(!name){alert('Space name is required.');return}
   const cat=document.getElementById('add-cat-sel').value;
   const m=parseFloat(document.getElementById('add-mid').value)||0;
-  const costType=cat==='Parking & Circulation'?'perstall':cat==='Site Work'?'lumpsum':'persf';
+  const costType=cat==='Parking Structure'?'perstall':cat==='Site Work & Landscape'?'lumpsum':'persf';
+  const qty=parseInt(document.getElementById('add-qty').value)||1;
+  const usf=parseInt(document.getElementById('add-usf').value)||0;
   const ns={
     id:uid(),category:cat,name,
-    qty:parseInt(document.getElementById('add-qty').value)||1,
-    unitSF:parseInt(document.getElementById('add-usf').value)||0,
+    qty,unitSF:usf,
     unitCostMid:m,costType,
     notes:document.getElementById('add-notes').value
   };
   program.push(ns);
+  /* Populate division line items for new persf space */
+  if(costType==='persf'&&usf>0){
+    const totalSF=qty*usf;
+    const mults=SPACE_MULTIPLIERS[name]||{};
+    if(Object.keys(mults).length>0){
+      lineItems[ns.id]=buildDivLineItems(ns.id,name,totalSF);
+    }else{
+      lineItems[ns.id]=[{id:ns.id+'_default',name:'Fit-Out (all divisions)',qty:totalSF,unitType:'/SF',unitCost:m,notes:''}];
+    }
+    ns.unitCostMid=m;
+    saveL2();
+  }
   logChange('add',name,`${costType} @ ${fmt$(m)}`);
   saveState();closeModal('add-modal');renderTable();updateBudget();updateGTN();scheduleChartUpdate();
 }
@@ -282,12 +350,12 @@ function getBench(name,usf){
 }
 
 /* ════════════════════════════════════
-   BUILDING SYSTEMS
+   BUILDING SYSTEMS PANEL (detail view)
 ════════════════════════════════════ */
 function toggleBsEdit(){
   bsEditMode=!bsEditMode;
   localStorage.setItem('pcl_bs_edit',bsEditMode?'1':'0');
-  renderBuildingSystems();
+  renderBuildingSystems();renderTable(); // refresh main table lock indicators
 }
 function toggleBsRow(id){
   if(bsExpanded.has(id))bsExpanded.delete(id);
@@ -306,10 +374,11 @@ function renderBuildingSystems(){
   if(li)li.textContent=bsEditMode?'🔓':'🔒';
   const eb=document.getElementById('bsys-edit-btn');
   if(eb){eb.textContent=bsEditMode?'LOCK SYSTEMS':'EDIT SYSTEMS';eb.className='adj-edit-btn'+(bsEditMode?' locked':'')}
+  const bsRefTotal=BUILDING_SYSTEMS.reduce((s,bs)=>s+(bsEdits[bs.id]?.total??bs.total),0);
   let html=`<table class="bsys-tbl"><thead><tr>
-    <th style="width:24px"></th><th style="width:90px">Division</th><th>System</th>
-    <th class="num">GSF</th><th class="num">$/SF</th><th class="num">Total Cost</th>
-    <th class="num">% Bldg</th><th class="num col-hide">Notes</th><th style="width:24px"></th>
+    <th style="width:24px"></th><th style="width:60px">Div</th><th>System</th>
+    <th class="num">GSF</th><th class="num">$/GSF</th><th class="num">Total Cost</th>
+    <th class="num">% Subtotal</th><th class="num col-hide">Notes</th><th style="width:24px"></th>
   </tr></thead><tbody>`;
   BUILDING_SYSTEMS.forEach(row=>{
     const e=bsEdits[row.id]||{};
@@ -317,9 +386,10 @@ function renderBuildingSystems(){
     const psf=e.psf!==undefined?e.psf:row.psf;
     const note=e.note!==undefined?e.note:row.note;
     const isExp=bsExpanded.has(row.id);
-    const psfDisp=bsEditMode?`<input class="bsys-inp" type="number" step="0.01" value="${psf}" oninput="updateBsField('${row.id}','psf',parseFloat(this.value)||0)">`:`<span class="bsys-psf">$${parseFloat(psf).toFixed(2)}/SF</span>`;
+    const psfDisp=bsEditMode?`<input class="bsys-inp" type="number" step="0.01" value="${psf}" oninput="updateBsField('${row.id}','psf',parseFloat(this.value)||0)">`:`<span class="bsys-psf">$${parseFloat(psf).toFixed(2)}/GSF</span>`;
     const totalDisp=bsEditMode?`<input class="bsys-inp" type="number" value="${total}" oninput="updateBsField('${row.id}','total',parseFloat(this.value)||0)">`:`<span class="bsys-total">$${parseInt(total).toLocaleString()}</span>`;
     const noteDisp=bsEditMode?`<input style="width:100%;font-size:11px;font-style:italic;border:none;border-bottom:1px solid #ccc;background:transparent;font-family:'Barlow',sans-serif;color:#6D6D6D;outline:none" type="text" value="${escHtml(note)}" oninput="updateBsField('${row.id}','note',this.value)">`:`<span style="font-size:11px;font-style:italic;color:#6D6D6D">${escHtml(note)}</span>`;
+    const pctOfSub=bsRefTotal>0?(total/bsRefTotal*100).toFixed(2):'0.00';
     html+=`<tr>
       <td><span class="bsys-chevron${isExp?' open':''}" onclick="toggleBsRow('${row.id}')">▶</span></td>
       <td><span class="bsys-div">${escHtml(row.div)}</span></td>
@@ -327,7 +397,7 @@ function renderBuildingSystems(){
       <td class="num" style="color:#6D6D6D;font-size:11px">${row.gsf.toLocaleString()}</td>
       <td class="num">${psfDisp}</td>
       <td class="num">${totalDisp}</td>
-      <td class="num"><span class="bsys-pct">${row.pct.toFixed(2)}%</span></td>
+      <td class="num"><span class="bsys-pct">${pctOfSub}%</span></td>
       <td class="col-hide">${noteDisp}</td>
       <td style="text-align:center;font-size:12px;color:#CCCCCC">${bsEditMode?'':'🔒'}</td>
     </tr>`;
@@ -335,15 +405,22 @@ function renderBuildingSystems(){
       row.subs.forEach(sub=>{
         const se=bsEdits[sub.id]||{};
         const stotal=se.total!==undefined?se.total:sub.total;
-        const spsf=se.psf!==undefined?se.psf:sub.psf;
-        const spsfD=bsEditMode?`<input class="bsys-inp" type="number" step="0.01" value="${spsf}" oninput="updateBsField('${sub.id}','psf',parseFloat(this.value)||0)">`:`<span class="bsys-psf" style="font-size:11px">$${parseFloat(spsf).toFixed(2)}/SF</span>`;
-        const stotalD=bsEditMode?`<input class="bsys-inp" type="number" value="${stotal}" oninput="updateBsField('${sub.id}','total',parseFloat(this.value)||0)">`:`$${parseInt(stotal).toLocaleString()}`;
+        let qtyDisp,psfSubDisp,stotalD;
+        if(sub.unitType==='EA'){
+          const ea=sub.qty||0;const uc=sub.unitCost||0;
+          qtyDisp=ea+' EA';psfSubDisp='$'+uc.toLocaleString()+'/EA';
+        }else{
+          const spsf=se.psf!==undefined?se.psf:sub.psf;
+          qtyDisp=(sub.gsf||97500).toLocaleString()+' GSF';
+          psfSubDisp=bsEditMode?`<input class="bsys-inp" type="number" step="0.01" value="${spsf}" oninput="updateBsField('${sub.id}','psf',parseFloat(this.value)||0)">`:`<span class="bsys-psf" style="font-size:11px">$${parseFloat(spsf).toFixed(2)}/GSF</span>`;
+        }
+        stotalD=bsEditMode?`<input class="bsys-inp" type="number" value="${stotal}" oninput="updateBsField('${sub.id}','total',parseFloat(this.value)||0)">`:`$${parseInt(stotal).toLocaleString()}`;
         html+=`<tr class="bsys-sub-row">
           <td></td>
-          <td><span style="font-size:10px;color:#4A7B9D;font-weight:700;font-family:'Barlow Condensed',sans-serif">${escHtml(sub.div)}</span></td>
+          <td><span style="font-size:10px;color:#4A7B9D;font-weight:700;font-family:'Barlow Condensed',sans-serif">${escHtml(sub.div||'')}</span></td>
           <td>${escHtml(sub.name)}</td>
-          <td class="num" style="font-size:10px;color:#9A9A9A">${sub.gsf.toLocaleString()}</td>
-          <td class="num">${spsfD}</td><td class="num">${stotalD}</td>
+          <td class="num" style="font-size:10px;color:#9A9A9A">${qtyDisp}</td>
+          <td class="num">${psfSubDisp}</td><td class="num">${stotalD}</td>
           <td class="num" style="color:#9A9A9A">—</td>
           <td class="col-hide"></td><td></td>
         </tr>`;
@@ -351,9 +428,9 @@ function renderBuildingSystems(){
     }
   });
   html+=`<tr class="bsys-subtotal-row">
-    <td></td><td colspan="2">LIBRARY BUILDING TOTAL</td>
-    <td class="num">97,500 SF</td><td class="num">$814.82/SF</td>
-    <td class="num">$79,445,200</td><td class="num">100%</td>
+    <td></td><td colspan="2">BUILDING SYSTEMS REFERENCE SUBTOTAL</td>
+    <td class="num">97,500 GSF</td><td class="num">$${(bsRefTotal/97500).toFixed(2)}/GSF</td>
+    <td class="num">$${bsRefTotal.toLocaleString()}</td><td class="num">100%</td>
     <td class="col-hide"></td><td></td>
   </tr></tbody></table>`;
   wrap.innerHTML=html;
@@ -369,7 +446,7 @@ function exportCSV(){
     let tsf=0,cost=0,psfLabel='';
     if(ct==='lumpsum'){cost=s.unitCostMid||0;psfLabel='Lump Sum'}
     else if(ct==='perstall'){tsf=(s.qty||1)*(s.unitSF||0);cost=(s.qty||1)*(s.unitCostMid||0);psfLabel=(s.unitCostMid||0)+'/stall'}
-    else{tsf=(s.qty||1)*(s.unitSF||0);cost=tsf*(s.unitCostMid||0);psfLabel=(s.unitCostMid||0)+'/SF'}
+    else{tsf=(s.qty||1)*(s.unitSF||0);cost=calcSpaceCost(s);psfLabel=(tsf>0?(cost/tsf):0).toFixed(2)+'/SF'}
     return[s.category,s.name,ct==='lumpsum'?'':s.qty,ct==='lumpsum'?'':s.unitSF||0,ct==='lumpsum'?'':tsf,psfLabel,cost,ct,s.notes||''];
   });
   download([hdrs,...rows].map(r=>r.map(v=>`"${String(v||'').replace(/"/g,'""')}"`).join(',')).join('\n'),'burbank-program.csv','text/csv');
@@ -450,4 +527,3 @@ function appendNoteChip(pid,cid,field,tag){
 
 /* Close modals on backdrop click */
 document.querySelectorAll('.modal-bg').forEach(bg=>{bg.addEventListener('click',e=>{if(e.target===bg)bg.classList.remove('show')})});
-
