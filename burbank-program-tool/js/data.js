@@ -169,6 +169,171 @@ const BENCHMARKS={
   'Restrooms':[2000,4000],'Mechanical/Electrical Room':[2500,4500],'Vertical Circulation/Lobbies':[3000,6000]
 };
 
+/* ════════════════════════════════════
+   L3 COMPONENT DATA (informational only — no budget impact)
+   Keys = L2 item ID (spaceId_divCode)
+════════════════════════════════════ */
+const L3_DATA={
+/* ── Café (s5) ── */
+'s5_d09':[
+  {id:'s5_d09_1',name:'Quarry tile flooring',qty:1500,unit:'SF',unitCost:28,notes:'food-safe, slip-resistant'},
+  {id:'s5_d09_2',name:'FRP wall panels',qty:800,unit:'SF',unitCost:18,notes:'fiberglass reinforced — food prep areas'},
+  {id:'s5_d09_3',name:'Painted CMU / drywall walls',qty:1500,unit:'SF',unitCost:8,notes:'washable paint finish'},
+  {id:'s5_d09_4',name:'Acoustic ceiling tile',qty:1200,unit:'SF',unitCost:12,notes:'moisture-resistant ACT'}
+],
+'s5_d11':[
+  {id:'s5_d11_1',name:'Commercial cooking equipment',qty:1,unit:'LS',unitCost:165000,notes:'ranges, ovens, fryers — confirm if tenant-supplied'},
+  {id:'s5_d11_2',name:'Refrigeration equipment',qty:1,unit:'LS',unitCost:85000,notes:'walk-in cooler, reach-in refrigerators'},
+  {id:'s5_d11_3',name:'Food service smallwares',qty:1,unit:'LS',unitCost:35000,notes:'Allowance — pots, pans, utensils'},
+  {id:'s5_d11_4',name:'Exhaust hood system',qty:1,unit:'LS',unitCost:55000,notes:'Type 1 hood — see also Div 23'}
+],
+'s5_d22':[
+  {id:'s5_d22_1',name:'Grease interceptor',qty:1,unit:'LS',unitCost:35000,notes:'required by code — confirm size with MEP'},
+  {id:'s5_d22_2',name:'Floor drains',qty:6,unit:'EA',unitCost:2500,notes:'food prep and service areas'},
+  {id:'s5_d22_3',name:'Hand sinks',qty:4,unit:'EA',unitCost:3500,notes:'per health code requirements'},
+  {id:'s5_d22_4',name:'3-compartment sink',qty:1,unit:'LS',unitCost:8500,notes:'warewashing station'},
+  {id:'s5_d22_5',name:'Hot water system',qty:1,unit:'LS',unitCost:45000,notes:'dedicated HW heater for food service'}
+],
+'s5_d23':[
+  {id:'s5_d23_1',name:'Kitchen exhaust system',qty:1,unit:'LS',unitCost:85000,notes:'makeup air unit + exhaust fans'},
+  {id:'s5_d23_2',name:'Dedicated café HVAC zones',qty:1500,unit:'SF',unitCost:45,notes:'separate zone from library — odor control'}
+],
+'s5_d26':[
+  {id:'s5_d26_1',name:'Food service dedicated circuits',qty:1,unit:'LS',unitCost:85000,notes:'208V/240V circuits for cooking equipment'},
+  {id:'s5_d26_2',name:'Exhaust hood controls',qty:1,unit:'LS',unitCost:22000,notes:'demand control ventilation'},
+  {id:'s5_d26_3',name:'Food service lighting',qty:1500,unit:'SF',unitCost:28,notes:'LED, food-safe fixtures'}
+],
+/* ── Performing Arts Theater (s9) ── */
+'s9_d09':[
+  {id:'s9_d09_1',name:'Sprung wood performance floor',qty:3500,unit:'SF',unitCost:45,notes:'dance/performance surface — maple'},
+  {id:'s9_d09_2',name:'Acoustic wall panels',qty:4000,unit:'SF',unitCost:35,notes:'fabric-wrapped panels, NRC 0.85+'},
+  {id:'s9_d09_3',name:'Acoustic ceiling system',qty:2500,unit:'SF',unitCost:28,notes:'adjustable acoustic clouds'},
+  {id:'s9_d09_4',name:'Backstage/support finishes',qty:2000,unit:'SF',unitCost:15,notes:'painted CMU, sealed concrete'}
+],
+'s9_d10':[
+  {id:'s9_d10_1',name:'Theatrical drapery & soft goods',qty:1,unit:'LS',unitCost:125000,notes:'grand drape, legs, borders, cyclorama'},
+  {id:'s9_d10_2',name:'Audience seating',qty:350,unit:'EA',unitCost:650,notes:'fixed upholstered seating'},
+  {id:'s9_d10_3',name:'Assistive listening system',qty:1,unit:'LS',unitCost:18500,notes:'ADA required — hearing loop or RF'},
+  {id:'s9_d10_4',name:'Wayfinding & signage',qty:1,unit:'LS',unitCost:25000,notes:'lobby, seat numbers, exits'}
+],
+'s9_d11':[
+  {id:'s9_d11_1',name:'Stage rigging system',qty:1,unit:'LS',unitCost:285000,notes:'motorized fly system — 20 line sets'},
+  {id:'s9_d11_2',name:'Theatrical lighting equipment',qty:1,unit:'LS',unitCost:425000,notes:'LED fixtures, dimmer racks, control console'},
+  {id:'s9_d11_3',name:'Sound system',qty:1,unit:'LS',unitCost:395000,notes:'line array, mixing console, stage monitors'},
+  {id:'s9_d11_4',name:'Stage manager station',qty:1,unit:'LS',unitCost:35000,notes:'communication, cue lights, intercom'},
+  {id:'s9_d11_5',name:'Projection system',qty:1,unit:'LS',unitCost:125000,notes:'laser projector + screen allowance'}
+],
+'s9_d22':[
+  {id:'s9_d22_1',name:'Dressing room plumbing',qty:4,unit:'EA',unitCost:8500,notes:'sink, toilet per dressing room'},
+  {id:'s9_d22_2',name:'Green room plumbing',qty:1,unit:'LS',unitCost:12000,notes:'kitchenette, restroom'},
+  {id:'s9_d22_3',name:'Orchestra pit drain',qty:1,unit:'LS',unitCost:8500,notes:'floor drain — pit waterproofing'}
+],
+'s9_d23':[
+  {id:'s9_d23_1',name:'House HVAC system',qty:3500,unit:'SF',unitCost:95,notes:'quiet low-velocity system — NC25 max'},
+  {id:'s9_d23_2',name:'Stage HVAC',qty:2000,unit:'SF',unitCost:65,notes:'fly loft ventilation, stage cooling'},
+  {id:'s9_d23_3',name:'Dressing room HVAC',qty:1,unit:'LS',unitCost:45000,notes:'4 dressing rooms + green room'}
+],
+'s9_d26':[
+  {id:'s9_d26_1',name:'Theatrical power distribution',qty:1,unit:'LS',unitCost:185000,notes:'dimmer racks, 400A company switches'},
+  {id:'s9_d26_2',name:'House lighting',qty:3500,unit:'SF',unitCost:35,notes:'aisle lighting, exit signs, house lights'},
+  {id:'s9_d26_3',name:'Stage electrical',qty:1,unit:'LS',unitCost:145000,notes:'floor pockets, grid power, drops'},
+  {id:'s9_d26_4',name:'Dressing room electrical',qty:4,unit:'EA',unitCost:8500,notes:'vanity lighting, outlets, data'}
+],
+/* ── Podcast/Recording Studios (s4) ── */
+'s4_d06':[
+  {id:'s4_d06_1',name:'Acoustic booth framing & construction',qty:3,unit:'EA',unitCost:45000,notes:'room-within-room construction'},
+  {id:'s4_d06_2',name:'Control room millwork',qty:1,unit:'LS',unitCost:25000,notes:'equipment rack furniture, desk'}
+],
+'s4_d09':[
+  {id:'s4_d09_1',name:'Acoustic wall treatment',qty:600,unit:'SF',unitCost:65,notes:'diffusers, absorbers, bass traps'},
+  {id:'s4_d09_2',name:'Acoustic ceiling clouds',qty:600,unit:'SF',unitCost:45,notes:'suspended acoustic panels'},
+  {id:'s4_d09_3',name:'Raised access flooring',qty:600,unit:'SF',unitCost:35,notes:'cable management under floor'}
+],
+'s4_d11':[
+  {id:'s4_d11_1',name:'Recording/mixing consoles',qty:3,unit:'EA',unitCost:18500,notes:'digital mixing boards per studio'},
+  {id:'s4_d11_2',name:'Microphones & accessories',qty:1,unit:'LS',unitCost:35000,notes:'dynamic, condenser, boom arms'},
+  {id:'s4_d11_3',name:'Studio monitors',qty:6,unit:'EA',unitCost:2500,notes:'near-field monitors per studio'},
+  {id:'s4_d11_4',name:'Headphone systems',qty:3,unit:'EA',unitCost:3500,notes:'headphone amp + 4 headphones each'},
+  {id:'s4_d11_5',name:'Streaming/recording hardware',qty:1,unit:'LS',unitCost:28000,notes:'recording interface, computer, software'}
+],
+'s4_d23':[
+  {id:'s4_d23_1',name:'Silent HVAC supply/return',qty:600,unit:'SF',unitCost:125,notes:'NC20 max — vibration isolation required'}
+],
+'s4_d26':[
+  {id:'s4_d26_1',name:'Dedicated studio circuits',qty:3,unit:'EA',unitCost:8500,notes:'isolated ground circuits per studio'},
+  {id:'s4_d26_2',name:'IT/network infrastructure',qty:1,unit:'LS',unitCost:35000,notes:'fiber, patch panels, streaming'},
+  {id:'s4_d26_3',name:'Studio lighting',qty:600,unit:'SF',unitCost:25,notes:'dimmable LED, no RF interference'}
+],
+/* ── Makerspace (s3) ── */
+'s3_d11':[
+  {id:'s3_d11_1',name:'3D printers',qty:4,unit:'EA',unitCost:8500,notes:'FDM + resin — exhaust required'},
+  {id:'s3_d11_2',name:'Laser cutters/engravers',qty:2,unit:'EA',unitCost:22000,notes:'ventilation required'},
+  {id:'s3_d11_3',name:'CNC router',qty:1,unit:'EA',unitCost:35000,notes:'4×8 table — dust collection required'},
+  {id:'s3_d11_4',name:'Vinyl cutters & heat press',qty:2,unit:'EA',unitCost:4500,notes:'graphics and apparel'},
+  {id:'s3_d11_5',name:'Electronics workstation equipment',qty:6,unit:'EA',unitCost:3500,notes:'soldering, oscilloscopes, components'},
+  {id:'s3_d11_6',name:'Sewing machines',qty:6,unit:'EA',unitCost:1200,notes:'industrial and domestic mix'},
+  {id:'s3_d11_7',name:'Tool storage & workbenches',qty:1,unit:'LS',unitCost:45000,notes:'pegboard, storage, heavy-duty benches'}
+],
+'s3_d22':[
+  {id:'s3_d22_1',name:'Utility sink stations',qty:4,unit:'EA',unitCost:3500,notes:'deep utility sinks for messy projects'},
+  {id:'s3_d22_2',name:'Eyewash stations',qty:2,unit:'EA',unitCost:1500,notes:'OSHA required near chemical areas'}
+],
+'s3_d23':[
+  {id:'s3_d23_1',name:'Fume extraction system',qty:1,unit:'LS',unitCost:45000,notes:'3D printer fumes, resin, chemicals'},
+  {id:'s3_d23_2',name:'Dust collection system',qty:1,unit:'LS',unitCost:35000,notes:'CNC, laser — central collection'},
+  {id:'s3_d23_3',name:'General HVAC',qty:2500,unit:'SF',unitCost:55,notes:'higher ACH for air quality'}
+],
+'s3_d26':[
+  {id:'s3_d26_1',name:'Heavy power circuits (208V/240V)',qty:1,unit:'LS',unitCost:85000,notes:'CNC, laser, 3D printers require 240V'},
+  {id:'s3_d26_2',name:'General power & lighting',qty:2500,unit:'SF',unitCost:85,notes:'task lighting, outlets every 6ft'}
+],
+/* ── Digital Media Lab (s2) ── */
+'s2_d11':[
+  {id:'s2_d11_1',name:'Editing workstations',qty:12,unit:'EA',unitCost:6500,notes:'Mac Pro / PC — video/audio editing'},
+  {id:'s2_d11_2',name:'Large format displays/monitors',qty:12,unit:'EA',unitCost:1200,notes:'27-32in displays per workstation'},
+  {id:'s2_d11_3',name:'Video production equipment',qty:1,unit:'LS',unitCost:45000,notes:'cameras, lights, green screen'},
+  {id:'s2_d11_4',name:'Audio production equipment',qty:1,unit:'LS',unitCost:25000,notes:'interfaces, headphones, mics'},
+  {id:'s2_d11_5',name:'Large format printer/scanner',qty:1,unit:'EA',unitCost:18500,notes:'wide format for graphics output'},
+  {id:'s2_d11_6',name:'Collaboration displays',qty:2,unit:'EA',unitCost:8500,notes:'85in interactive displays'},
+  {id:'s2_d11_7',name:'Equipment storage & charging',qty:1,unit:'LS',unitCost:22000,notes:'locked storage, charging lockers'}
+],
+'s2_d12':[
+  {id:'s2_d12_1',name:'Editing workstation furniture',qty:12,unit:'EA',unitCost:2800,notes:'height-adjustable desks'},
+  {id:'s2_d12_2',name:'Collaboration seating',qty:1,unit:'LS',unitCost:25000,notes:'Allowance — moveable chairs, tables'}
+],
+'s2_d26':[
+  {id:'s2_d26_1',name:'Workstation power & data',qty:12,unit:'EA',unitCost:1800,notes:'dedicated circuit + 4 data drops each'},
+  {id:'s2_d26_2',name:'IT infrastructure',qty:1,unit:'LS',unitCost:55000,notes:'server rack, switches, fiber backbone'},
+  {id:'s2_d26_3',name:'General lighting',qty:1800,unit:'SF',unitCost:28,notes:'low-glare LED for screen work'}
+],
+/* ── Rooftop Terrace (s6) ── */
+'s6_d09':[
+  {id:'s6_d09_1',name:'Pavers / hardscape',qty:2000,unit:'SF',unitCost:22,notes:'concrete or porcelain pavers'},
+  {id:'s6_d09_2',name:'Roof deck waterproofing',qty:3000,unit:'SF',unitCost:18,notes:'under pavers — see also Div 07'}
+],
+'s6_d12':[
+  {id:'s6_d12_1',name:'Outdoor seating',qty:1,unit:'LS',unitCost:35000,notes:'Allowance — weather-resistant chairs, tables'},
+  {id:'s6_d12_2',name:'Shade structures',qty:1,unit:'LS',unitCost:45000,notes:'umbrellas or fixed shade sails'},
+  {id:'s6_d12_3',name:'Planter boxes',qty:1,unit:'LS',unitCost:18500,notes:'integrated planters with irrigation'}
+],
+'s6_d26':[
+  {id:'s6_d26_1',name:'Exterior lighting',qty:3000,unit:'SF',unitCost:12,notes:'bollards, wall sconces, step lights'},
+  {id:'s6_d26_2',name:'Outdoor power outlets',qty:1,unit:'LS',unitCost:12000,notes:'weatherproof GFCI outlets'}
+],
+/* ── Children's Library (s7) ── */
+'s7_d11':[
+  {id:'s7_d11_1',name:'Interactive learning displays',qty:4,unit:'EA',unitCost:12500,notes:'touch-screen interactive kiosks'},
+  {id:'s7_d11_2',name:'Library catalog terminals',qty:6,unit:'EA',unitCost:3500,notes:'OPAC stations — child height'},
+  {id:'s7_d11_3',name:'Storytime AV equipment',qty:1,unit:'LS',unitCost:35000,notes:'projector, screen, sound system'}
+],
+'s7_d12':[
+  {id:'s7_d12_1',name:"Children's shelving system",qty:1,unit:'LS',unitCost:85000,notes:'low-profile, rounded corners, colorful'},
+  {id:'s7_d12_2',name:"Children's seating & tables",qty:1,unit:'LS',unitCost:65000,notes:'age-appropriate — toddler through tween'},
+  {id:'s7_d12_3',name:'Reading nook furniture',qty:1,unit:'LS',unitCost:35000,notes:'Allowance — soft seating, bean bags, floor cushions'},
+  {id:'s7_d12_4',name:'Storytime area furnishings',qty:1,unit:'LS',unitCost:25000,notes:'risers, carpet, moveable seating'}
+]
+};
+
 const INITIAL_ADJ={
   's7-s16':'must','s16-s7':'must','s8-s2':'must','s2-s8':'must',
   's5-s6':'must','s6-s5':'must','s9-s10':'should','s10-s9':'should',
@@ -186,7 +351,7 @@ let drawerOpen=false,divChartDone=false;
 let charts={};
 let chartUpdateTimeout=null;
 let adjEditMode=false;
-let lineItems={},expandedSpaces=new Set();
+let lineItems={},expandedSpaces=new Set(),l3Expanded=new Set();
 let bsEditMode=false,bsEdits={},bsExpanded=new Set();
 let chipHideTimeout=null;
 /* Budget stack state */
@@ -223,6 +388,8 @@ function init(){
   if(liDirty)saveL2();
   const savedExp=localStorage.getItem('pcl_exp');
   if(savedExp){try{expandedSpaces=new Set(JSON.parse(savedExp))}catch{}}
+  const savedL3X=localStorage.getItem('pcl_l3exp');
+  if(savedL3X){try{l3Expanded=new Set(JSON.parse(savedL3X))}catch{}}
   bsEditMode=localStorage.getItem('pcl_bs_edit')==='1';
   const savedBSE=localStorage.getItem('pcl_bs_edits');
   if(savedBSE){try{bsEdits=JSON.parse(savedBSE)}catch{}}

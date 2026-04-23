@@ -127,12 +127,15 @@ function renderL2Rows(tbody,s,items,catColor){
   items.forEach(child=>{
     const isLS=child.unitType==='/LS';
     const total=isLS?(child.unitCost||0):(child.qty||0)*(child.unitCost||0);
+    const hasL3=!!(L3_DATA&&L3_DATA[child.id]);
+    const l3Open=l3Expanded.has(child.id);
     const tr=document.createElement('tr');
     tr.className='l2-row';tr.dataset.lid=child.id;tr.dataset.pid=s.id;
     tr.innerHTML=`
       <td style="padding:2px 4px"><span class="l2-drag-h">⋮⋮</span></td>
       <td style="padding:0;width:4px"><div style="width:4px;height:34px;background:${borderColor};border-left:2px solid ${catColor}88"></div></td>
       <td class="l2-indent">
+        ${hasL3?`<span class="l3-chevron${l3Open?' open':''}" onclick="toggleL3('${child.id}',event)" title="Show components">▸</span>`:''}
         <input class="l2-input" type="text" data-field="name" data-lid="${child.id}"
           value="${escHtml(child.name||'')}" placeholder="Division description"
           oninput="updateL2Field('${s.id}','${child.id}','name',this.value)">
@@ -165,6 +168,7 @@ function renderL2Rows(tbody,s,items,catColor){
       </td>
       <td><button class="l2-del-btn" onclick="deleteL2('${s.id}','${child.id}')" title="Remove">✕</button></td>`;
     tbody.appendChild(tr);
+    if(hasL3&&l3Open)renderL3Rows(tbody,child,s,catColor);
   });
   const addRow=document.createElement('tr');
   addRow.innerHTML=`<td colspan="11"><button class="l2-add-btn" onclick="addL2Row('${s.id}')">+ ADD DIVISION ITEM</button></td>`;
@@ -222,6 +226,83 @@ function updateL2Type(sid,cid,type){
 }
 function saveL2(){localStorage.setItem('pcl_li',JSON.stringify(lineItems))}
 function saveExpanded(){localStorage.setItem('pcl_exp',JSON.stringify([...expandedSpaces]))}
+function saveL3Exp(){localStorage.setItem('pcl_l3exp',JSON.stringify([...l3Expanded]))}
+
+/* ════════════════════════════════════
+   L3 COMPONENT ROWS (informational only)
+════════════════════════════════════ */
+function toggleL3(l2Id,evt){
+  if(evt)evt.stopPropagation();
+  if(l3Expanded.has(l2Id))l3Expanded.delete(l2Id);
+  else l3Expanded.add(l2Id);
+  saveL3Exp();renderTable();
+}
+function renderL3Note(note){
+  if(!note)return'';
+  let h=escHtml(note);
+  h=h.replace(/\b(Allowance)\b/gi,'<span class="note-tag note-allowance">$1</span>');
+  h=h.replace(/\b(TBC)\b/g,'<span class="note-tag note-tbc">$1</span>');
+  h=h.replace(/\b(NIC)\b/g,'<span class="note-tag note-nic">$1</span>');
+  h=h.replace(/\b(By Owner)\b/gi,'<span class="note-tag note-by-owner">$1</span>');
+  h=h.replace(/\b(Excluded)\b/gi,'<span class="note-tag note-excluded">$1</span>');
+  return h;
+}
+function renderL3Rows(tbody,l2Item,parentSpace,catColor){
+  const l3List=L3_DATA[l2Item.id]||[];
+  const isL2LS=l2Item.unitType==='/LS';
+  const l2Total=isL2LS?(l2Item.unitCost||0):(l2Item.qty||0)*(l2Item.unitCost||0);
+  let explicitSum=0;
+  const borderCol=catColor+'4D';
+  l3List.forEach(item=>{
+    const isLS=item.unit==='LS';
+    const itemTotal=isLS?item.unitCost:(item.qty||0)*(item.unitCost||0);
+    explicitSum+=itemTotal;
+    const qtyDisp=isLS?'1':item.qty.toLocaleString();
+    const uc=item.unitCost;
+    const psDisp=isLS?'Lump Sum':'$'+(Number.isInteger(uc)?uc.toLocaleString():uc.toFixed(2))+'/'+item.unit;
+    const tr=document.createElement('tr');tr.className='l3-row';
+    tr.innerHTML=`
+      <td style="padding:0;width:24px"></td>
+      <td style="padding:0;width:6px"><div style="width:3px;height:34px;background:${borderCol}"></div></td>
+      <td class="l3-indent" style="border-left:1px solid ${borderCol};background:#F8FBF8;font-family:'Barlow',sans-serif;font-weight:400;font-size:11px;color:#6D6D6D">${escHtml(item.name)}</td>
+      <td class="num" style="background:#F8FBF8;font-size:11px;color:#6D6D6D">${qtyDisp}</td>
+      <td class="num col-hide" style="background:#F8FBF8;font-size:11px;color:#9A9A9A">${item.unit}</td>
+      <td class="num col-hide" style="background:#F8FBF8;font-size:11px;color:#9A9A9A;text-align:center">—</td>
+      <td class="num" style="background:#F8FBF8;font-family:'Barlow',sans-serif;font-weight:600;font-size:11px;color:#006330">${psDisp}</td>
+      <td class="num" style="background:#F8FBF8;font-family:'Barlow',sans-serif;font-weight:600;font-size:11px;color:#1A1A1A">${fmt$(itemTotal)}</td>
+      <td class="col-hide" style="background:#F8FBF8"></td>
+      <td class="col-hide" style="background:#F8FBF8;font-size:11px;color:#6D6D6D;padding:2px 8px">${renderL3Note(item.notes||'')}</td>
+      <td style="background:#F8FBF8"></td>`;
+    tbody.appendChild(tr);
+  });
+  /* Remaining allowance row */
+  const remaining=l2Total-explicitSum;
+  const isNeg=remaining<-1;
+  const remTr=document.createElement('tr');remTr.className='l3-row l3-remainder';
+  if(isNeg){
+    remTr.innerHTML=`
+      <td style="padding:0;width:24px"></td>
+      <td style="padding:0;width:6px"><div style="width:3px;height:34px;background:${borderCol}"></div></td>
+      <td colspan="8" style="padding:4px 8px 4px 64px;background:#FFF8E1;border-left:1px solid ${borderCol};font-family:'Barlow',sans-serif;font-size:11px;color:#856404;font-weight:600">
+        ⚠ L3 items exceed L2 budget — review costs <span style="font-weight:400">(over by ${fmt$(Math.abs(remaining))})</span>
+      </td>
+      <td style="background:#FFF8E1"></td>`;
+  }else{
+    remTr.innerHTML=`
+      <td style="padding:0;width:24px"></td>
+      <td style="padding:0;width:6px"><div style="width:3px;height:34px;background:${borderCol}"></div></td>
+      <td class="l3-indent" style="border-left:1px solid ${borderCol};background:#F8FBF8;font-family:'Barlow',sans-serif;font-weight:300;font-size:11px;color:#9A9A9A;font-style:italic">Remaining allowance</td>
+      <td class="num" style="background:#F8FBF8;font-size:11px;color:#9A9A9A">1</td>
+      <td class="num col-hide" style="background:#F8FBF8;font-size:11px;color:#9A9A9A">LS</td>
+      <td class="num col-hide" style="background:#F8FBF8;font-size:11px;color:#9A9A9A;text-align:center">—</td>
+      <td class="num" style="background:#F8FBF8;font-size:11px;color:#9A9A9A;font-style:italic">auto-calc</td>
+      <td class="num" style="background:#F8FBF8;font-family:'Barlow',sans-serif;font-weight:600;font-size:11px;color:#9A9A9A;font-style:italic">${fmt$(remaining)}</td>
+      <td class="col-hide" style="background:#F8FBF8"></td>
+      <td class="col-hide" style="background:#F8FBF8;font-size:11px;color:#9A9A9A;font-style:italic;padding:2px 8px"><span class="note-tag note-allowance">Allowance</span></td>
+      <td style="background:#F8FBF8"></td>`;
+  }
+  tbody.appendChild(remTr);
+}
 
 /* ════════════════════════════════════
    INLINE EDITING
