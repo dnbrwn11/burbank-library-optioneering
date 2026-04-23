@@ -1,1133 +1,506 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>PCL Architectural Program Tool — Burbank Central Library</title>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>PCL — Burbank Central Library Optioneering</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Barlow+Condensed:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
-/* =========================
-   PCL BRAND SYSTEM
-   ========================= */
-:root {
-  --pcl-red: #CE2027;
-  --pcl-red-dark: #A01820;
-  --pcl-red-darker: #7A1218;
-  --pcl-black: #1A1A1A;
-  --pcl-dark: #2D2D2D;
-  --pcl-gray: #6D6D6D;
-  --pcl-gray-light: #B0B0B0;
-  --pcl-light: #F5F5F5;
-  --pcl-light-2: #EAEAEA;
-  --pcl-white: #FFFFFF;
-  --pcl-green: #2E7D32;
-  --pcl-yellow: #E8A020;
-  --pcl-shadow: 0 2px 4px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06);
-  --pcl-shadow-lg: 0 10px 25px rgba(0,0,0,0.15);
-  --cat-public: #1E5F8E;
-  --cat-kids: #8E4DA8;
-  --cat-staff: #5A7542;
-  --cat-special: #C17B00;
-  --cat-parking: #555555;
-  --cat-support: #8B6F47;
+/* ── VARIABLES ── */
+:root{
+  --red:#CE2027;--red-dark:#A01820;
+  --pcl-green:#3D6B35;--gold:#FFD700;
+  --bg:#F5F5F5;--panel:#FFFFFF;--border:#E0E0E0;
+  --text:#1A1A1A;--dim:#6D6D6D;--inv:#FFFFFF;
+  --nav:#1A1A1A;--row-alt:#F9F9F9;
+  --ok-bg:#D4EDDA;--ok-txt:#155724;
+  --warn-bg:#FFF3CD;--warn-txt:#856404;
+  --err-bg:#F8D7DA;--err-txt:#721C24;
+  --add-bg:#D4EDDA;--del-bg:#F8D7DA;--mod-bg:#FFF3CD;
+  --shadow:0 1px 3px rgba(0,0,0,0.08);
+}
+/* ── RESET ── */
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;font-family:'Barlow',sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.45;overflow-x:hidden}
+h1,h2,h3,h4{font-family:'Barlow',sans-serif;font-weight:700}
+button{font-family:'Barlow',sans-serif;cursor:pointer;border:none;background:none}
+input,select,textarea{font-family:'Barlow',sans-serif;font-size:14px}
+/* ── SCROLLBARS ── */
+*::-webkit-scrollbar{width:8px;height:8px}
+*::-webkit-scrollbar-track{background:var(--bg)}
+*::-webkit-scrollbar-thumb{background:var(--red)}
+*::-webkit-scrollbar-thumb:hover{background:var(--red-dark)}
+*{scrollbar-width:thin;scrollbar-color:var(--red) var(--bg)}
+
+/* NAV */
+.nav{background:var(--nav);height:64px;display:flex;align-items:center;padding:0 24px;gap:20px;position:sticky;top:0;z-index:200;border-bottom:2px solid var(--red)}
+.nav-logo{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.pcl-oval{width:48px;height:40px;background:var(--pcl-green);border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0}
+.pcl-oval .ol-pcl{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:16px;color:var(--gold);letter-spacing:0.05em;line-height:1}
+.pcl-oval .ol-sub{font-family:'Barlow Condensed',sans-serif;font-weight:500;font-size:5.5px;color:var(--inv);letter-spacing:0.1em;text-transform:uppercase;margin-top:1px}
+.nav-center{flex:1;text-align:center}
+.nav-center .t1{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:18px;letter-spacing:0.12em;color:var(--inv);text-transform:uppercase;display:block}
+.nav-center .t2{font-family:'Barlow',sans-serif;font-weight:400;font-size:12px;letter-spacing:0.08em;color:var(--red);display:block;margin-top:2px}
+.nav-right{font-size:11px;color:#9A9A9A;text-align:right;flex-shrink:0;letter-spacing:0.03em}
+
+/* TEAM STRIP */
+.team-strip{background:var(--panel);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 24px;height:72px;gap:0}
+.team-lbl{font-family:'Barlow Condensed',sans-serif;font-size:9px;color:var(--dim);text-transform:uppercase;letter-spacing:0.12em;white-space:nowrap;margin-right:20px;font-weight:600}
+.firm{display:flex;flex-direction:column;justify-content:center;align-items:center;padding:0 20px;border-left:1px solid var(--border);height:100%;gap:3px}
+.firm-role{font-size:9px;color:var(--dim);text-transform:uppercase;letter-spacing:0.1em}
+.firm-pcl-row{display:flex;align-items:center;gap:7px}
+.firm-oval{width:30px;height:26px;background:var(--pcl-green);border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0}
+.firm-oval .fo-pcl{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:10px;color:var(--gold);line-height:1}
+.firm-oval .fo-sub{font-family:'Barlow Condensed',sans-serif;font-weight:500;font-size:4px;color:var(--inv);letter-spacing:0.1em;text-transform:uppercase}
+.firm-pcl-name{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:12px;color:var(--text);letter-spacing:0.06em;text-transform:uppercase}
+.firm-gruen-wm{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:14px;color:var(--red);letter-spacing:0.06em;text-transform:uppercase}
+.firm-gruen-tl{font-size:7.5px;color:var(--red);letter-spacing:0.04em;text-transform:uppercase}
+.firm-grimshaw-wm{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:18px;color:var(--text);letter-spacing:0.15em;text-transform:uppercase}
+.firm-arup-wm{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:18px;color:#E3000F;letter-spacing:0.08em;text-transform:uppercase}
+.team-pill{margin-left:auto;background:var(--bg);border:1px solid var(--border);padding:6px 12px;font-size:10px;color:var(--dim);letter-spacing:0.04em;white-space:nowrap;font-family:'Barlow',sans-serif}
+
+/* RIBBON */
+.ribbon{height:4px;background:linear-gradient(to right,#CE2027 0%,#CE2027 33%,#3D6B35 33%,#3D6B35 66%,#1A1A1A 66%,#1A1A1A 100%)}
+
+/* BUDGET BAR */
+.budget-bar{background:#1A1A1A;position:sticky;top:64px;z-index:190;display:grid;grid-template-columns:repeat(6,1fr);padding:12px 24px;gap:0;border-bottom:1px solid #2D2D2D;box-shadow:0 2px 8px rgba(0,0,0,0.25)}
+.bc{padding:0 16px;border-left:1px solid #333}
+.bc:first-child{border-left:none}
+.bc.accent{border-left:3px solid var(--red)}
+.bl{font-size:9px;text-transform:uppercase;letter-spacing:0.1em;color:#9A9A9A;font-family:'Barlow',sans-serif;font-weight:400}
+.bv{font-family:'Barlow',sans-serif;font-weight:600;font-size:20px;color:#FFFFFF;margin-top:2px;transition:color 0.3s;font-variant-numeric:tabular-nums}
+.bv.ok{color:#66BB6A}.bv.warn{color:#FFD54F}.bv.bad{color:#EF5350}
+.bs{font-size:10px;color:#666;margin-top:1px}
+.bpw{grid-column:1/-1;margin-top:8px;display:flex;flex-direction:column;gap:3px}
+.bpl{display:flex;justify-content:space-between;font-size:9px;text-transform:uppercase;letter-spacing:0.1em;color:#9A9A9A}
+.bpt{height:4px;background:#3D3D3D;overflow:hidden}
+.bpf{height:100%;background:var(--red);width:0%;transition:width 0.55s cubic-bezier(.4,0,.2,1)}
+
+/* MOBILE BANNER */
+.mob-banner{display:none;background:var(--bg);border-bottom:1px solid var(--border);padding:8px 16px;font-size:11px;color:var(--dim);justify-content:space-between;align-items:center}
+.mob-banner button{font-size:16px;color:var(--dim);padding:0 4px;line-height:1}
+
+/* MAIN LAYOUT */
+.main{display:flex;min-height:calc(100vh - 64px - 72px - 4px - 70px);overflow:hidden}
+.content-col{flex:1;overflow-y:auto;padding:20px 24px 80px;min-width:0}
+.right-sb{width:340px;flex-shrink:0;background:var(--panel);border-left:1px solid var(--border);overflow-y:auto;display:flex;flex-direction:column}
+
+/* PANELS */
+.panel{background:var(--panel);border:1px solid var(--border);margin-bottom:20px;box-shadow:var(--shadow)}
+.ph{padding:12px 16px;border-bottom:3px solid var(--red);display:flex;justify-content:space-between;align-items:center;background:var(--panel)}
+.ph h3{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;letter-spacing:0.08em;text-transform:uppercase;color:var(--text)}
+.ph-toggle{cursor:pointer;user-select:none}
+.chevron{color:var(--dim);font-size:11px;transition:transform 0.2s ease}
+.panel.collapsed .chevron{transform:rotate(-180deg)}
+.panel.collapsed .pb,.panel.collapsed .pf{display:none}
+.pb{padding:16px}
+.sh{border-left:4px solid var(--red);padding:3px 0 3px 10px;margin-bottom:12px}
+.sh h2{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:var(--text)}
+.sh p{font-size:11px;color:var(--dim);margin-top:2px}
+
+/* BUTTONS */
+.btn{background:var(--red);color:var(--inv);font-family:'Barlow',sans-serif;font-weight:600;font-size:12px;letter-spacing:0.05em;text-transform:uppercase;padding:9px 18px;border:none;transition:background 0.15s;cursor:pointer;display:inline-flex;align-items:center;gap:6px;min-height:36px}
+.btn:hover{background:var(--red-dark)}.btn:active{background:#7A1218}
+.btn:disabled{background:#ccc;color:#999;cursor:not-allowed}
+.btn-ghost{background:var(--panel);color:var(--text);border:1px solid var(--border);font-family:'Barlow',sans-serif;font-weight:600;font-size:12px;letter-spacing:0.05em;text-transform:uppercase;padding:8px 14px;transition:all 0.15s;cursor:pointer;display:inline-flex;align-items:center;gap:6px;min-height:36px}
+.btn-ghost:hover{border-color:var(--red);color:var(--red)}
+.btn-ghost.active{background:var(--red);color:var(--inv);border-color:var(--red)}
+.btn-sm{padding:5px 10px!important;font-size:11px!important;min-height:30px!important}
+.btn-icon{background:transparent;color:var(--dim);padding:3px 5px;border:none;cursor:pointer;line-height:1}
+.btn-icon:hover{color:var(--red)}
+
+/* PHASE PILLS */
+.pill-group{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:0}
+.phase-pill{background:var(--bg);color:var(--text);border:1px solid var(--border);font-family:'Barlow',sans-serif;font-weight:600;font-size:11px;letter-spacing:0.05em;text-transform:uppercase;padding:8px 14px;border-radius:4px;transition:all 0.15s;cursor:pointer;min-height:36px;display:flex;align-items:center}
+.phase-pill:hover{border-color:var(--red)}
+.phase-pill.active{background:var(--red);color:var(--inv);border-color:var(--red)}
+
+/* TOOLBAR */
+.toolbar{display:flex;gap:8px;align-items:center;margin-bottom:14px;flex-wrap:wrap;background:var(--panel);padding:10px 14px;border:1px solid var(--border);box-shadow:var(--shadow)}
+.tb-sep{width:1px;height:24px;background:var(--border);margin:0 2px;flex-shrink:0}
+.tb-lbl{font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--dim);font-weight:400}
+.tb-val{font-weight:600;font-size:13px;color:var(--text)}
+
+/* PROGRAM TABLE */
+.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.prog-tbl{width:100%;border-collapse:collapse;font-size:13px;background:var(--panel);color:var(--text)}
+.prog-tbl thead th{background:var(--red);color:var(--inv);font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:0.08em;padding:10px 8px;text-align:left;white-space:nowrap}
+.prog-tbl thead th.num{text-align:right}
+.cat-row td{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:0.1em;padding:7px 10px;border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.data-row{background:var(--panel);border-bottom:1px solid var(--border);transition:background 0.12s}
+.data-row:nth-child(even){background:var(--row-alt)}
+.data-row:hover{background:#F0F0F0}
+.data-row.p-add{background:var(--add-bg)!important;border-left:4px solid #28A745}
+.data-row.p-del{background:var(--del-bg)!important;border-left:4px solid #DC3545;text-decoration:line-through;opacity:0.75}
+.data-row.p-mod{background:var(--mod-bg)!important;border-left:4px solid #FFC107}
+.data-row.dragging{opacity:0.35}
+.data-row.drop-tgt{border-top:3px solid var(--red)}
+.prog-tbl td{padding:7px 8px;vertical-align:middle;color:var(--text)}
+.prog-tbl td.num{text-align:right;font-variant-numeric:tabular-nums}
+.prog-tbl td.editable{cursor:text}
+.prog-tbl td.editable:hover{background:#FFF5F5;outline:1px solid var(--red)}
+.prog-tbl input.inl,.prog-tbl select.inl{width:100%;padding:3px 6px;border:1px solid var(--red);background:var(--panel);color:var(--text);font-size:12px;font-family:'Barlow',sans-serif;outline:none}
+.excl-badge{display:inline-block;margin-left:6px;padding:1px 5px;font-size:9px;font-weight:700;letter-spacing:0.04em;background:#8B3DB8;color:var(--inv);font-family:'Barlow',sans-serif}
+.bench-icon{font-size:11px;margin-left:3px;cursor:help;font-style:normal}
+.b-lo{color:#2060CE}.b-ok{color:#3D8B37}.b-hi{color:#CE6020}
+.phase-badge{display:inline-block;padding:2px 7px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;font-family:'Barlow',sans-serif}
+.drag-h{cursor:grab;color:#CCCCCC;user-select:none;padding:0 3px;font-size:14px}
+.drag-h:active{cursor:grabbing}
+.add-row-btn{width:100%;padding:8px 12px;background:var(--bg);color:var(--dim);font-size:11px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;border:none;border-top:1px dashed var(--border);text-align:left;font-family:'Barlow',sans-serif;cursor:pointer;display:block}
+.add-row-btn:hover{background:#EAEAEA;color:var(--red)}
+.muted{color:var(--dim)!important}
+.detail-row{display:none}
+.detail-row.show{display:table-row}
+.detail-row td{background:#F8F8F8;padding:8px 16px;font-size:12px;color:var(--dim);border-bottom:1px solid var(--border)}
+
+/* CHIPS */
+.chip-row{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.chip{background:var(--bg);border:1px solid var(--red);color:var(--text);padding:5px 10px;font-size:11px;font-family:'Barlow',sans-serif;cursor:pointer;border-radius:4px;transition:all 0.15s}
+.chip:hover{background:var(--red);color:var(--inv)}
+
+/* RIGHT SIDEBAR */
+.rp-hd{background:var(--panel);border-bottom:3px solid var(--red);padding:12px 16px}
+.rp-hd h3{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;letter-spacing:0.08em;text-transform:uppercase;color:var(--text)}
+.rp-hd p{font-size:11px;color:var(--dim);margin-top:3px}
+.widget{margin-bottom:22px}
+.wr{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--border);font-size:13px}
+.wr:last-child{border-bottom:none}
+.wr .k{color:var(--dim);font-weight:400}
+.wr .v{font-family:'Barlow',sans-serif;font-weight:600;color:var(--text);font-variant-numeric:tabular-nums;transition:color 0.3s}
+.slider-w{padding:10px 0 4px}
+.slider-w input[type=range]{width:100%;accent-color:var(--red)}
+.slider-lbl{display:flex;justify-content:space-between;font-size:10px;color:var(--dim);margin-top:3px}
+.var-badge{display:inline-block;padding:3px 8px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.04em;border:1px solid var(--border);background:var(--bg);font-family:'Barlow',sans-serif}
+.var-badge.ok{color:var(--ok-txt);border-color:#28A745;background:var(--ok-bg)}
+.var-badge.warn{color:var(--warn-txt);border-color:#FFC107;background:var(--warn-bg)}
+.var-badge.bad{color:var(--err-txt);border-color:var(--red);background:var(--err-bg)}
+.warn-banner{background:var(--warn-bg);border-left:4px solid #FFC107;padding:8px 10px;font-size:12px;color:var(--warn-txt);margin-top:8px;display:none}
+.warn-banner.show{display:block}
+.ai-textarea{width:100%;min-height:80px;padding:10px;border:1px solid var(--border);background:var(--panel);color:var(--text);font-size:13px;resize:vertical;font-family:'Barlow',sans-serif}
+.ai-textarea::placeholder{color:var(--dim)}
+.ai-textarea:focus{border-color:var(--red);outline:none}
+.prev-box{display:none;padding:12px;background:var(--warn-bg);border:1px solid #FFC107;margin-top:12px}
+.prev-box.show{display:block}
+.prev-box h4{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;color:var(--warn-txt);margin-bottom:6px}
+.prev-box p{font-size:12px;color:var(--text);margin-bottom:10px}
+.prev-box .br{display:flex;gap:8px}
+.ai-err{background:var(--err-bg);border-left:4px solid var(--red);padding:8px 10px;font-size:12px;color:var(--err-txt);margin-top:10px;display:none}
+.ai-err.show{display:block}
+.spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(206,32,39,0.25);border-top-color:var(--red);border-radius:50%;animation:spin 0.8s linear infinite;vertical-align:middle;margin-right:6px}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* TABS */
+.tab-bar{display:flex;border-bottom:1px solid var(--border);background:var(--panel)}
+.tab-btn{padding:10px 18px;font-size:12px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:var(--dim);border-bottom:3px solid transparent;font-family:'Barlow',sans-serif;background:none;border-top:none;border-left:none;border-right:none;cursor:pointer;transition:all 0.15s}
+.tab-btn.active{color:var(--text);border-bottom-color:var(--red)}
+.tab-pane{display:none;padding:16px}
+.tab-pane.active{display:block}
+
+/* CHANGE LOG */
+.log-entry{display:grid;grid-template-columns:140px 70px 1fr;gap:8px;padding:7px 0;border-bottom:1px solid var(--border);font-size:12px;align-items:center}
+.log-ts{color:var(--dim);font-variant-numeric:tabular-nums}
+.log-op{font-weight:700;font-size:10px;text-transform:uppercase;letter-spacing:0.04em}
+.log-op.add{color:#28A745}.log-op.del{color:var(--red)}.log-op.mod{color:#856404}.log-op.sys{color:var(--dim)}
+
+/* ADJACENCY MATRIX */
+.adj-legend{display:flex;gap:14px;padding:10px 0;font-size:11px;align-items:center;flex-wrap:wrap;color:var(--text)}
+.adj-legend .sw{display:inline-block;width:12px;height:12px;margin-right:4px;vertical-align:middle;border:1px solid #ccc}
+.adj-wrap{overflow:auto;max-height:65vh}
+.adj-tbl{border-collapse:collapse;font-size:10px;background:var(--panel)}
+.adj-tbl th,.adj-tbl td{border:1px solid var(--border);padding:0;text-align:center;min-width:28px;height:28px}
+.adj-tbl thead th{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font-weight:600;padding:4px}
+.adj-tbl thead th.rot{height:100px;min-width:28px;max-width:28px}
+.adj-tbl thead th.rot>div{transform:rotate(-60deg);transform-origin:left bottom;white-space:nowrap;padding-left:20px;width:26px;color:var(--text);font-family:'Barlow',sans-serif;font-size:10px}
+.adj-tbl tbody th{background:var(--bg);color:var(--text);text-align:left;padding:4px 8px;font-weight:500;white-space:nowrap;position:sticky;left:0;z-index:1;font-size:10px;font-family:'Barlow',sans-serif}
+.adj-cell{cursor:pointer;transition:transform 0.1s}
+.adj-cell:hover{transform:scale(1.15);outline:1px solid var(--red)}
+.adj-must{background:#1B5E20!important}.adj-should{background:#81C784!important}
+.adj-sep{background:var(--red)!important}.adj-none{background:#F5F5F5}
+.adj-diag{background:#E0E0E0}
+
+/* SCENARIO MANAGER */
+.sc-card{border:1px solid var(--border);padding:10px;margin-bottom:8px;background:var(--panel)}
+.sc-card.active{border-left:4px solid var(--red)}
+.sc-card.baseline{border-right:3px solid #3D8B37}
+.sc-name{font-weight:600;font-size:13px;color:var(--text)}
+.sc-stats{font-size:11px;color:var(--dim);margin-top:2px}
+.sc-actions{margin-top:6px;display:flex;gap:4px}
+.cmp-tbl{width:100%;border-collapse:collapse;font-size:12px}
+.cmp-tbl th{background:var(--red);color:var(--inv);font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:0.08em;padding:8px;text-align:left}
+.cmp-tbl td{padding:8px;border-bottom:1px solid var(--border);color:var(--text)}
+.cmp-tbl tr:nth-child(even) td{background:var(--row-alt)}
+.cmp-tbl td.num{text-align:right;font-variant-numeric:tabular-nums}
+.delta-p{color:var(--red);font-weight:600}.delta-n{color:#28A745;font-weight:600}
+
+/* MODALS */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,0.6);display:none;align-items:center;justify-content:center;z-index:1000;backdrop-filter:blur(2px)}
+.modal-bg.show{display:flex}
+.modal{background:var(--panel);width:90%;max-width:640px;max-height:90vh;display:flex;flex-direction:column;box-shadow:0 16px 48px rgba(0,0,0,0.22);border:1px solid var(--border)}
+.modal-hd{background:var(--red);color:var(--inv);padding:14px 18px;display:flex;justify-content:space-between;align-items:center}
+.modal-hd h3{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:14px;letter-spacing:0.08em;text-transform:uppercase}
+.modal-cl{background:transparent;color:var(--inv);font-size:22px;line-height:1;padding:0;width:28px;height:28px;border:none;cursor:pointer}
+.modal-cl:hover{color:#FFD2D5}
+.modal-bd{padding:20px;overflow-y:auto;flex:1}
+.modal-ft{padding:12px 18px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:8px;background:var(--bg)}
+.fg{margin-bottom:14px}
+.fg label{display:block;font-size:11px;text-transform:uppercase;letter-spacing:0.1em;color:var(--dim);font-weight:400;margin-bottom:4px;font-family:'Barlow',sans-serif}
+.fg input,.fg select,.fg textarea{width:100%;padding:8px 10px;border:1px solid var(--border);background:var(--panel);color:var(--text);font-size:13px;font-family:'Barlow',sans-serif}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--red);outline:none}
+.narr-box{background:var(--bg);padding:18px;border-left:4px solid var(--red);font-size:13px;line-height:1.7;font-family:'Barlow',sans-serif}
+.narr-box h2{font-size:14px;font-weight:700;text-transform:uppercase;color:var(--red);margin:14px 0 6px}
+.narr-box h2:first-child{margin-top:0}
+.narr-box ul{margin:0 0 10px 18px}.narr-box li{margin-bottom:4px}.narr-box p{margin-bottom:8px}
+.narr-box strong{font-weight:700}
+
+/* FOOTER */
+.footer{background:var(--bg);border-top:2px solid var(--red);padding:16px 24px 48px;text-align:center;font-size:11px;color:var(--dim);font-family:'Barlow',sans-serif;line-height:1.9}
+.footer strong{color:var(--text);font-weight:600}
+
+/* UTIL */
+.hidden{display:none!important}
+.flex{display:flex;gap:8px;align-items:center}
+.flex-col{display:flex;flex-direction:column;gap:6px}
+
+/* TABLET */
+@media(max-width:1024px){
+  .right-sb{width:280px}
+  .nav-center .t1{font-size:15px}
+  .bv{font-size:17px}
+  .prog-tbl{font-size:12px}
+  .budget-bar{grid-template-columns:repeat(3,1fr);row-gap:10px;padding:10px 16px}
+  .bc{padding:0 10px}
+}
+@media(max-width:900px){.firm{padding:0 12px}.firm-gruen-tl{display:none}}
+
+/* MOBILE */
+@media(max-width:767px){
+  .team-strip,.ribbon{display:none}
+  .mob-banner{display:flex!important}
+  .nav-right{display:none}
+  .nav-center .t1{font-size:13px;letter-spacing:0.06em}
+  .budget-bar{grid-template-columns:repeat(2,1fr);padding:10px 12px}
+  .bv{font-size:16px}
+  .main{flex-direction:column}
+  .content-col{padding:12px 12px 60px}
+  .right-sb{width:100%;border-left:none;border-top:1px solid var(--border)}
+  .col-hide{display:none!important}
+  .phase-pill,.btn,.btn-ghost{min-height:44px}
+  .prog-tbl td,.prog-tbl thead th{padding:5px 6px;font-size:12px}
+  .log-entry{grid-template-columns:100px 60px 1fr;font-size:11px}
+  .toolbar{flex-wrap:wrap;gap:6px}
+  .flex-col .btn-ghost,.flex-col .btn{width:100%;justify-content:center}
 }
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
-html, body { height: 100%; }
-body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  background: var(--pcl-light);
-  color: var(--pcl-black);
-  font-size: 14px;
-  line-height: 1.45;
-  overflow-x: hidden;
+/* PRINT */
+@media print{
+  .nav,.team-strip,.ribbon,.budget-bar,.mob-banner,.right-sb,.toolbar,.tab-bar,.tab-pane,.footer,.modal-bg{display:none!important}
+  .main{display:block}.content-col{padding:0;overflow:visible}
+  body{background:#FFF;color:#000;font-size:11px}
+  .panel{border:1px solid #999;box-shadow:none;margin-bottom:10px;page-break-inside:avoid}
+  .ph{border-bottom:2px solid #CE2027}
+  .prog-tbl{font-size:10px}
+  .prog-tbl thead th{background:#CE2027!important;color:#FFF!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .cat-row td{background:#EEE!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .data-row{background:#FFF!important}
+  .col-hide{display:table-cell!important}
+  .add-row-btn,.btn-icon,.drag-h{display:none!important}
+  .detail-row{display:none!important}
 }
-
-button { font-family: inherit; cursor: pointer; border: none; }
-input, select, textarea { font-family: inherit; font-size: 14px; }
-
-/* =========================
-   TOP NAV
-   ========================= */
-.topnav {
-  background: var(--pcl-black);
-  color: var(--pcl-white);
-  display: flex;
-  align-items: center;
-  height: 56px;
-  padding: 0 20px;
-  border-bottom: 3px solid var(--pcl-red);
-  position: sticky;
-  top: 0;
-  z-index: 100;
-}
-.logo-block {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-.logo-mark {
-  background: var(--pcl-red);
-  color: var(--pcl-white);
-  font-weight: 800;
-  font-size: 20px;
-  letter-spacing: 1px;
-  padding: 6px 12px;
-  line-height: 1;
-}
-.logo-text {
-  font-weight: 600;
-  font-size: 15px;
-  letter-spacing: 0.3px;
-  color: var(--pcl-white);
-}
-.logo-sub {
-  font-size: 11px;
-  color: var(--pcl-gray-light);
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  margin-top: 2px;
-}
-.nav-tabs {
-  display: flex;
-  margin-left: 40px;
-  gap: 2px;
-}
-.nav-tab {
-  background: transparent;
-  color: var(--pcl-gray-light);
-  padding: 8px 16px;
-  font-size: 13px;
-  font-weight: 500;
-  letter-spacing: 0.4px;
-  text-transform: uppercase;
-  border-bottom: 2px solid transparent;
-  transition: all 0.15s;
-}
-.nav-tab:hover { color: var(--pcl-white); }
-.nav-tab.active {
-  color: var(--pcl-white);
-  border-bottom-color: var(--pcl-red);
-}
-.nav-right {
-  margin-left: auto;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  font-size: 12px;
-  color: var(--pcl-gray-light);
-}
-.project-pill {
-  background: var(--pcl-dark);
-  color: var(--pcl-white);
-  padding: 6px 12px;
-  border-left: 3px solid var(--pcl-red);
-  font-weight: 500;
-  font-size: 12px;
-  letter-spacing: 0.3px;
-}
-
-/* =========================
-   BUDGET STICKY BAR
-   ========================= */
-.budget-bar {
-  background: var(--pcl-white);
-  border-bottom: 1px solid var(--pcl-light-2);
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  padding: 14px 24px;
-  gap: 8px;
-  position: sticky;
-  top: 56px;
-  z-index: 90;
-  box-shadow: var(--pcl-shadow);
-}
-.budget-cell {
-  padding: 0 16px;
-  border-left: 3px solid var(--pcl-light-2);
-}
-.budget-cell.accent { border-left-color: var(--pcl-red); }
-.budget-label {
-  font-size: 10px;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  color: var(--pcl-gray);
-  font-weight: 600;
-}
-.budget-value {
-  font-size: 20px;
-  font-weight: 700;
-  color: var(--pcl-black);
-  margin-top: 2px;
-  transition: color 0.3s;
-}
-.budget-value.positive { color: var(--pcl-green); }
-.budget-value.warn { color: var(--pcl-yellow); }
-.budget-value.negative { color: var(--pcl-red); }
-.budget-sub {
-  font-size: 11px;
-  color: var(--pcl-gray);
-  margin-top: 2px;
-}
-
-/* =========================
-   MAIN LAYOUT
-   ========================= */
-.main {
-  display: grid;
-  grid-template-columns: 260px 1fr 340px;
-  height: calc(100vh - 56px - 75px);
-  overflow: hidden;
-}
-.sidebar {
-  background: var(--pcl-white);
-  border-right: 1px solid var(--pcl-light-2);
-  overflow-y: auto;
-  padding: 20px;
-}
-.content {
-  overflow-y: auto;
-  padding: 20px 24px;
-  background: var(--pcl-light);
-}
-.rightpanel {
-  background: var(--pcl-white);
-  border-left: 1px solid var(--pcl-light-2);
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-}
-
-/* =========================
-   SECTION HEADERS
-   ========================= */
-.section-header {
-  border-left: 4px solid var(--pcl-red);
-  padding: 4px 0 4px 12px;
-  margin-bottom: 14px;
-}
-.section-header h2 {
-  font-size: 14px;
-  font-weight: 700;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-  color: var(--pcl-black);
-}
-.section-header p {
-  font-size: 12px;
-  color: var(--pcl-gray);
-  margin-top: 2px;
-}
-
-/* =========================
-   SIDEBAR WIDGETS
-   ========================= */
-.widget {
-  margin-bottom: 28px;
-}
-.widget-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 8px 0;
-  border-bottom: 1px solid var(--pcl-light-2);
-  font-size: 13px;
-}
-.widget-row:last-child { border-bottom: none; }
-.widget-row .k { color: var(--pcl-gray); font-weight: 500; }
-.widget-row .v { font-weight: 600; color: var(--pcl-black); font-variant-numeric: tabular-nums; }
-.slider-wrap {
-  padding: 12px 0 6px;
-}
-.slider-wrap input[type="range"] {
-  width: 100%;
-  accent-color: var(--pcl-red);
-}
-.slider-labels {
-  display: flex;
-  justify-content: space-between;
-  font-size: 10px;
-  color: var(--pcl-gray);
-  margin-top: 4px;
-}
-.variance-badge {
-  padding: 4px 8px;
-  font-size: 11px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  display: inline-block;
-}
-.variance-badge.good { background: #E8F5E9; color: var(--pcl-green); }
-.variance-badge.warn { background: #FFF8E1; color: var(--pcl-yellow); }
-.variance-badge.bad { background: #FFEBEE; color: var(--pcl-red); }
-
-.warning-banner {
-  background: #FFF3E0;
-  border-left: 4px solid var(--pcl-yellow);
-  padding: 8px 10px;
-  font-size: 12px;
-  color: #8B5A00;
-  margin-top: 8px;
-  display: none;
-}
-.warning-banner.show { display: block; }
-.warning-banner.critical { background: #FFEBEE; border-left-color: var(--pcl-red); color: var(--pcl-red-darker); }
-
-/* =========================
-   BUTTONS
-   ========================= */
-.btn {
-  background: var(--pcl-red);
-  color: var(--pcl-white);
-  padding: 9px 16px;
-  font-size: 13px;
-  font-weight: 600;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-  transition: background 0.15s;
-  border: none;
-}
-.btn:hover { background: var(--pcl-red-dark); }
-.btn:active { background: var(--pcl-red-darker); }
-.btn:disabled { background: var(--pcl-gray-light); cursor: not-allowed; }
-
-.btn-ghost {
-  background: var(--pcl-white);
-  color: var(--pcl-black);
-  border: 1px solid var(--pcl-light-2);
-  padding: 8px 14px;
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.4px;
-  text-transform: uppercase;
-}
-.btn-ghost:hover { background: var(--pcl-light); border-color: var(--pcl-gray-light); }
-.btn-ghost.active { background: var(--pcl-black); color: var(--pcl-white); border-color: var(--pcl-black); }
-
-.btn-dark {
-  background: var(--pcl-black);
-  color: var(--pcl-white);
-  padding: 9px 16px;
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.4px;
-  text-transform: uppercase;
-}
-.btn-dark:hover { background: var(--pcl-dark); }
-
-.btn-sm { padding: 5px 10px; font-size: 11px; }
-.btn-icon {
-  background: transparent;
-  color: var(--pcl-gray);
-  padding: 4px 6px;
-  border-radius: 0;
-}
-.btn-icon:hover { color: var(--pcl-red); background: var(--pcl-light); }
-
-/* =========================
-   TOOLBAR
-   ========================= */
-.toolbar {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-  margin-bottom: 14px;
-  flex-wrap: wrap;
-  background: var(--pcl-white);
-  padding: 12px;
-  border: 1px solid var(--pcl-light-2);
-}
-.toolbar-group {
-  display: flex;
-  gap: 2px;
-  align-items: center;
-  padding-right: 12px;
-  border-right: 1px solid var(--pcl-light-2);
-}
-.toolbar-group:last-child { border-right: none; }
-.toolbar-label {
-  font-size: 10px;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  color: var(--pcl-gray);
-  margin-right: 8px;
-  font-weight: 600;
-}
-
-/* =========================
-   PROGRAM TABLE
-   ========================= */
-.card {
-  background: var(--pcl-white);
-  border: 1px solid var(--pcl-light-2);
-  box-shadow: var(--pcl-shadow);
-  margin-bottom: 24px;
-}
-.card-head {
-  padding: 14px 16px;
-  background: var(--pcl-black);
-  color: var(--pcl-white);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.card-head h3 {
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-}
-.card-body { padding: 0; }
-
-.program-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 13px;
-}
-.program-table thead th {
-  background: var(--pcl-red);
-  color: var(--pcl-white);
-  text-align: left;
-  padding: 10px 8px;
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  position: sticky;
-  top: 0;
-  white-space: nowrap;
-}
-.program-table thead th.num { text-align: right; }
-
-.category-header td {
-  background: var(--pcl-black);
-  color: var(--pcl-white);
-  padding: 8px 12px;
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-.category-header .cat-swatch {
-  display: inline-block;
-  width: 10px;
-  height: 10px;
-  margin-right: 8px;
-  vertical-align: middle;
-}
-
-.program-table tbody tr {
-  border-bottom: 1px solid var(--pcl-light-2);
-  transition: background 0.15s;
-}
-.program-table tbody tr:nth-child(even of .data-row) { background: var(--pcl-light); }
-.program-table tbody tr.data-row:hover { background: #FFF5F5; }
-.program-table tbody tr.data-row.preview-add { background: #E8F5E9 !important; border-left: 4px solid var(--pcl-green); }
-.program-table tbody tr.data-row.preview-del { background: #FFEBEE !important; border-left: 4px solid var(--pcl-red); text-decoration: line-through; opacity: 0.75; }
-.program-table tbody tr.data-row.preview-mod { background: #FFF8E1 !important; border-left: 4px solid var(--pcl-yellow); }
-
-.program-table td {
-  padding: 8px;
-  vertical-align: middle;
-}
-.program-table td.num { text-align: right; font-variant-numeric: tabular-nums; }
-.program-table td.edit { cursor: text; }
-.program-table td.edit:hover { background: #FFF5F5; outline: 1px solid var(--pcl-red); }
-.program-table input.inline, .program-table select.inline {
-  width: 100%;
-  padding: 4px 6px;
-  border: 1px solid var(--pcl-red);
-  background: var(--pcl-white);
-  font-size: 13px;
-  outline: none;
-}
-.program-table select.inline { padding: 3px 4px; }
-.cat-border {
-  display: inline-block;
-  width: 4px;
-  height: 22px;
-  margin-right: 6px;
-  vertical-align: middle;
-}
-.bench-icon {
-  display: inline-block;
-  font-size: 11px;
-  font-weight: 700;
-  width: 16px;
-  height: 16px;
-  line-height: 16px;
-  text-align: center;
-  margin-left: 6px;
-  cursor: help;
-}
-.bench-icon.low { color: #1565C0; }
-.bench-icon.ok { color: var(--pcl-green); }
-.bench-icon.high { color: var(--pcl-red); }
-
-.phase-badge {
-  display: inline-block;
-  padding: 2px 8px;
-  font-size: 10px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-.phase-Phase1 { background: var(--pcl-black); color: var(--pcl-white); }
-.phase-Phase2 { background: var(--pcl-gray); color: var(--pcl-white); }
-.phase-Optional { background: #FFF3E0; color: #8B5A00; border: 1px solid #E8A020; }
-.phase-Alternate { background: #FFEBEE; color: var(--pcl-red); border: 1px solid var(--pcl-red); }
-
-.drag-handle {
-  cursor: grab;
-  color: var(--pcl-gray-light);
-  user-select: none;
-  padding: 0 4px;
-}
-.drag-handle:active { cursor: grabbing; }
-.data-row.dragging { opacity: 0.4; }
-.data-row.drop-target { border-top: 3px solid var(--pcl-red); }
-
-.add-row-btn {
-  padding: 8px 12px;
-  background: var(--pcl-light);
-  color: var(--pcl-gray);
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-  border-top: 1px dashed var(--pcl-gray-light);
-  display: block;
-  width: 100%;
-  text-align: left;
-}
-.add-row-btn:hover { background: var(--pcl-light-2); color: var(--pcl-red); }
-
-/* =========================
-   RIGHT PANEL — AI ASSISTANT
-   ========================= */
-.rp-header {
-  background: var(--pcl-black);
-  color: var(--pcl-white);
-  padding: 14px 16px;
-  border-bottom: 3px solid var(--pcl-red);
-}
-.rp-header h3 {
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-}
-.rp-header p {
-  font-size: 11px;
-  color: var(--pcl-gray-light);
-  margin-top: 4px;
-}
-.rp-body {
-  padding: 16px;
-  flex: 1;
-  overflow-y: auto;
-}
-.ai-textarea {
-  width: 100%;
-  min-height: 90px;
-  padding: 10px;
-  border: 1px solid var(--pcl-light-2);
-  font-size: 13px;
-  resize: vertical;
-  background: var(--pcl-light);
-}
-.ai-textarea:focus { border-color: var(--pcl-red); outline: none; background: var(--pcl-white); }
-.chip-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin: 10px 0;
-}
-.chip {
-  background: var(--pcl-light);
-  border: 1px solid var(--pcl-light-2);
-  padding: 5px 10px;
-  font-size: 11px;
-  color: var(--pcl-dark);
-  cursor: pointer;
-  transition: all 0.15s;
-}
-.chip:hover { background: var(--pcl-red); color: var(--pcl-white); border-color: var(--pcl-red); }
-
-.preview-actions {
-  display: none;
-  padding: 12px;
-  background: #FFF8E1;
-  border: 1px solid var(--pcl-yellow);
-  margin-top: 12px;
-}
-.preview-actions.show { display: block; }
-.preview-actions h4 {
-  font-size: 12px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  color: #8B5A00;
-  margin-bottom: 6px;
-}
-.preview-actions p { font-size: 12px; color: var(--pcl-dark); margin-bottom: 10px; }
-.preview-actions .btn-row { display: flex; gap: 8px; }
-
-.ai-error {
-  background: #FFEBEE;
-  border-left: 4px solid var(--pcl-red);
-  padding: 8px 10px;
-  font-size: 12px;
-  color: var(--pcl-red-darker);
-  margin-top: 10px;
-  display: none;
-}
-.ai-error.show { display: block; }
-
-/* =========================
-   SPINNER
-   ========================= */
-.spinner {
-  display: inline-block;
-  width: 14px;
-  height: 14px;
-  border: 2px solid rgba(255,255,255,0.4);
-  border-top-color: var(--pcl-white);
-  border-radius: 50%;
-  animation: spin 0.8s linear infinite;
-  vertical-align: middle;
-  margin-right: 6px;
-}
-.spinner.dark { border-color: rgba(0,0,0,0.2); border-top-color: var(--pcl-red); }
-@keyframes spin { to { transform: rotate(360deg); } }
-
-/* =========================
-   MODAL
-   ========================= */
-.modal-backdrop {
-  position: fixed;
-  inset: 0;
-  background: rgba(26,26,26,0.6);
-  display: none;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-}
-.modal-backdrop.show { display: flex; }
-.modal {
-  background: var(--pcl-white);
-  width: 90%;
-  max-width: 640px;
-  max-height: 90vh;
-  display: flex;
-  flex-direction: column;
-  box-shadow: var(--pcl-shadow-lg);
-}
-.modal-head {
-  background: var(--pcl-black);
-  color: var(--pcl-white);
-  padding: 14px 18px;
-  border-bottom: 3px solid var(--pcl-red);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.modal-head h3 {
-  font-size: 14px;
-  font-weight: 700;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-}
-.modal-close {
-  background: transparent;
-  color: var(--pcl-white);
-  font-size: 20px;
-  line-height: 1;
-  padding: 0;
-  width: 28px;
-  height: 28px;
-}
-.modal-close:hover { color: var(--pcl-red); }
-.modal-body {
-  padding: 20px;
-  overflow-y: auto;
-  flex: 1;
-}
-.modal-foot {
-  padding: 12px 18px;
-  border-top: 1px solid var(--pcl-light-2);
-  display: flex;
-  justify-content: flex-end;
-  gap: 8px;
-  background: var(--pcl-light);
-}
-
-.form-group {
-  margin-bottom: 14px;
-}
-.form-group label {
-  display: block;
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  color: var(--pcl-gray);
-  font-weight: 600;
-  margin-bottom: 4px;
-}
-.form-group input, .form-group select, .form-group textarea {
-  width: 100%;
-  padding: 8px 10px;
-  border: 1px solid var(--pcl-light-2);
-  background: var(--pcl-white);
-  font-size: 13px;
-}
-.form-group input:focus, .form-group select:focus, .form-group textarea:focus {
-  border-color: var(--pcl-red);
-  outline: none;
-}
-
-.narrative-box {
-  background: var(--pcl-light);
-  padding: 18px;
-  border-left: 4px solid var(--pcl-red);
-  font-size: 13px;
-  line-height: 1.7;
-  white-space: pre-wrap;
-  font-family: 'Inter', sans-serif;
-}
-.narrative-box h2 {
-  font-size: 15px;
-  font-weight: 700;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-  color: var(--pcl-red);
-  margin: 18px 0 8px;
-}
-.narrative-box h2:first-child { margin-top: 0; }
-.narrative-box ul { margin: 0 0 12px 20px; }
-.narrative-box li { margin-bottom: 6px; }
-.narrative-box p { margin-bottom: 10px; }
-
-/* =========================
-   SCENARIOS
-   ========================= */
-.scenario-card {
-  border: 1px solid var(--pcl-light-2);
-  padding: 10px;
-  margin-bottom: 8px;
-  background: var(--pcl-white);
-}
-.scenario-card.active { border-left: 4px solid var(--pcl-red); background: #FFF5F5; }
-.scenario-card .name {
-  font-weight: 600;
-  font-size: 13px;
-}
-.scenario-card .stats {
-  font-size: 11px;
-  color: var(--pcl-gray);
-  margin-top: 2px;
-}
-.scenario-card .actions {
-  margin-top: 6px;
-  display: flex;
-  gap: 4px;
-}
-
-.compare-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 12px;
-}
-.compare-table th, .compare-table td {
-  padding: 8px;
-  border-bottom: 1px solid var(--pcl-light-2);
-  text-align: left;
-}
-.compare-table th {
-  background: var(--pcl-red);
-  color: var(--pcl-white);
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-.compare-table td.num { text-align: right; font-variant-numeric: tabular-nums; }
-.delta-pos { color: var(--pcl-red); font-weight: 600; }
-.delta-neg { color: var(--pcl-green); font-weight: 600; }
-
-/* =========================
-   ADJACENCY MATRIX
-   ========================= */
-.adjacency-wrap {
-  overflow: auto;
-  max-height: 75vh;
-  background: var(--pcl-white);
-  border: 1px solid var(--pcl-light-2);
-}
-.adj-table {
-  border-collapse: collapse;
-  font-size: 11px;
-}
-.adj-table th, .adj-table td {
-  border: 1px solid var(--pcl-light-2);
-  padding: 0;
-  text-align: center;
-  min-width: 32px;
-  height: 32px;
-}
-.adj-table thead th {
-  background: var(--pcl-black);
-  color: var(--pcl-white);
-  padding: 6px;
-  vertical-align: bottom;
-  white-space: nowrap;
-  position: sticky;
-  top: 0;
-  z-index: 2;
-}
-.adj-table thead th.rot {
-  height: 120px;
-  min-width: 32px;
-  max-width: 32px;
-}
-.adj-table thead th.rot > div {
-  transform: rotate(-60deg);
-  transform-origin: left bottom;
-  white-space: nowrap;
-  padding-left: 24px;
-  width: 30px;
-}
-.adj-table tbody th {
-  background: var(--pcl-light);
-  color: var(--pcl-black);
-  text-align: left;
-  padding: 6px 10px;
-  font-weight: 500;
-  white-space: nowrap;
-  position: sticky;
-  left: 0;
-  z-index: 1;
-  font-size: 11px;
-}
-.adj-cell {
-  cursor: pointer;
-  transition: transform 0.1s;
-}
-.adj-cell:hover { transform: scale(1.2); }
-.adj-must { background: #1B5E20; }
-.adj-should { background: #A5D6A7; }
-.adj-separate { background: var(--pcl-red); }
-.adj-none { background: var(--pcl-light); }
-.adj-diag { background: var(--pcl-black); }
-
-.adj-legend {
-  display: flex;
-  gap: 16px;
-  padding: 12px;
-  background: var(--pcl-white);
-  border-bottom: 1px solid var(--pcl-light-2);
-  font-size: 12px;
-  align-items: center;
-  flex-wrap: wrap;
-}
-.adj-legend .swatch {
-  display: inline-block;
-  width: 14px;
-  height: 14px;
-  margin-right: 6px;
-  vertical-align: middle;
-  border: 1px solid rgba(0,0,0,0.1);
-}
-
-/* =========================
-   CHANGE LOG (BOTTOM)
-   ========================= */
-.changelog {
-  background: var(--pcl-white);
-  border-top: 1px solid var(--pcl-light-2);
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  max-height: 50vh;
-  display: flex;
-  flex-direction: column;
-  transform: translateY(calc(100% - 40px));
-  transition: transform 0.25s;
-  z-index: 95;
-  box-shadow: 0 -4px 12px rgba(0,0,0,0.08);
-}
-.changelog.open { transform: translateY(0); }
-.changelog-head {
-  background: var(--pcl-black);
-  color: var(--pcl-white);
-  padding: 10px 16px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  cursor: pointer;
-  border-top: 3px solid var(--pcl-red);
-}
-.changelog-head h3 {
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-}
-.changelog-body {
-  overflow-y: auto;
-  padding: 12px 16px;
-  flex: 1;
-}
-.changelog-entry {
-  padding: 8px 0;
-  border-bottom: 1px solid var(--pcl-light-2);
-  font-size: 12px;
-  display: grid;
-  grid-template-columns: 150px 90px 1fr 180px;
-  gap: 10px;
-  align-items: center;
-}
-.changelog-entry .ts { color: var(--pcl-gray); font-variant-numeric: tabular-nums; }
-.changelog-entry .op {
-  font-weight: 700;
-  text-transform: uppercase;
-  font-size: 10px;
-  letter-spacing: 0.5px;
-}
-.changelog-entry .op.add { color: var(--pcl-green); }
-.changelog-entry .op.del { color: var(--pcl-red); }
-.changelog-entry .op.mod { color: var(--pcl-yellow); }
-.changelog-entry .op.sys { color: var(--pcl-gray); }
-.changelog-entry input.note {
-  padding: 4px 6px;
-  border: 1px solid var(--pcl-light-2);
-  font-size: 11px;
-  width: 100%;
-}
-
-/* =========================
-   TAB VIEW
-   ========================= */
-.view { display: none; }
-.view.active { display: block; }
-
-/* =========================
-   PRINT
-   ========================= */
-@media print {
-  .topnav, .budget-bar, .sidebar, .rightpanel, .toolbar, .changelog, .card-head, .add-row-btn, .btn-icon {
-    display: none !important;
-  }
-  .main { grid-template-columns: 1fr !important; height: auto !important; overflow: visible !important; }
-  .content { padding: 0 !important; background: white !important; }
-  body { background: white !important; }
-  .program-table { font-size: 11px; }
-  .program-table thead th { background: #000 !important; color: #fff !important; -webkit-print-color-adjust: exact; }
-  .category-header td { background: #444 !important; color: #fff !important; -webkit-print-color-adjust: exact; }
-}
-
-/* =========================
-   RESPONSIVE
-   ========================= */
-@media (max-width: 1200px) {
-  .main { grid-template-columns: 220px 1fr 300px; }
-  .budget-bar { grid-template-columns: repeat(3, 1fr); }
-  .budget-bar .budget-cell:nth-child(n+4) { border-top: 1px solid var(--pcl-light-2); padding-top: 10px; margin-top: 10px; }
-}
-@media (max-width: 900px) {
-  .main { grid-template-columns: 1fr; }
-  .sidebar, .rightpanel { display: none; }
-  .sidebar.mobile-open, .rightpanel.mobile-open {
-    display: block; position: fixed; top: 56px; bottom: 0; width: 85%; z-index: 200; box-shadow: var(--pcl-shadow-lg);
-  }
-  .sidebar.mobile-open { left: 0; }
-  .rightpanel.mobile-open { right: 0; }
-  .nav-tabs { display: none; }
-}
-
-.mobile-toggle { display: none; }
-@media (max-width: 900px) {
-  .mobile-toggle { display: inline-block; }
-}
-
-/* util */
-.hidden { display: none !important; }
-.num { font-variant-numeric: tabular-nums; }
-.text-right { text-align: right; }
-.muted { color: var(--pcl-gray); }
-.tiny { font-size: 11px; }
 </style>
 </head>
 <body>
 
-<!-- ============ NAV ============ -->
-<div class="topnav">
-  <div class="logo-block">
-    <div class="logo-mark">PCL</div>
-    <div>
-      <div class="logo-text">Architectural Program Tool</div>
-      <div class="logo-sub">Preconstruction · Design-Build</div>
+<!-- LAYER 1: NAV -->
+<nav class="nav">
+  <div class="nav-logo">
+    <div class="pcl-oval"><span class="ol-pcl">PCL</span><span class="ol-sub">Const.</span></div>
+  </div>
+  <div class="nav-center">
+    <span class="t1">Burbank Central Library &amp; Civic Center</span>
+    <span class="t2">Progressive Design-Build Optioneering Tool</span>
+  </div>
+  <div class="nav-right">Pursuit Phase &nbsp;|&nbsp; $155M GMP Target</div>
+</nav>
+
+<!-- LAYER 2: TEAM STRIP -->
+<div class="team-strip">
+  <span class="team-lbl">Project Team:</span>
+  <div class="firm">
+    <span class="firm-role">General Contractor</span>
+    <div class="firm-pcl-row">
+      <div class="firm-oval"><span class="fo-pcl">PCL</span><span class="fo-sub">CONST.</span></div>
+      <span class="firm-pcl-name">PCL Construction</span>
     </div>
   </div>
-  <div class="nav-tabs">
-    <button class="nav-tab active" data-view="program">Program</button>
-    <button class="nav-tab" data-view="scenarios">Scenarios</button>
-    <button class="nav-tab" data-view="adjacency">Adjacency</button>
+  <div class="firm">
+    <span class="firm-role">Architect of Record</span>
+    <div class="firm-gruen-wm">Gruen Associates</div>
+    <div class="firm-gruen-tl">Architecture · Planning · Interiors · Landscapes</div>
   </div>
-  <div class="nav-right">
-    <div class="project-pill">Burbank Central Library · Progressive DB</div>
+  <div class="firm">
+    <span class="firm-role">Design Architect</span>
+    <div class="firm-grimshaw-wm">Grimshaw</div>
   </div>
+  <div class="firm">
+    <span class="firm-role">Engineering</span>
+    <div class="firm-arup-wm">Arup</div>
+  </div>
+  <div class="team-pill">RFQ: May 2026 &nbsp;|&nbsp; GMP Target: 2028</div>
 </div>
 
-<!-- ============ BUDGET BAR ============ -->
+<!-- LAYER 3: RIBBON -->
+<div class="ribbon"></div>
+
+<!-- BUDGET BAR -->
 <div class="budget-bar">
-  <div class="budget-cell accent">
-    <div class="budget-label">Programmed Cost (Mid)</div>
-    <div class="budget-value" id="b-programmed">$0</div>
-    <div class="budget-sub" id="b-range">Range: $0 – $0</div>
+  <div class="bc accent">
+    <div class="bl">Programmed Cost (Mid)</div>
+    <div class="bv" id="b-cost">$0</div>
+    <div class="bs" id="b-range">Range: $0 – $0</div>
   </div>
-  <div class="budget-cell">
-    <div class="budget-label">Target GMP</div>
-    <div class="budget-value">$155,000,000</div>
-    <div class="budget-sub">Progressive Design-Build</div>
+  <div class="bc">
+    <div class="bl">Target GMP</div>
+    <div class="bv">$155,000,000</div>
+    <div class="bs">Progressive Design-Build</div>
   </div>
-  <div class="budget-cell accent">
-    <div class="budget-label">Variance</div>
-    <div class="budget-value" id="b-variance">$0</div>
-    <div class="budget-sub" id="b-variance-pct">0.0%</div>
+  <div class="bc accent">
+    <div class="bl">Variance</div>
+    <div class="bv" id="b-var">$0</div>
+    <div class="bs" id="b-var-pct">0.0%</div>
   </div>
-  <div class="budget-cell">
-    <div class="budget-label">Cost / GSF</div>
-    <div class="budget-value" id="b-psf">$0</div>
-    <div class="budget-sub" id="b-gsf">0 GSF</div>
+  <div class="bc">
+    <div class="bl">Cost / GSF (Building)</div>
+    <div class="bv" id="b-psf">$0</div>
+    <div class="bs" id="b-gsf">87,500 GSF · parking excluded</div>
   </div>
-  <div class="budget-cell">
-    <div class="budget-label">Phase 1 Cost</div>
-    <div class="budget-value" id="b-phase1">$0</div>
-    <div class="budget-sub" id="b-phase1-sf">0 SF</div>
+  <div class="bc">
+    <div class="bl">Phase 1 Cost</div>
+    <div class="bv" id="b-ph1">$0</div>
+    <div class="bs" id="b-ph1-sf">0 SF</div>
   </div>
-  <div class="budget-cell">
-    <div class="budget-label">Phase 2 Cost</div>
-    <div class="budget-value" id="b-phase2">$0</div>
-    <div class="budget-sub" id="b-phase2-sf">0 SF</div>
+  <div class="bc">
+    <div class="bl">Phase 2 Cost</div>
+    <div class="bv" id="b-ph2">$0</div>
+    <div class="bs" id="b-ph2-sf">0 SF</div>
+  </div>
+  <div class="bpw">
+    <div class="bpl"><span>Budget Utilization</span><span id="b-pct">0%</span></div>
+    <div class="bpt"><div class="bpf" id="b-fill"></div></div>
   </div>
 </div>
 
-<!-- ============ MAIN ============ -->
+<!-- MOBILE BANNER -->
+<div class="mob-banner" id="mob-banner">
+  <span>For best experience, view on tablet or desktop.</span>
+  <button onclick="dismissBanner()" title="Dismiss">×</button>
+</div>
+
+<!-- MAIN LAYOUT -->
 <div class="main">
 
-  <!-- ============ LEFT SIDEBAR ============ -->
-  <aside class="sidebar" id="sidebar">
+  <!-- LEFT: CONTENT COLUMN -->
+  <div class="content-col">
 
-    <div class="widget">
-      <div class="section-header"><h2>Gross-to-Net</h2><p>Building efficiency</p></div>
-      <div class="widget-row"><span class="k">Total Net SF</span><span class="v" id="g-nsf">0</span></div>
-      <div class="slider-wrap">
-        <div class="widget-row" style="border:none;padding-bottom:4px;">
-          <span class="k">Efficiency Factor</span>
-          <span class="v" id="g-eff-val">68%</span>
-        </div>
-        <input type="range" min="60" max="80" value="68" id="g-eff" />
-        <div class="slider-labels"><span>60%</span><span>68%</span><span>80%</span></div>
-      </div>
-      <div class="widget-row"><span class="k">Calculated Gross SF</span><span class="v" id="g-gsf">0</span></div>
-      <div class="widget-row">
-        <span class="k">Target GSF</span>
-        <input type="number" id="g-target" value="87500" style="width:80px;text-align:right;border:1px solid var(--pcl-light-2);padding:4px;font-size:12px;" />
-      </div>
-      <div class="widget-row">
-        <span class="k">Variance</span>
-        <span class="v"><span class="variance-badge" id="g-var">0</span></span>
-      </div>
-      <div class="warning-banner" id="g-warn">⚠ GSF variance exceeds ±5% of target. Review efficiency factor or program scope.</div>
-    </div>
-
-    <div class="widget">
-      <div class="section-header"><h2>Program Filters</h2><p>Phase & scope view</p></div>
-      <div style="display:flex;flex-direction:column;gap:6px;">
-        <button class="btn-ghost active" data-filter="all">Show All</button>
-        <button class="btn-ghost" data-filter="Phase 1">Phase 1 Only</button>
-        <button class="btn-ghost" data-filter="Phase 2">Phase 2 Only</button>
-        <button class="btn-ghost" data-filter="Optional">Optionals & Alternates</button>
+    <!-- Phase filter -->
+    <div class="toolbar" style="margin-bottom:10px">
+      <span class="tb-lbl">Phase:</span>
+      <div class="pill-group" id="phase-pills">
+        <button class="phase-pill active" data-filter="all">All</button>
+        <button class="phase-pill" data-filter="Phase 1">Phase 1</button>
+        <button class="phase-pill" data-filter="Phase 2">Phase 2</button>
+        <button class="phase-pill" data-filter="Optional">Optional</button>
+        <button class="phase-pill" data-filter="Alternate">Alternate</button>
       </div>
     </div>
 
-    <div class="widget">
-      <div class="section-header"><h2>Export</h2><p>Downloads & reports</p></div>
-      <div style="display:flex;flex-direction:column;gap:6px;">
-        <button class="btn-ghost" onclick="exportCSV()">⤓ Program CSV</button>
-        <button class="btn-ghost" onclick="exportChangelogCSV()">⤓ Change Log CSV</button>
-        <button class="btn-ghost" onclick="window.print()">⎙ Stakeholder PDF</button>
+    <!-- Scenario toolbar -->
+    <div class="toolbar">
+      <span class="tb-lbl">Scenario:</span>
+      <span class="tb-val" id="cur-scenario">Baseline — Full Program</span>
+      <div class="tb-sep"></div>
+      <button class="btn-ghost btn-sm" onclick="saveScenario()">Save Scenario</button>
+      <button class="btn btn-sm" onclick="resetBaseline()">Reset to Baseline</button>
+      <div class="tb-sep"></div>
+      <button class="btn-ghost btn-sm" onclick="exportCSV()">⤓ CSV</button>
+      <button class="btn-ghost btn-sm" onclick="window.print()">⎙ PDF</button>
+      <div class="tb-sep"></div>
+      <span class="tb-lbl">Rows:</span>
+      <span class="tb-val" id="row-count">0</span>
+    </div>
+
+    <!-- Program table -->
+    <div class="panel">
+      <div class="ph">
+        <h3>Burbank Central Library — Architectural Program</h3>
+        <span style="font-size:11px;color:var(--dim)">Click cell to edit · Drag ⋮⋮ to reorder</span>
+      </div>
+      <div class="table-wrap">
+        <table class="prog-tbl" id="prog-tbl">
+          <thead>
+            <tr>
+              <th style="width:24px"></th>
+              <th style="width:6px;padding:0"></th>
+              <th>Space Name</th>
+              <th class="num">Qty</th>
+              <th class="num col-hide">Unit SF</th>
+              <th class="num">Total SF</th>
+              <th class="num col-hide">$/SF Low</th>
+              <th class="num">$/SF Mid</th>
+              <th class="num col-hide">$/SF High</th>
+              <th class="num">Total Cost</th>
+              <th>Phase</th>
+              <th class="col-hide">Bench</th>
+              <th class="col-hide">Notes</th>
+              <th style="width:40px"></th>
+            </tr>
+          </thead>
+          <tbody id="prog-tbody"></tbody>
+        </table>
       </div>
     </div>
 
-  </aside>
-
-  <!-- ============ CONTENT ============ -->
-  <section class="content">
-
-    <!-- PROGRAM VIEW -->
-    <div class="view active" id="view-program">
-
-      <div class="toolbar">
-        <div class="toolbar-group">
-          <span class="toolbar-label">Scenario</span>
-          <span id="current-scenario" style="font-weight:600;font-size:13px;">Baseline Program</span>
-        </div>
-        <div class="toolbar-group">
-          <button class="btn-dark btn-sm" onclick="saveScenario()">Save Scenario</button>
-          <button class="btn-ghost btn-sm" onclick="resetBaseline()">Reset Baseline</button>
-        </div>
-        <div class="toolbar-group" style="margin-left:auto;">
-          <span class="toolbar-label">Rows</span>
-          <span id="row-count" class="tiny" style="font-weight:600;">0</span>
-        </div>
+    <!-- Tabs: Change Log / Adjacency Matrix -->
+    <div class="panel" style="margin-bottom:20px">
+      <div class="tab-bar">
+        <button class="tab-btn active" onclick="switchTab('log',this)">Change Log</button>
+        <button class="tab-btn" onclick="switchTab('adj',this)">Adjacency Matrix</button>
       </div>
-
-      <div class="card">
-        <div class="card-head">
-          <h3>Burbank Central Library — Architectural Program</h3>
-          <div class="tiny" style="opacity:0.75;">Click any cell to edit · Drag ⋮⋮ to reorder</div>
+      <div class="tab-pane active" id="tab-log">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+          <div class="sh" style="margin-bottom:0"><h2>Change Log</h2></div>
+          <button class="btn-ghost btn-sm" onclick="exportLogCSV()">⤓ Export CSV</button>
         </div>
-        <div class="card-body">
-          <table class="program-table" id="program-table">
-            <thead>
-              <tr>
-                <th style="width:28px"></th>
-                <th>Space Name</th>
-                <th class="num">Qty</th>
-                <th class="num">Unit SF</th>
-                <th class="num">Total SF</th>
-                <th class="num">$/SF Low</th>
-                <th class="num">$/SF Mid</th>
-                <th class="num">$/SF High</th>
-                <th class="num">Total Cost</th>
-                <th>Phase</th>
-                <th>Notes</th>
-                <th style="width:60px;"></th>
-              </tr>
-            </thead>
-            <tbody id="program-tbody"></tbody>
-          </table>
+        <div id="log-body"></div>
+      </div>
+      <div class="tab-pane" id="tab-adj">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <div class="sh" style="margin-bottom:0"><h2>Adjacency Matrix</h2></div>
+          <button class="btn-ghost btn-sm" onclick="exportAdj()">⤓ Export</button>
         </div>
+        <div class="adj-legend">
+          <span><span class="sw" style="background:#1B5E20"></span>Must Be Adjacent</span>
+          <span><span class="sw" style="background:#81C784"></span>Should Be Adjacent</span>
+          <span><span class="sw" style="background:var(--red)"></span>Should Be Separated</span>
+          <span><span class="sw" style="background:#F5F5F5"></span>No Requirement</span>
+          <span style="margin-left:auto;font-size:11px;color:var(--dim)">Click cell to cycle</span>
+        </div>
+        <div class="adj-wrap" id="adj-wrap"></div>
       </div>
     </div>
 
-    <!-- SCENARIOS VIEW -->
-    <div class="view" id="view-scenarios">
-      <div class="card">
-        <div class="card-head"><h3>Scenario Manager</h3></div>
-        <div class="card-body" style="padding:16px;">
-          <div id="scenario-list"></div>
-        </div>
+    <!-- Scenario Manager -->
+    <div class="panel">
+      <div class="ph ph-toggle" onclick="togglePanel(this)">
+        <h3>Scenario Manager</h3>
+        <span class="chevron">▼</span>
       </div>
-      <div class="card">
-        <div class="card-head"><h3>Side-by-Side Comparison</h3></div>
-        <div class="card-body" style="padding:0;overflow-x:auto;">
-          <table class="compare-table" id="compare-table">
+      <div class="pb">
+        <div id="sc-list" style="margin-bottom:16px"></div>
+        <div class="sh"><h2>Side-by-Side Comparison</h2></div>
+        <div style="overflow-x:auto">
+          <table class="cmp-tbl" id="cmp-tbl">
             <thead>
               <tr>
                 <th>Scenario</th>
@@ -1135,1099 +508,767 @@ input, select, textarea { font-family: inherit; font-size: 14px; }
                 <th class="num">Gross SF</th>
                 <th class="num">Total Cost (Mid)</th>
                 <th class="num">$/GSF</th>
-                <th class="num">Δ vs Baseline ($)</th>
-                <th class="num">Δ vs Target GMP</th>
+                <th class="num">Δ vs Baseline</th>
+                <th class="num">Δ vs GMP</th>
               </tr>
             </thead>
-            <tbody id="compare-tbody"></tbody>
+            <tbody id="cmp-tbody"></tbody>
           </table>
         </div>
       </div>
     </div>
 
-    <!-- ADJACENCY VIEW -->
-    <div class="view" id="view-adjacency">
-      <div class="card">
-        <div class="card-head">
-          <h3>Adjacency Matrix</h3>
-          <button class="btn-ghost btn-sm" onclick="exportAdjacency()" style="background:white;">⤓ Export for Architects</button>
+  </div><!-- /content-col -->
+
+  <!-- RIGHT SIDEBAR -->
+  <aside class="right-sb">
+
+    <!-- Gross-to-Net -->
+    <div style="border-bottom:1px solid var(--border)">
+      <div class="rp-hd" style="display:flex;justify-content:space-between;align-items:center;cursor:pointer" onclick="toggleRpPanel('gtn-body','gtn-chev')">
+        <div>
+          <h3>Gross-to-Net</h3>
+          <p>Building efficiency · parking excluded</p>
         </div>
-        <div class="adj-legend">
-          <span><span class="swatch adj-must"></span> Must Be Adjacent</span>
-          <span><span class="swatch adj-should"></span> Should Be Adjacent</span>
-          <span><span class="swatch adj-separate"></span> Should Be Separated</span>
-          <span><span class="swatch adj-none"></span> No Requirement</span>
-          <span class="muted tiny" style="margin-left:auto;">Click a cell to cycle through states</span>
+        <span id="gtn-chev" style="color:var(--dim);font-size:11px;margin-left:8px">▼</span>
+      </div>
+      <div id="gtn-body" style="padding:16px">
+        <div class="widget">
+          <div class="wr"><span class="k">Total Net SF</span><span class="v" id="g-nsf">0</span></div>
+          <div class="slider-w">
+            <div class="wr" style="border:none;padding-bottom:4px">
+              <span class="k">Efficiency Factor</span><span class="v" id="g-eff-val">68%</span>
+            </div>
+            <input type="range" min="60" max="80" value="68" id="g-eff" oninput="onEffChange(this.value)"/>
+            <div class="slider-lbl"><span>60%</span><span>68%</span><span>80%</span></div>
+          </div>
+          <div class="wr"><span class="k">Calculated Gross SF</span><span class="v" id="g-gsf">0</span></div>
+          <div class="wr">
+            <span class="k">Target GSF</span>
+            <input type="number" id="g-target" value="87500" min="0" oninput="updateGTN()"
+              style="width:90px;text-align:right;border:1px solid var(--border);background:var(--panel);color:var(--text);padding:4px 6px;font-size:12px;font-family:'Barlow',sans-serif"/>
+          </div>
+          <div class="wr"><span class="k">Variance</span><span class="v"><span class="var-badge" id="g-var">0 SF</span></span></div>
+          <div class="warn-banner" id="g-warn">⚠ GSF variance exceeds ±5,000 SF. Review efficiency or program scope.</div>
         </div>
-        <div class="adjacency-wrap" id="adj-wrap"></div>
       </div>
     </div>
 
-  </section>
-
-  <!-- ============ RIGHT PANEL ============ -->
-  <aside class="rightpanel" id="rightpanel">
-    <div class="rp-header">
-      <h3>AI Program Assistant</h3>
-      <p>Powered by Claude · claude-opus-4-5</p>
-    </div>
-    <div class="rp-body">
-
-      <div class="section-header" style="margin-bottom:10px;">
-        <h2>Describe a Change</h2>
+    <!-- AI Assistant -->
+    <div style="flex:1;display:flex;flex-direction:column">
+      <div class="rp-hd" style="display:flex;justify-content:space-between;align-items:center;cursor:pointer" onclick="toggleRpPanel('ai-body','ai-chev')">
+        <div>
+          <h3>AI Program Assistant</h3>
+          <p>Powered by Claude · claude-opus-4-5</p>
+        </div>
+        <span id="ai-chev" style="color:var(--dim);font-size:11px;margin-left:8px">▼</span>
       </div>
-      <textarea class="ai-textarea" id="ai-input" placeholder="e.g. 'Add a 2,000 SF esports lounge to Teen Zone' or 'Remove the rooftop terrace and add 4,000 SF of outdoor reading courtyard instead'"></textarea>
-
-      <div class="chip-row">
-        <span class="chip" data-example="Add a 2,000 SF esports room to the Teen Zone">+ Esports room</span>
-        <span class="chip" data-example="Remove the rooftop terrace">− Rooftop terrace</span>
-        <span class="chip" data-example="Split the Performing Arts Theater into two smaller 3,500 SF black box theaters">Split theater</span>
-        <span class="chip" data-example="Increase all meeting rooms by 20%">+20% meeting rooms</span>
-        <span class="chip" data-example="Add a teaching kitchen of 1,800 SF">+ Teaching kitchen</span>
-      </div>
-
-      <button class="btn" style="width:100%;" id="ai-submit" onclick="submitAiSuggestion()">
-        <span id="ai-submit-label">Suggest Changes</span>
-      </button>
-
-      <div class="ai-error" id="ai-error"></div>
-
-      <div class="preview-actions" id="preview-actions">
-        <h4 id="preview-title">Pending Changes</h4>
-        <p id="preview-summary"></p>
-        <div class="btn-row">
-          <button class="btn btn-sm" onclick="acceptPreview()">✓ Accept Changes</button>
-          <button class="btn-ghost btn-sm" onclick="rejectPreview()">✕ Reject</button>
+      <div id="ai-body" style="padding:16px;flex:1;display:flex;flex-direction:column">
+        <div class="sh" style="margin-bottom:10px"><h2>Describe a Change</h2></div>
+        <textarea class="ai-textarea" id="ai-input" placeholder="Describe what to add, remove, or change..."></textarea>
+        <div class="chip-row">
+          <span class="chip" data-ex="Add a 2,000 SF esports room to the Teen Zone">+ Esports room</span>
+          <span class="chip" data-ex="Remove the Rooftop Terrace">− Rooftop</span>
+          <span class="chip" data-ex="Split the Performing Arts Theater into two 3,500 SF black box theaters">Split theater</span>
+          <span class="chip" data-ex="Increase all meeting rooms by 20%">+20% mtg rooms</span>
+          <span class="chip" data-ex="Show me what $140M buys vs $155M">$140M vs $155M</span>
+          <span class="chip" data-ex="Add a 1,500 SF outdoor reading garden">+ Reading garden</span>
+        </div>
+        <button class="btn" style="width:100%" id="ai-btn" onclick="submitAI()">
+          <span id="ai-lbl">Suggest Changes</span>
+        </button>
+        <div class="ai-err" id="ai-err"></div>
+        <div class="prev-box" id="prev-box">
+          <h4 id="prev-title">Pending Changes</h4>
+          <p id="prev-summary"></p>
+          <div class="br">
+            <button class="btn btn-sm" onclick="acceptPreview()">✓ Accept</button>
+            <button class="btn-ghost btn-sm" onclick="rejectPreview()">✕ Reject</button>
+          </div>
+        </div>
+        <div style="margin-top:24px">
+          <div class="sh"><h2>Generate</h2></div>
+          <div class="flex-col">
+            <button class="btn-ghost" onclick="openModal('gen-modal')">⚡ Generate New Baseline</button>
+            <button class="btn-ghost" id="narr-btn" onclick="generateNarrative()">📄 Stakeholder Narrative</button>
+          </div>
         </div>
       </div>
-
-      <div style="margin-top:28px;">
-        <div class="section-header"><h2>Generate</h2></div>
-        <div style="display:flex;flex-direction:column;gap:8px;">
-          <button class="btn-dark" onclick="openGenerateModal()">⚡ Generate New Baseline</button>
-          <button class="btn-dark" onclick="generateNarrative()" id="narr-btn">📄 Generate Stakeholder Narrative</button>
-        </div>
-      </div>
-
     </div>
+
+    <!-- Sidebar exports -->
+    <div style="padding:16px;border-top:1px solid var(--border)">
+      <div class="sh"><h2>Export</h2></div>
+      <div class="flex-col">
+        <button class="btn-ghost btn-sm" onclick="exportCSV()">⤓ Program CSV</button>
+        <button class="btn-ghost btn-sm" onclick="exportLogCSV()">⤓ Change Log CSV</button>
+        <button class="btn-ghost btn-sm" onclick="window.print()">⎙ Stakeholder PDF</button>
+      </div>
+    </div>
+
   </aside>
+</div><!-- /main -->
 
-</div>
+<!-- FOOTER -->
+<footer class="footer">
+  <strong>Burbank Central Library &amp; Civic Center — Progressive Design-Build Optioneering Tool</strong><br>
+  © PCL Construction &nbsp;|&nbsp; For internal pursuit use only &nbsp;|&nbsp; Not for distribution<br>
+  Project Team: PCL Construction · Gruen Associates · Grimshaw · Arup
+</footer>
 
-<!-- ============ CHANGE LOG ============ -->
-<div class="changelog" id="changelog">
-  <div class="changelog-head" onclick="toggleChangelog()">
-    <h3>Change Log · <span id="changelog-count">0</span> entries</h3>
-    <span id="changelog-arrow">▲</span>
-  </div>
-  <div class="changelog-body" id="changelog-body"></div>
-</div>
-
-<!-- ============ MODAL: GENERATE ============ -->
-<div class="modal-backdrop" id="generate-modal">
+<!-- MODAL: ADD ROW -->
+<div class="modal-bg" id="add-modal">
   <div class="modal">
-    <div class="modal-head">
-      <h3>Generate New Baseline Program</h3>
-      <button class="modal-close" onclick="closeModal('generate-modal')">×</button>
-    </div>
-    <div class="modal-body">
-      <div class="form-group">
-        <label>Building Type</label>
-        <select id="gen-type">
-          <option>Civic Library</option>
-          <option>Community Center</option>
-          <option>City Hall</option>
-          <option>Recreation Center</option>
-          <option>Mixed-Use Civic</option>
+    <div class="modal-hd"><h3>Add Space</h3><button class="modal-cl" onclick="closeModal('add-modal')">×</button></div>
+    <div class="modal-bd">
+      <div class="fg"><label>Space Name</label><input type="text" id="add-name" placeholder="e.g. Teen Makerspace"/></div>
+      <div class="fg"><label>Category</label>
+        <select id="add-cat-sel">
+          <option>Public Spaces</option><option>Children &amp; Teen</option>
+          <option>Special Facilities</option><option>Staff &amp; Operations</option>
+          <option>Parking &amp; Circulation</option><option>Support Spaces</option>
         </select>
       </div>
-      <div class="form-group">
-        <label>Total Target GSF</label>
-        <input type="number" id="gen-sf" value="87500" />
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div class="fg"><label>Qty</label><input type="number" id="add-qty" value="1" min="1"/></div>
+        <div class="fg"><label>Unit SF</label><input type="number" id="add-usf" value="1000" min="0"/></div>
+        <div class="fg"><label>$/SF Mid</label><input type="number" id="add-mid" value="300" min="0"/></div>
+        <div class="fg"><label>Phase</label>
+          <select id="add-phase">
+            <option>Phase 1</option><option>Phase 2</option><option>Optional</option><option>Alternate</option>
+          </select>
+        </div>
       </div>
-      <div class="form-group">
-        <label>Total Budget (USD)</label>
-        <input type="number" id="gen-budget" value="155000000" />
-      </div>
-      <div class="form-group">
-        <label>Description & Special Requirements</label>
-        <textarea id="gen-desc" rows="4" placeholder="Context, stakeholder priorities, unique programmatic requirements...">Burbank Central Library progressive design-build replacement. Serves 108K residents. City priorities: children's & teen programs, digital/maker tech, community meeting space, a performance venue, city office co-location, and a rooftop amenity. 1-acre public plaza adjacent. 310-stall parking structure.</textarea>
-      </div>
+      <div class="fg"><label>Notes</label><input type="text" id="add-notes" placeholder="Optional context"/></div>
     </div>
-    <div class="modal-foot">
-      <button class="btn-ghost" onclick="closeModal('generate-modal')">Cancel</button>
-      <button class="btn" id="gen-submit" onclick="submitGenerate()"><span id="gen-submit-label">Generate Program</span></button>
+    <div class="modal-ft">
+      <button class="btn-ghost" onclick="closeModal('add-modal')">Cancel</button>
+      <button class="btn" onclick="confirmAddRow()">Add Space</button>
     </div>
   </div>
 </div>
 
-<!-- ============ MODAL: NARRATIVE ============ -->
-<div class="modal-backdrop" id="narrative-modal">
-  <div class="modal" style="max-width:780px;">
-    <div class="modal-head">
-      <h3>Stakeholder Program Narrative</h3>
-      <button class="modal-close" onclick="closeModal('narrative-modal')">×</button>
+<!-- MODAL: GENERATE PROGRAM -->
+<div class="modal-bg" id="gen-modal">
+  <div class="modal">
+    <div class="modal-hd"><h3>Generate New Baseline Program</h3><button class="modal-cl" onclick="closeModal('gen-modal')">×</button></div>
+    <div class="modal-bd">
+      <div class="fg"><label>Building Type</label>
+        <select id="gen-type">
+          <option>Civic Library</option><option>Community Center</option>
+          <option>City Hall</option><option>Recreation Center</option><option>Mixed-Use Civic</option>
+        </select>
+      </div>
+      <div class="fg"><label>Total Target GSF</label><input type="number" id="gen-sf" value="87500"/></div>
+      <div class="fg"><label>Total Budget (USD)</label><input type="number" id="gen-budget" value="155000000"/></div>
+      <div class="fg">
+        <label>Description &amp; Special Requirements</label>
+        <textarea id="gen-desc" rows="5" placeholder="Context, stakeholder priorities, unique requirements...">Burbank Central Library progressive design-build replacement. Serves 108K residents. City priorities: children's &amp; teen programs, digital/maker tech, community meeting space, a performance venue, city office co-location, and a rooftop amenity. 1-acre public plaza adjacent. 310-stall parking structure.</textarea>
+      </div>
     </div>
-    <div class="modal-body">
-      <div id="narrative-content" class="narrative-box">Generating...</div>
+    <div class="modal-ft">
+      <button class="btn-ghost" onclick="closeModal('gen-modal')">Cancel</button>
+      <button class="btn" id="gen-btn" onclick="submitGenerate()"><span id="gen-lbl">Generate Program</span></button>
     </div>
-    <div class="modal-foot">
+  </div>
+</div>
+
+<!-- MODAL: NARRATIVE -->
+<div class="modal-bg" id="narr-modal">
+  <div class="modal" style="max-width:780px">
+    <div class="modal-hd"><h3>Stakeholder Program Narrative</h3><button class="modal-cl" onclick="closeModal('narr-modal')">×</button></div>
+    <div class="modal-bd"><div id="narr-content" class="narr-box">Generating…</div></div>
+    <div class="modal-ft">
       <button class="btn-ghost" onclick="copyNarrative()">📋 Copy</button>
-      <button class="btn" onclick="closeModal('narrative-modal')">Close</button>
+      <button class="btn" onclick="closeModal('narr-modal')">Close</button>
     </div>
   </div>
 </div>
 
 <script>
-/* =============================================================
-   STATE
-   ============================================================= */
-const CATEGORIES = ['Public Spaces','Children & Teen','Staff & Operations','Special Facilities','Parking & Circulation','Support Spaces'];
-const PHASES = ['Phase 1','Phase 2','Optional','Alternate'];
-const CAT_COLORS = {
-  'Public Spaces': 'var(--cat-public)',
-  'Children & Teen': 'var(--cat-kids)',
-  'Staff & Operations': 'var(--cat-staff)',
-  'Special Facilities': 'var(--cat-special)',
-  'Parking & Circulation': 'var(--cat-parking)',
-  'Support Spaces': 'var(--cat-support)'
-};
-const TARGET_GMP = 155000000;
-
-// PLA civic library benchmark ranges (per-unit SF)
-const BENCHMARKS = {
-  "Children's Library": [6000, 12000],
-  "Teen Zone": [1800, 4500],
-  "Adult Reading Room": [8000, 16000],
-  "Digital Media Lab": [1500, 3500],
-  "Makerspace": [2000, 5000],
-  "Podcast/Recording Studio": [200, 500],
-  "Community Meeting Room (Large)": [1200, 2400],
-  "Community Meeting Room (Small)": [350, 800],
-  "Performing Arts Theater": [5000, 12000],
-  "Café": [1200, 3000],
-  "Rooftop Terrace": [2500, 6000],
-  "City Offices": [8000, 20000],
-  "Staff Workroom": [1500, 3500],
-  "Collections/Stacks": [4000, 10000]
+/* ════════════════════════════════════
+   CONSTANTS
+════════════════════════════════════ */
+const CAT_ORDER=['Public Spaces','Children & Teen','Special Facilities','Staff & Operations','Parking & Circulation','Support Spaces'];
+const CAT_COLORS={'Public Spaces':'#CE2027','Children & Teen':'#E8A020','Special Facilities':'#2060CE','Staff & Operations':'#3D8B37','Parking & Circulation':'#8B3DB8','Support Spaces':'#CE6020'};
+const PHASE_COLORS={'Phase 1':'#2060CE','Phase 2':'#CE6020','Optional':'#8B3DB8','Alternate':'#3D8B37'};
+const TARGET_GMP=155000000,TARGET_GSF=87500;
+const BENCHMARKS={
+  'Adult Reading Room':[8000,16000],'Digital Media Lab':[1500,3500],'Makerspace':[2000,4500],
+  'Podcast/Recording Studios':[200,500],'Café':[1500,3000],'Rooftop Terrace':[2000,6000],
+  "Children's Library":[6000,12000],'Teen Zone':[1800,4500],'Performing Arts Theater':[6000,12000],
+  'Community Meeting Room Large':[1200,2500],'Community Meeting Room Small':[400,900],
+  'City Offices':[10000,20000],'Staff Workroom':[1800,3000],'Collections/Stacks':[4000,9000],
+  'Parking Structure 310 stalls':[80000,130000],'Restrooms':[2000,4000],
+  'Mechanical/Electrical':[2500,4500],'Vertical Circulation/Lobbies':[3000,6000]
 };
 
-function baselineProgram() {
-  return [
-    // Public Spaces
-    { id: 's1',  category: 'Public Spaces',     name: "Adult Reading Room",        qty: 1, unitSF: 12000, unitCostLow: 750, unitCostMid: 900,  unitCostHigh: 1050, phase: 'Phase 1', notes: 'Central reading area with lounge seating & individual study' },
-    { id: 's2',  category: 'Public Spaces',     name: 'Café',                       qty: 1, unitSF: 2200,  unitCostLow: 900, unitCostMid: 1100, unitCostHigh: 1300, phase: 'Phase 1', notes: 'Lobby-adjacent, revenue-generating' },
-    { id: 's3',  category: 'Public Spaces',     name: 'Rooftop Terrace',            qty: 1, unitSF: 4500,  unitCostLow: 450, unitCostMid: 600,  unitCostHigh: 750,  phase: 'Phase 2', notes: 'Events, reading, city views' },
-    { id: 's4',  category: 'Public Spaces',     name: "Community Meeting Room (Large)", qty: 2, unitSF: 1800, unitCostLow: 700, unitCostMid: 850, unitCostHigh: 1000, phase: 'Phase 1', notes: 'Divisible, A/V equipped' },
-    { id: 's5',  category: 'Public Spaces',     name: "Community Meeting Room (Small)", qty: 4, unitSF: 600,  unitCostLow: 650, unitCostMid: 800, unitCostHigh: 950,  phase: 'Phase 1', notes: 'Bookable study & meeting' },
-    // Children & Teen
-    { id: 's6',  category: 'Children & Teen',   name: "Children's Library",         qty: 1, unitSF: 8500,  unitCostLow: 800, unitCostMid: 950,  unitCostHigh: 1100, phase: 'Phase 1', notes: 'Story time, early literacy, family space' },
-    { id: 's7',  category: 'Children & Teen',   name: 'Teen Zone',                  qty: 1, unitSF: 3200,  unitCostLow: 750, unitCostMid: 900,  unitCostHigh: 1050, phase: 'Phase 1', notes: 'Tech, collaboration, homework' },
-    // Special Facilities
-    { id: 's8',  category: 'Special Facilities',name: 'Digital Media Lab',          qty: 1, unitSF: 2800,  unitCostLow: 900, unitCostMid: 1100, unitCostHigh: 1300, phase: 'Phase 1', notes: 'Video edit, graphics, VR' },
-    { id: 's9',  category: 'Special Facilities',name: 'Makerspace',                 qty: 1, unitSF: 3500,  unitCostLow: 850, unitCostMid: 1050, unitCostHigh: 1250, phase: 'Phase 1', notes: '3D printing, woodshop, textiles' },
-    { id: 's10', category: 'Special Facilities',name: 'Podcast/Recording Studio',   qty: 3, unitSF: 300,   unitCostLow: 1100, unitCostMid: 1300, unitCostHigh: 1500, phase: 'Phase 1', notes: 'Acoustic treatment, A/V equipped' },
-    { id: 's11', category: 'Special Facilities',name: 'Performing Arts Theater',    qty: 1, unitSF: 8000,  unitCostLow: 1200, unitCostMid: 1500, unitCostHigh: 1800, phase: 'Phase 2', notes: '250-seat, fly tower, black-box capable' },
-    // Staff & Operations
-    { id: 's12', category: 'Staff & Operations',name: 'City Offices',               qty: 1, unitSF: 14000, unitCostLow: 600, unitCostMid: 750,  unitCostHigh: 900,  phase: 'Phase 1', notes: 'Co-located city departments' },
-    { id: 's13', category: 'Staff & Operations',name: 'Staff Workroom',             qty: 1, unitSF: 2400,  unitCostLow: 550, unitCostMid: 700,  unitCostHigh: 850,  phase: 'Phase 1', notes: 'Library staff ops, sorting, IT' },
-    // Support
-    { id: 's14', category: 'Support Spaces',    name: 'Collections/Stacks',         qty: 1, unitSF: 6000,  unitCostLow: 500, unitCostMid: 650,  unitCostHigh: 800,  phase: 'Phase 1', notes: 'Open & closed stacks' },
-    // Parking & Circulation (EXCLUDED from building GSF)
-    { id: 's15', category: 'Parking & Circulation', name: 'Parking Structure (310 stalls)', qty: 1, unitSF: 93000, unitCostLow: 120, unitCostMid: 160, unitCostHigh: 200, phase: 'Phase 1', notes: 'Excluded from building GSF' },
-    { id: 's16', category: 'Parking & Circulation', name: 'Public Plaza (1 acre)',          qty: 1, unitSF: 43560, unitCostLow: 80,  unitCostMid: 125, unitCostHigh: 170, phase: 'Phase 1', notes: 'Excluded from building GSF · hardscape, landscape, lighting' }
-  ];
-}
-
-const state = {
-  program: baselineProgram(),
-  efficiency: 68,
-  targetGSF: 87500,
-  filter: 'all',
-  scenarios: [],
-  currentScenario: 'Baseline Program',
-  changelog: [],
-  adjacency: {}, // "idA|idB" -> 0..3
-  pendingPreview: null,
-  view: 'program',
-  idCounter: 100
-};
-
-/* =============================================================
-   PERSISTENCE
-   ============================================================= */
-function saveState() {
-  try {
-    localStorage.setItem('pcl_state_v1', JSON.stringify({
-      program: state.program,
-      efficiency: state.efficiency,
-      targetGSF: state.targetGSF,
-      scenarios: state.scenarios,
-      currentScenario: state.currentScenario,
-      changelog: state.changelog,
-      adjacency: state.adjacency
-    }));
-  } catch(e) { console.warn('localStorage save failed', e); }
-}
-function loadState() {
-  try {
-    const raw = localStorage.getItem('pcl_state_v1');
-    if (!raw) return;
-    const d = JSON.parse(raw);
-    if (Array.isArray(d.program)) state.program = d.program;
-    if (typeof d.efficiency === 'number') state.efficiency = d.efficiency;
-    if (typeof d.targetGSF === 'number') state.targetGSF = d.targetGSF;
-    if (Array.isArray(d.scenarios)) state.scenarios = d.scenarios;
-    if (typeof d.currentScenario === 'string') state.currentScenario = d.currentScenario;
-    if (Array.isArray(d.changelog)) state.changelog = d.changelog;
-    if (d.adjacency && typeof d.adjacency === 'object') state.adjacency = d.adjacency;
-  } catch(e) { console.warn('localStorage load failed', e); }
-}
-
-/* =============================================================
-   CALCULATIONS
-   ============================================================= */
-function isParkingOrPlaza(sp) { return sp.category === 'Parking & Circulation'; }
-function spaceTotalSF(sp) { return (sp.qty || 0) * (sp.unitSF || 0); }
-function spaceTotalCost(sp) { return spaceTotalSF(sp) * (sp.unitCostMid || 0); }
-
-function totals() {
-  let netSF = 0, totalMid = 0, totalLow = 0, totalHigh = 0;
-  let p1Cost = 0, p2Cost = 0, p1SF = 0, p2SF = 0;
-  state.program.forEach(sp => {
-    const sf = spaceTotalSF(sp);
-    const cost = sf * (sp.unitCostMid || 0);
-    const costLow = sf * (sp.unitCostLow || 0);
-    const costHigh = sf * (sp.unitCostHigh || 0);
-    totalMid += cost; totalLow += costLow; totalHigh += costHigh;
-    if (!isParkingOrPlaza(sp)) netSF += sf;
-    if (sp.phase === 'Phase 1') { p1Cost += cost; p1SF += sf; }
-    else if (sp.phase === 'Phase 2') { p2Cost += cost; p2SF += sf; }
-  });
-  const gsf = Math.round(netSF / (state.efficiency / 100));
-  return { netSF, gsf, totalMid, totalLow, totalHigh, p1Cost, p2Cost, p1SF, p2SF };
-}
-
-function fmt$(n) { return '$' + Math.round(n).toLocaleString(); }
-function fmtSF(n) { return Math.round(n).toLocaleString() + ' SF'; }
-
-/* =============================================================
-   RENDER — PROGRAM TABLE
-   ============================================================= */
-function renderTable() {
-  const tbody = document.getElementById('program-tbody');
-  tbody.innerHTML = '';
-
-  // Group by category in preferred order
-  const groups = {};
-  CATEGORIES.forEach(c => groups[c] = []);
-  state.program.forEach(sp => {
-    if (!groups[sp.category]) groups[sp.category] = [];
-    groups[sp.category].push(sp);
-  });
-
-  let rowCount = 0;
-  CATEGORIES.forEach(cat => {
-    const rows = groups[cat];
-    // category header
-    const catTr = document.createElement('tr');
-    catTr.className = 'category-header';
-    catTr.innerHTML = `<td colspan="12"><span class="cat-swatch" style="background:${CAT_COLORS[cat]}"></span>${cat} <span style="opacity:0.6;font-weight:400;margin-left:8px;">${rows.length} ${rows.length === 1 ? 'space' : 'spaces'}</span></td>`;
-    tbody.appendChild(catTr);
-
-    rows.forEach(sp => {
-      if (!passesFilter(sp)) return;
-      rowCount++;
-      const tr = buildRow(sp);
-      tbody.appendChild(tr);
-    });
-
-    // add-row button
-    const addTr = document.createElement('tr');
-    addTr.innerHTML = `<td colspan="12" style="padding:0;"><button class="add-row-btn" onclick="addRow('${cat}')">+ Add space to ${cat}</button></td>`;
-    tbody.appendChild(addTr);
-  });
-
-  document.getElementById('row-count').textContent = state.program.length;
-  updateBudget();
-  renderChangelog();
-}
-
-function passesFilter(sp) {
-  if (state.filter === 'all') return true;
-  if (state.filter === 'Optional') return sp.phase === 'Optional' || sp.phase === 'Alternate';
-  return sp.phase === state.filter;
-}
-
-function buildRow(sp) {
-  const tr = document.createElement('tr');
-  tr.className = 'data-row';
-  tr.dataset.id = sp.id;
-  tr.draggable = true;
-  const sf = spaceTotalSF(sp);
-  const cost = sf * (sp.unitCostMid || 0);
-  const phaseClass = 'phase-' + sp.phase.replace(/\s/g, '');
-  const bench = benchmarkIndicator(sp);
-
-  tr.innerHTML = `
-    <td><span class="drag-handle">⋮⋮</span><span class="cat-border" style="background:${CAT_COLORS[sp.category]}"></span></td>
-    <td class="edit" data-field="name">${escape(sp.name)}${bench}</td>
-    <td class="edit num" data-field="qty">${sp.qty}</td>
-    <td class="edit num" data-field="unitSF">${(sp.unitSF||0).toLocaleString()}</td>
-    <td class="num"><strong>${sf.toLocaleString()}</strong></td>
-    <td class="edit num" data-field="unitCostLow">$${sp.unitCostLow||0}</td>
-    <td class="edit num" data-field="unitCostMid">$${sp.unitCostMid||0}</td>
-    <td class="edit num" data-field="unitCostHigh">$${sp.unitCostHigh||0}</td>
-    <td class="num"><strong>${fmt$(cost)}</strong></td>
-    <td><select class="inline phase-select" data-field="phase">${PHASES.map(p => `<option ${p===sp.phase?'selected':''}>${p}</option>`).join('')}</select></td>
-    <td class="edit" data-field="notes" style="max-width:240px;font-size:12px;color:var(--pcl-gray);">${escape(sp.notes||'')}</td>
-    <td style="text-align:right;white-space:nowrap;">
-      <button class="btn-icon" title="Change category" onclick="changeCategory('${sp.id}')">⇅</button>
-      <button class="btn-icon" title="Delete" onclick="deleteRow('${sp.id}')" style="color:var(--pcl-red);">🗑</button>
-    </td>
-  `;
-
-  // phase select
-  tr.querySelector('.phase-select').addEventListener('change', (e) => {
-    updateField(sp.id, 'phase', e.target.value);
-  });
-
-  // edit-in-place
-  tr.querySelectorAll('td.edit').forEach(td => {
-    td.addEventListener('click', (e) => startEdit(td, sp));
-  });
-
-  // drag
-  tr.addEventListener('dragstart', (e) => { tr.classList.add('dragging'); e.dataTransfer.effectAllowed = 'move'; e.dataTransfer.setData('text/plain', sp.id); });
-  tr.addEventListener('dragend', () => { tr.classList.remove('dragging'); document.querySelectorAll('.drop-target').forEach(el => el.classList.remove('drop-target')); });
-  tr.addEventListener('dragover', (e) => { e.preventDefault(); tr.classList.add('drop-target'); });
-  tr.addEventListener('dragleave', () => tr.classList.remove('drop-target'));
-  tr.addEventListener('drop', (e) => {
-    e.preventDefault();
-    const fromId = e.dataTransfer.getData('text/plain');
-    const toId = sp.id;
-    reorderRows(fromId, toId);
-  });
-
-  return tr;
-}
-
-function escape(s) { return String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-
-function startEdit(td, sp) {
-  if (td.querySelector('input')) return;
-  const field = td.dataset.field;
-  const cur = sp[field] == null ? '' : sp[field];
-  const isNum = ['qty','unitSF','unitCostLow','unitCostMid','unitCostHigh'].includes(field);
-  const inp = document.createElement('input');
-  inp.type = isNum ? 'number' : 'text';
-  inp.className = 'inline';
-  inp.value = cur;
-  td.innerHTML = '';
-  td.appendChild(inp);
-  inp.focus();
-  inp.select();
-  const commit = () => {
-    const val = isNum ? Number(inp.value) : inp.value;
-    updateField(sp.id, field, val);
-  };
-  inp.addEventListener('blur', commit);
-  inp.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') { inp.blur(); }
-    if (e.key === 'Escape') { renderTable(); }
-  });
-}
-
-function benchmarkIndicator(sp) {
-  const bm = BENCHMARKS[sp.name];
-  if (!bm) return '';
-  const sf = sp.unitSF || 0;
-  if (sf < bm[0]) return `<span class="bench-icon low" title="Below PLA typical range: ${bm[0].toLocaleString()}–${bm[1].toLocaleString()} SF">↓</span>`;
-  if (sf > bm[1]) return `<span class="bench-icon high" title="Above PLA typical range: ${bm[0].toLocaleString()}–${bm[1].toLocaleString()} SF">↑</span>`;
-  return `<span class="bench-icon ok" title="Within PLA typical range: ${bm[0].toLocaleString()}–${bm[1].toLocaleString()} SF">✓</span>`;
-}
-
-/* =============================================================
-   MUTATIONS
-   ============================================================= */
-function newId() { return 'u' + (++state.idCounter); }
-
-function updateField(id, field, val) {
-  const sp = state.program.find(s => s.id === id);
-  if (!sp) return;
-  const old = sp[field];
-  if (old === val) return;
-  sp[field] = val;
-  logChange('mod', sp.name, `${field}: ${old} → ${val}`);
-  saveState();
-  renderTable();
-}
-
-function addRow(category) {
-  const sp = {
-    id: newId(),
-    category,
-    name: 'New Space',
-    qty: 1,
-    unitSF: 500,
-    unitCostLow: 700,
-    unitCostMid: 850,
-    unitCostHigh: 1000,
-    phase: 'Phase 1',
-    notes: ''
-  };
-  state.program.push(sp);
-  logChange('add', sp.name, `added to ${category}`);
-  saveState();
-  renderTable();
-}
-
-function deleteRow(id) {
-  const sp = state.program.find(s => s.id === id);
-  if (!sp) return;
-  if (!confirm(`Delete "${sp.name}"? This cannot be undone (but will be logged).`)) return;
-  state.program = state.program.filter(s => s.id !== id);
-  logChange('del', sp.name, `removed from ${sp.category}`);
-  saveState();
-  renderTable();
-}
-
-function changeCategory(id) {
-  const sp = state.program.find(s => s.id === id);
-  if (!sp) return;
-  const next = prompt('Move to which category?\n' + CATEGORIES.map((c,i) => `${i+1}. ${c}`).join('\n'), sp.category);
-  if (!next) return;
-  const match = CATEGORIES.find(c => c.toLowerCase() === next.toLowerCase()) || CATEGORIES[parseInt(next,10) - 1];
-  if (!match) { alert('Not a valid category'); return; }
-  const old = sp.category;
-  sp.category = match;
-  logChange('mod', sp.name, `category: ${old} → ${match}`);
-  saveState();
-  renderTable();
-}
-
-function reorderRows(fromId, toId) {
-  if (fromId === toId) return;
-  const fromIdx = state.program.findIndex(s => s.id === fromId);
-  const toIdx = state.program.findIndex(s => s.id === toId);
-  if (fromIdx < 0 || toIdx < 0) return;
-  const [moved] = state.program.splice(fromIdx, 1);
-  state.program.splice(toIdx, 0, moved);
-  saveState();
-  renderTable();
-}
-
-/* =============================================================
-   BUDGET BAR
-   ============================================================= */
-function updateBudget() {
-  const t = totals();
-  document.getElementById('b-programmed').textContent = fmt$(t.totalMid);
-  document.getElementById('b-range').textContent = `Range: ${fmt$(t.totalLow)} – ${fmt$(t.totalHigh)}`;
-
-  const variance = t.totalMid - TARGET_GMP;
-  const pct = TARGET_GMP ? (variance / TARGET_GMP) * 100 : 0;
-  const vEl = document.getElementById('b-variance');
-  vEl.textContent = (variance >= 0 ? '+' : '') + fmt$(variance);
-  document.getElementById('b-variance-pct').textContent = (pct >= 0 ? '+' : '') + pct.toFixed(1) + '%';
-  vEl.classList.remove('positive','warn','negative');
-  const pctAbs = Math.abs(pct);
-  if (pctAbs <= 5) vEl.classList.add('positive');
-  else if (pctAbs <= 10) vEl.classList.add('warn');
-  else vEl.classList.add('negative');
-
-  const psf = t.gsf ? t.totalMid / t.gsf : 0;
-  document.getElementById('b-psf').textContent = fmt$(psf);
-  document.getElementById('b-gsf').textContent = fmtSF(t.gsf);
-
-  document.getElementById('b-phase1').textContent = fmt$(t.p1Cost);
-  document.getElementById('b-phase1-sf').textContent = fmtSF(t.p1SF);
-  document.getElementById('b-phase2').textContent = fmt$(t.p2Cost);
-  document.getElementById('b-phase2-sf').textContent = fmtSF(t.p2SF);
-
-  // sidebar
-  document.getElementById('g-nsf').textContent = fmtSF(t.netSF);
-  document.getElementById('g-gsf').textContent = fmtSF(t.gsf);
-  const diff = t.gsf - state.targetGSF;
-  const diffPct = state.targetGSF ? (diff / state.targetGSF) * 100 : 0;
-  const vBadge = document.getElementById('g-var');
-  vBadge.textContent = (diff >= 0 ? '+' : '') + fmtSF(diff) + ' (' + (diffPct >= 0 ? '+' : '') + diffPct.toFixed(1) + '%)';
-  vBadge.classList.remove('good','warn','bad');
-  const diffAbs = Math.abs(diffPct);
-  if (diffAbs <= 5) vBadge.classList.add('good');
-  else if (diffAbs <= 10) vBadge.classList.add('warn');
-  else vBadge.classList.add('bad');
-
-  const warn = document.getElementById('g-warn');
-  if (diffAbs > 5) {
-    warn.classList.add('show');
-    if (diffAbs > 10) warn.classList.add('critical');
-    else warn.classList.remove('critical');
-  } else warn.classList.remove('show');
-
-  renderScenarios();
-}
-
-/* =============================================================
-   CHANGE LOG
-   ============================================================= */
-function logChange(op, name, detail) {
-  state.changelog.unshift({
-    ts: new Date().toISOString(),
-    op,
-    name,
-    detail,
-    note: ''
-  });
-  if (state.changelog.length > 500) state.changelog.length = 500;
-  saveState();
-}
-
-function renderChangelog() {
-  document.getElementById('changelog-count').textContent = state.changelog.length;
-  const body = document.getElementById('changelog-body');
-  body.innerHTML = '';
-  state.changelog.slice(0, 100).forEach((c, i) => {
-    const e = document.createElement('div');
-    e.className = 'changelog-entry';
-    const d = new Date(c.ts);
-    const ts = d.toLocaleString([], { year:'numeric', month:'short', day:'numeric', hour:'2-digit', minute:'2-digit', second:'2-digit' });
-    const opLabel = c.op === 'add' ? 'ADD' : c.op === 'del' ? 'DELETE' : c.op === 'mod' ? 'MODIFY' : 'SYSTEM';
-    e.innerHTML = `
-      <span class="ts">${ts}</span>
-      <span class="op ${c.op}">${opLabel}</span>
-      <span><strong>${escape(c.name)}</strong> — <span class="muted">${escape(c.detail)}</span></span>
-      <input type="text" class="note" placeholder="Note…" value="${escape(c.note||'')}" data-idx="${i}" />
-    `;
-    e.querySelector('input.note').addEventListener('change', (ev) => {
-      state.changelog[ev.target.dataset.idx].note = ev.target.value;
-      saveState();
-    });
-    body.appendChild(e);
-  });
-}
-
-function toggleChangelog() {
-  const cl = document.getElementById('changelog');
-  cl.classList.toggle('open');
-  document.getElementById('changelog-arrow').textContent = cl.classList.contains('open') ? '▼' : '▲';
-}
-
-/* =============================================================
-   SCENARIOS
-   ============================================================= */
-function saveScenario() {
-  const name = prompt('Name this scenario:', `Option ${String.fromCharCode(65 + state.scenarios.length)} — ${new Date().toLocaleDateString()}`);
-  if (!name) return;
-  const t = totals();
-  const scenario = {
-    name,
-    createdAt: new Date().toISOString(),
-    program: JSON.parse(JSON.stringify(state.program)),
-    efficiency: state.efficiency,
-    targetGSF: state.targetGSF,
-    stats: { netSF: t.netSF, gsf: t.gsf, totalMid: t.totalMid, psf: t.gsf ? t.totalMid / t.gsf : 0 }
-  };
-  state.scenarios.push(scenario);
-  state.currentScenario = name;
-  document.getElementById('current-scenario').textContent = name;
-  logChange('sys', 'Scenario', `saved "${name}"`);
-  saveState();
-  renderTable();
-  renderScenarios();
-}
-
-function loadScenario(idx) {
-  const s = state.scenarios[idx];
-  if (!s) return;
-  if (!confirm(`Load "${s.name}"? Your current unsaved changes will be replaced.`)) return;
-  state.program = JSON.parse(JSON.stringify(s.program));
-  state.efficiency = s.efficiency;
-  state.targetGSF = s.targetGSF;
-  state.currentScenario = s.name;
-  document.getElementById('g-eff').value = state.efficiency;
-  document.getElementById('g-eff-val').textContent = state.efficiency + '%';
-  document.getElementById('g-target').value = state.targetGSF;
-  document.getElementById('current-scenario').textContent = s.name;
-  logChange('sys', 'Scenario', `loaded "${s.name}"`);
-  saveState();
-  renderTable();
-}
-
-function branchScenario(idx) {
-  const s = state.scenarios[idx];
-  if (!s) return;
-  const name = prompt('Name the new scenario (branching from "' + s.name + '"):', s.name + ' – v2');
-  if (!name) return;
-  const branched = JSON.parse(JSON.stringify(s));
-  branched.name = name;
-  branched.createdAt = new Date().toISOString();
-  state.scenarios.push(branched);
-  saveState();
-  renderScenarios();
-}
-
-function deleteScenario(idx) {
-  const s = state.scenarios[idx];
-  if (!s) return;
-  if (!confirm(`Delete scenario "${s.name}"?`)) return;
-  state.scenarios.splice(idx, 1);
-  saveState();
-  renderScenarios();
-}
-
-function renderScenarios() {
-  const list = document.getElementById('scenario-list');
-  if (!list) return;
-  list.innerHTML = '';
-  if (state.scenarios.length === 0) {
-    list.innerHTML = '<p class="muted tiny">No saved scenarios yet. Click "Save Scenario" on the Program tab to snapshot the current program.</p>';
-  } else {
-    state.scenarios.forEach((s, i) => {
-      const div = document.createElement('div');
-      div.className = 'scenario-card' + (s.name === state.currentScenario ? ' active' : '');
-      div.innerHTML = `
-        <div class="name">${escape(s.name)}</div>
-        <div class="stats">${fmtSF(s.stats.gsf)} · ${fmt$(s.stats.totalMid)} · ${fmt$(s.stats.psf)}/GSF</div>
-        <div class="actions">
-          <button class="btn-ghost btn-sm" onclick="loadScenario(${i})">Load</button>
-          <button class="btn-ghost btn-sm" onclick="branchScenario(${i})">Branch</button>
-          <button class="btn-ghost btn-sm" onclick="deleteScenario(${i})" style="color:var(--pcl-red);">Delete</button>
-        </div>`;
-      list.appendChild(div);
-    });
-  }
-
-  // comparison table
-  const tbody = document.getElementById('compare-tbody');
-  if (tbody) {
-    tbody.innerHTML = '';
-    const t = totals();
-    // current row
-    const curRow = renderCompareRow({ name: state.currentScenario + ' (current)', stats: { netSF: t.netSF, gsf: t.gsf, totalMid: t.totalMid, psf: t.gsf ? t.totalMid / t.gsf : 0 } }, null, true);
-    tbody.appendChild(curRow);
-    const baseline = state.scenarios[0];
-    state.scenarios.forEach((s) => {
-      tbody.appendChild(renderCompareRow(s, baseline, false));
-    });
-  }
-}
-
-function renderCompareRow(s, baseline, isCurrent) {
-  const tr = document.createElement('tr');
-  const deltaBase = baseline ? s.stats.totalMid - baseline.stats.totalMid : 0;
-  const deltaBaseCls = deltaBase > 0 ? 'delta-pos' : deltaBase < 0 ? 'delta-neg' : '';
-  const deltaGmp = s.stats.totalMid - TARGET_GMP;
-  const deltaGmpCls = deltaGmp > 0 ? 'delta-pos' : 'delta-neg';
-  tr.innerHTML = `
-    <td>${isCurrent ? '<strong>' : ''}${escape(s.name)}${isCurrent ? '</strong>' : ''}</td>
-    <td class="num">${fmtSF(s.stats.netSF)}</td>
-    <td class="num">${fmtSF(s.stats.gsf)}</td>
-    <td class="num">${fmt$(s.stats.totalMid)}</td>
-    <td class="num">${fmt$(s.stats.psf)}</td>
-    <td class="num ${deltaBaseCls}">${baseline ? (deltaBase >= 0 ? '+' : '') + fmt$(deltaBase) : '—'}</td>
-    <td class="num ${deltaGmpCls}">${(deltaGmp >= 0 ? '+' : '') + fmt$(deltaGmp)}</td>
-  `;
-  return tr;
-}
-
-/* =============================================================
-   AI: SUGGEST / GENERATE / NARRATIVE
-   ============================================================= */
-async function submitAiSuggestion() {
-  const input = document.getElementById('ai-input').value.trim();
-  if (!input) return;
-  const btn = document.getElementById('ai-submit');
-  const label = document.getElementById('ai-submit-label');
-  const errEl = document.getElementById('ai-error');
-  errEl.classList.remove('show');
-  btn.disabled = true;
-  label.innerHTML = '<span class="spinner"></span>Thinking...';
-  try {
-    const res = await fetch('/api/suggest', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ currentProgram: { spaces: state.program }, request: input })
-    });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Suggestion failed');
-    showPreview(data);
-  } catch (e) {
-    errEl.textContent = 'AI error: ' + e.message;
-    errEl.classList.add('show');
-  } finally {
-    btn.disabled = false;
-    label.textContent = 'Suggest Changes';
-  }
-}
-
-function showPreview(data) {
-  state.pendingPreview = data;
-  const pa = document.getElementById('preview-actions');
-  document.getElementById('preview-title').textContent = `Pending Changes (${data.changes.length})`;
-  document.getElementById('preview-summary').textContent = data.summary || '';
-  pa.classList.add('show');
-
-  // apply preview highlighting to existing rows; insert ghost rows for adds
-  const tbody = document.getElementById('program-tbody');
-  data.changes.forEach(ch => {
-    if (ch.op === 'delete' || ch.op === 'modify') {
-      const tr = tbody.querySelector(`tr[data-id="${ch.targetId}"]`);
-      if (tr) tr.classList.add(ch.op === 'delete' ? 'preview-del' : 'preview-mod');
-    }
-    if (ch.op === 'add' && ch.space) {
-      // insert a ghost row at the end of its category
-      const fakeRow = buildRow({ ...ch.space, id: '__preview_' + ch.space.id });
-      fakeRow.classList.add('preview-add');
-      fakeRow.querySelectorAll('button').forEach(b => b.style.display = 'none');
-      // find the add-row button for that category and insert before it
-      const addBtns = tbody.querySelectorAll('.add-row-btn');
-      let inserted = false;
-      addBtns.forEach(btn => {
-        if (inserted) return;
-        if (btn.textContent.includes(ch.space.category)) {
-          btn.closest('tr').before(fakeRow);
-          inserted = true;
-        }
-      });
-      if (!inserted) tbody.appendChild(fakeRow);
-    }
-  });
-}
-
-function acceptPreview() {
-  if (!state.pendingPreview) return;
-  const changes = state.pendingPreview.changes;
-  changes.forEach(ch => {
-    if (ch.op === 'delete') {
-      const sp = state.program.find(s => s.id === ch.targetId);
-      if (sp) {
-        state.program = state.program.filter(s => s.id !== ch.targetId);
-        logChange('del', sp.name, 'AI: removed');
-      }
-    } else if (ch.op === 'modify') {
-      const idx = state.program.findIndex(s => s.id === ch.targetId);
-      if (idx >= 0 && ch.space) {
-        const oldName = state.program[idx].name;
-        state.program[idx] = { ...state.program[idx], ...ch.space, id: state.program[idx].id };
-        logChange('mod', ch.space.name, `AI: ${ch.rationale || 'modified'}`);
-      }
-    } else if (ch.op === 'add' && ch.space) {
-      const sp = { ...ch.space, id: ch.space.id || newId() };
-      state.program.push(sp);
-      logChange('add', sp.name, `AI: ${ch.rationale || 'added'}`);
-    }
-  });
-  state.pendingPreview = null;
-  document.getElementById('preview-actions').classList.remove('show');
-  document.getElementById('ai-input').value = '';
-  saveState();
-  renderTable();
-}
-
-function rejectPreview() {
-  state.pendingPreview = null;
-  document.getElementById('preview-actions').classList.remove('show');
-  renderTable();
-}
-
-function openGenerateModal() {
-  document.getElementById('generate-modal').classList.add('show');
-}
-function closeModal(id) { document.getElementById(id).classList.remove('show'); }
-
-async function submitGenerate() {
-  const btn = document.getElementById('gen-submit');
-  const label = document.getElementById('gen-submit-label');
-  btn.disabled = true;
-  label.innerHTML = '<span class="spinner"></span>Generating...';
-  const body = {
-    buildingType: document.getElementById('gen-type').value,
-    totalSF: Number(document.getElementById('gen-sf').value),
-    budget: Number(document.getElementById('gen-budget').value),
-    description: document.getElementById('gen-desc').value
-  };
-  try {
-    const res = await fetch('/api/generate-program', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body)
-    });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Generation failed');
-    if (!confirm(`AI generated ${data.program.spaces.length} program items. Replace current program?`)) return;
-    state.program = data.program.spaces.map(s => ({
-      id: s.id || newId(),
-      category: s.category,
-      name: s.name,
-      qty: Number(s.qty || 1),
-      unitSF: Number(s.unitSF || 0),
-      unitCostLow: Number(s.unitCostLow || 0),
-      unitCostMid: Number(s.unitCostMid || 0),
-      unitCostHigh: Number(s.unitCostHigh || 0),
-      phase: s.phase || 'Phase 1',
-      notes: s.notes || ''
-    }));
-    state.currentScenario = `AI Baseline — ${body.buildingType}`;
-    document.getElementById('current-scenario').textContent = state.currentScenario;
-    logChange('sys', 'AI Generate', `new baseline: ${body.buildingType}, ${body.totalSF} GSF, $${body.budget.toLocaleString()}`);
-    saveState();
-    renderTable();
-    closeModal('generate-modal');
-  } catch (e) {
-    alert('Generation failed: ' + e.message);
-  } finally {
-    btn.disabled = false;
-    label.textContent = 'Generate Program';
-  }
-}
-
-async function generateNarrative() {
-  const btn = document.getElementById('narr-btn');
-  btn.disabled = true;
-  const oldText = btn.innerHTML;
-  btn.innerHTML = '<span class="spinner"></span>Generating narrative...';
-  const content = document.getElementById('narrative-content');
-  content.innerHTML = 'Generating stakeholder narrative...';
-  document.getElementById('narrative-modal').classList.add('show');
-  try {
-    const res = await fetch('/api/narrative', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        program: { spaces: state.program, totals: totals(), efficiency: state.efficiency, targetGSF: state.targetGSF },
-        scenarioName: state.currentScenario
-      })
-    });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Narrative generation failed');
-    content.innerHTML = renderMarkdown(data.narrative);
-    content.dataset.raw = data.narrative;
-  } catch (e) {
-    content.innerHTML = '<p style="color:var(--pcl-red);">Error: ' + escape(e.message) + '</p>';
-  } finally {
-    btn.disabled = false;
-    btn.innerHTML = oldText;
-  }
-}
-
-function renderMarkdown(md) {
-  // minimal md -> html
-  const lines = md.split('\n');
-  let html = '';
-  let inList = false;
-  lines.forEach(line => {
-    if (/^##\s+/.test(line)) {
-      if (inList) { html += '</ul>'; inList = false; }
-      html += '<h2>' + escape(line.replace(/^##\s+/, '')) + '</h2>';
-    } else if (/^\s*[-*]\s+/.test(line)) {
-      if (!inList) { html += '<ul>'; inList = true; }
-      html += '<li>' + escape(line.replace(/^\s*[-*]\s+/, '')) + '</li>';
-    } else if (line.trim() === '') {
-      if (inList) { html += '</ul>'; inList = false; }
-    } else {
-      if (inList) { html += '</ul>'; inList = false; }
-      html += '<p>' + escape(line) + '</p>';
-    }
-  });
-  if (inList) html += '</ul>';
-  return html;
-}
-
-function copyNarrative() {
-  const raw = document.getElementById('narrative-content').dataset.raw || document.getElementById('narrative-content').innerText;
-  navigator.clipboard.writeText(raw).then(() => {
-    const btn = event.target;
-    const old = btn.textContent;
-    btn.textContent = '✓ Copied';
-    setTimeout(() => btn.textContent = old, 1500);
-  });
-}
-
-/* =============================================================
-   ADJACENCY
-   ============================================================= */
-function adjKey(a, b) { return a < b ? a + '|' + b : b + '|' + a; }
-const ADJ_STATES = [
-  { cls: 'adj-none',     label: 'No Requirement' },
-  { cls: 'adj-must',     label: 'Must Be Adjacent' },
-  { cls: 'adj-should',   label: 'Should Be Adjacent' },
-  { cls: 'adj-separate', label: 'Should Be Separated' }
+/* ════════════════════════════════════
+   BASELINE DATA
+════════════════════════════════════ */
+const BASELINE=[
+  {id:'s1',category:'Public Spaces',name:'Adult Reading Room',qty:1,unitSF:12000,unitCostMid:285,phase:'Phase 1',notes:'Main stacks + reading area',excluded:false},
+  {id:'s2',category:'Public Spaces',name:'Digital Media Lab',qty:1,unitSF:2800,unitCostMid:320,phase:'Phase 1',notes:'Computers, editing bays',excluded:false},
+  {id:'s3',category:'Public Spaces',name:'Makerspace',qty:1,unitSF:3500,unitCostMid:310,phase:'Phase 1',notes:'Fab tools, 3D printing',excluded:false},
+  {id:'s4',category:'Public Spaces',name:'Podcast/Recording Studios',qty:3,unitSF:300,unitCostMid:450,phase:'Phase 1',notes:'Soundproofed',excluded:false},
+  {id:'s5',category:'Public Spaces',name:'Café',qty:1,unitSF:2200,unitCostMid:380,phase:'Phase 1',notes:'Public-facing F&B',excluded:false},
+  {id:'s6',category:'Public Spaces',name:'Rooftop Terrace',qty:1,unitSF:4500,unitCostMid:180,phase:'Phase 2',notes:'Outdoor amenity',excluded:false},
+  {id:'s7',category:'Children & Teen',name:"Children's Library",qty:1,unitSF:8500,unitCostMid:295,phase:'Phase 1',notes:'0–12 programming area',excluded:false},
+  {id:'s8',category:'Children & Teen',name:'Teen Zone',qty:1,unitSF:3200,unitCostMid:290,phase:'Phase 1',notes:'13–18 YA + digital',excluded:false},
+  {id:'s9',category:'Special Facilities',name:'Performing Arts Theater',qty:1,unitSF:8000,unitCostMid:520,phase:'Phase 1',notes:'300-seat proscenium',excluded:false},
+  {id:'s10',category:'Special Facilities',name:'Community Meeting Room Large',qty:2,unitSF:1800,unitCostMid:310,phase:'Phase 1',notes:'Divisible, AV ready',excluded:false},
+  {id:'s11',category:'Special Facilities',name:'Community Meeting Room Small',qty:4,unitSF:600,unitCostMid:295,phase:'Phase 1',notes:'8–12 person',excluded:false},
+  {id:'s12',category:'Staff & Operations',name:'City Offices',qty:1,unitSF:14000,unitCostMid:265,phase:'Phase 1',notes:'Co-located city services',excluded:false},
+  {id:'s13',category:'Staff & Operations',name:'Staff Workroom',qty:1,unitSF:2400,unitCostMid:260,phase:'Phase 1',notes:'Processing + staff support',excluded:false},
+  {id:'s14',category:'Staff & Operations',name:'Collections/Stacks',qty:1,unitSF:6000,unitCostMid:195,phase:'Phase 1',notes:'Compact shelving ready',excluded:false},
+  {id:'s15',category:'Parking & Circulation',name:'Parking Structure 310 stalls',qty:1,unitSF:93000,unitCostMid:95,phase:'Phase 1',notes:'Above/below grade TBD',excluded:true},
+  {id:'s16',category:'Support Spaces',name:'Restrooms',qty:1,unitSF:2800,unitCostMid:285,phase:'Phase 1',notes:'Public + ADA',excluded:false},
+  {id:'s17',category:'Support Spaces',name:'Mechanical/Electrical',qty:1,unitSF:3200,unitCostMid:165,phase:'Phase 1',notes:'MEP rooms',excluded:false},
+  {id:'s18',category:'Support Spaces',name:'Vertical Circulation/Lobbies',qty:1,unitSF:4100,unitCostMid:210,phase:'Phase 1',notes:'Stairs, elevators, entry',excluded:false}
 ];
+const INITIAL_ADJ={
+  's7-s16':'must','s16-s7':'must','s8-s2':'must','s2-s8':'must',
+  's5-s6':'must','s6-s5':'must','s9-s10':'should','s10-s9':'should',
+  's13-s14':'must','s14-s13':'must','s15-s18':'should','s18-s15':'should',
+  's7-s9':'separate','s9-s7':'separate'
+};
 
-function renderAdjacency() {
-  const wrap = document.getElementById('adj-wrap');
-  const spaces = state.program.filter(s => !isParkingOrPlaza(s));
-  let html = '<table class="adj-table"><thead><tr><th style="position:sticky;left:0;z-index:3;"></th>';
-  spaces.forEach(s => {
-    html += `<th class="rot"><div>${escape(s.name)}</div></th>`;
-  });
-  html += '</tr></thead><tbody>';
-  spaces.forEach((ra, ri) => {
-    html += `<tr><th>${escape(ra.name)}</th>`;
-    spaces.forEach((rb, ci) => {
-      if (ri === ci) {
-        html += '<td class="adj-diag"></td>';
-      } else {
-        const k = adjKey(ra.id, rb.id);
-        const st = state.adjacency[k] || 0;
-        html += `<td class="adj-cell ${ADJ_STATES[st].cls}" data-a="${ra.id}" data-b="${rb.id}" title="${ADJ_STATES[st].label}: ${escape(ra.name)} ↔ ${escape(rb.name)}"></td>`;
-      }
-    });
-    html += '</tr>';
-  });
-  html += '</tbody></table>';
-  wrap.innerHTML = html;
-  wrap.querySelectorAll('.adj-cell').forEach(cell => {
-    cell.addEventListener('click', () => {
-      const k = adjKey(cell.dataset.a, cell.dataset.b);
-      const cur = state.adjacency[k] || 0;
-      const next = (cur + 1) % ADJ_STATES.length;
-      if (next === 0) delete state.adjacency[k]; else state.adjacency[k] = next;
-      saveState();
-      renderAdjacency();
-    });
-  });
-}
+/* ════════════════════════════════════
+   STATE
+════════════════════════════════════ */
+let program=[],changelog=[],scenarios={},adjMatrix={};
+let activeFilter='all',currentScenario='Baseline — Full Program';
+let preview=null,dragSrcId=null,narrativeText='';
 
-function exportAdjacency() {
-  const spaces = state.program.filter(s => !isParkingOrPlaza(s));
-  const byId = Object.fromEntries(spaces.map(s => [s.id, s.name]));
-  let lines = ['# PCL Architectural Program — Adjacency Requirements', `# Project: Burbank Central Library`, `# Generated: ${new Date().toLocaleString()}`, ''];
-  const groups = { 1: [], 2: [], 3: [] };
-  Object.entries(state.adjacency).forEach(([k, v]) => {
-    if (!v) return;
-    const [a, b] = k.split('|');
-    if (!byId[a] || !byId[b]) return;
-    groups[v].push(`  - ${byId[a]} ↔ ${byId[b]}`);
-  });
-  lines.push('## Must Be Adjacent'); lines.push(...(groups[1].length ? groups[1] : ['  (none)']));
-  lines.push(''); lines.push('## Should Be Adjacent'); lines.push(...(groups[2].length ? groups[2] : ['  (none)']));
-  lines.push(''); lines.push('## Should Be Separated'); lines.push(...(groups[3].length ? groups[3] : ['  (none)']));
-  const blob = new Blob([lines.join('\n')], { type: 'text/plain' });
-  downloadBlob(blob, 'adjacency-requirements.txt');
-}
-
-/* =============================================================
-   EXPORTS
-   ============================================================= */
-function csvRow(cells) {
-  return cells.map(c => {
-    const s = String(c == null ? '' : c);
-    return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
-  }).join(',');
-}
-
-function exportCSV() {
-  const rows = [['Category','Space Name','Qty','Unit SF','Total SF','Unit Cost Low ($/SF)','Unit Cost Mid ($/SF)','Unit Cost High ($/SF)','Total Cost Mid','Phase','Notes']];
-  state.program.forEach(sp => {
-    const sf = spaceTotalSF(sp);
-    rows.push([sp.category, sp.name, sp.qty, sp.unitSF, sf, sp.unitCostLow, sp.unitCostMid, sp.unitCostHigh, Math.round(sf * sp.unitCostMid), sp.phase, sp.notes || '']);
-  });
-  const t = totals();
-  rows.push([]);
-  rows.push(['TOTALS']);
-  rows.push(['Net SF', '', '', '', t.netSF]);
-  rows.push(['Efficiency', '', '', '', state.efficiency + '%']);
-  rows.push(['Gross SF', '', '', '', t.gsf]);
-  rows.push(['Total Cost (Mid)', '', '', '', '', '', '', '', t.totalMid]);
-  rows.push(['Cost / GSF', '', '', '', '', '', '', '', t.gsf ? Math.round(t.totalMid/t.gsf) : 0]);
-  const csv = rows.map(csvRow).join('\n');
-  downloadBlob(new Blob([csv], { type: 'text/csv' }), `pcl-program-${ymd()}.csv`);
-}
-
-function exportChangelogCSV() {
-  const rows = [['Timestamp','Operation','Space Name','Detail','User Note']];
-  state.changelog.forEach(c => rows.push([c.ts, c.op, c.name, c.detail, c.note || '']));
-  downloadBlob(new Blob([rows.map(csvRow).join('\n')], { type: 'text/csv' }), `pcl-changelog-${ymd()}.csv`);
-}
-
-function downloadBlob(blob, filename) {
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url; a.download = filename; document.body.appendChild(a); a.click(); document.body.removeChild(a);
-  setTimeout(() => URL.revokeObjectURL(url), 1000);
-}
-
-function ymd() {
-  const d = new Date();
-  return d.toISOString().slice(0,10);
-}
-
-function resetBaseline() {
-  if (!confirm('Reset program to default Burbank Library baseline? Current program will be discarded (unless saved as scenario).')) return;
-  state.program = baselineProgram();
-  state.currentScenario = 'Baseline Program';
-  document.getElementById('current-scenario').textContent = state.currentScenario;
-  logChange('sys', 'Program', 'reset to Burbank baseline');
-  saveState();
-  renderTable();
-}
-
-/* =============================================================
-   VIEW SWITCHING
-   ============================================================= */
-function setView(view) {
-  state.view = view;
-  document.querySelectorAll('.nav-tab').forEach(t => t.classList.toggle('active', t.dataset.view === view));
-  document.querySelectorAll('.view').forEach(v => v.classList.toggle('active', v.id === 'view-' + view));
-  if (view === 'adjacency') renderAdjacency();
-  if (view === 'scenarios') renderScenarios();
-}
-
-/* =============================================================
+/* ════════════════════════════════════
    INIT
-   ============================================================= */
-function init() {
-  loadState();
-  document.getElementById('g-eff').value = state.efficiency;
-  document.getElementById('g-eff-val').textContent = state.efficiency + '%';
-  document.getElementById('g-target').value = state.targetGSF;
-  document.getElementById('current-scenario').textContent = state.currentScenario;
+════════════════════════════════════ */
+function init(){
+  const saved=localStorage.getItem('pcl_prog');
+  if(saved){try{program=JSON.parse(saved)}catch{program=cloneBase()}}else{program=cloneBase()}
+  const savedSc=localStorage.getItem('pcl_scenarios');
+  if(savedSc){try{scenarios=JSON.parse(savedSc)}catch{scenarios={}}}
+  adjMatrix=Object.assign({},INITIAL_ADJ);
+  currentScenario=localStorage.getItem('pcl_cur_sc')||'Baseline — Full Program';
+  if(!scenarios['Baseline — Full Program']){
+    scenarios['Baseline — Full Program']={program:cloneBase(),ts:new Date().toISOString(),baseline:true};
+    saveSc();
+  }
+  if(localStorage.getItem('pcl_banner')!=='1'&&window.innerWidth<=767){
+    document.getElementById('mob-banner').style.display='flex';
+  }
+  setupPills();setupChips();setupDragDrop();
+  logChange('sys','','Baseline loaded — 18 spaces');
+  renderAll();
+}
+function cloneBase(){return JSON.parse(JSON.stringify(BASELINE))}
+function saveState(){localStorage.setItem('pcl_prog',JSON.stringify(program));localStorage.setItem('pcl_cur_sc',currentScenario)}
+function saveSc(){localStorage.setItem('pcl_scenarios',JSON.stringify(scenarios))}
 
-  // efficiency slider
-  document.getElementById('g-eff').addEventListener('input', (e) => {
-    state.efficiency = Number(e.target.value);
-    document.getElementById('g-eff-val').textContent = state.efficiency + '%';
-    saveState();
-    updateBudget();
+/* ════════════════════════════════════
+   HELPERS
+════════════════════════════════════ */
+function fmt$(n){return '$'+Math.round(n||0).toLocaleString('en-US')}
+function fmtSF(n){return Math.round(n||0).toLocaleString('en-US')+' SF'}
+function escHtml(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+function uid(){return 'u'+Date.now()+Math.random().toString(36).slice(2,6)}
+function setText(id,v){const e=document.getElementById(id);if(e)e.textContent=v}
+
+/* ════════════════════════════════════
+   CALCULATIONS
+════════════════════════════════════ */
+function calcTotals(){
+  let nsf=0,mid=0,lo=0,hi=0,ph1=0,ph1sf=0,ph2=0,ph2sf=0;
+  program.forEach(s=>{
+    if(s.excluded)return;
+    const tsf=(s.qty||1)*(s.unitSF||0),m=s.unitCostMid||0;
+    nsf+=tsf;mid+=tsf*m;lo+=tsf*Math.round(m*0.85);hi+=tsf*Math.round(m*1.15);
+    if(s.phase==='Phase 1'){ph1+=tsf*m;ph1sf+=tsf}
+    if(s.phase==='Phase 2'){ph2+=tsf*m;ph2sf+=tsf}
   });
-  document.getElementById('g-target').addEventListener('input', (e) => {
-    state.targetGSF = Number(e.target.value) || 0;
-    saveState();
-    updateBudget();
-  });
-
-  // filters
-  document.querySelectorAll('[data-filter]').forEach(b => {
-    b.addEventListener('click', () => {
-      document.querySelectorAll('[data-filter]').forEach(x => x.classList.remove('active'));
-      b.classList.add('active');
-      state.filter = b.dataset.filter;
-      renderTable();
-    });
-  });
-
-  // nav tabs
-  document.querySelectorAll('.nav-tab').forEach(t => t.addEventListener('click', () => setView(t.dataset.view)));
-
-  // chips
-  document.querySelectorAll('.chip').forEach(c => c.addEventListener('click', () => {
-    document.getElementById('ai-input').value = c.dataset.example;
-    document.getElementById('ai-input').focus();
-  }));
-
-  // modal backdrop close
-  document.querySelectorAll('.modal-backdrop').forEach(m => {
-    m.addEventListener('click', (e) => { if (e.target === m) m.classList.remove('show'); });
-  });
-
-  renderTable();
-  renderScenarios();
-  renderChangelog();
+  return{nsf,costMid:mid,costLow:lo,costHigh:hi,ph1,ph1sf,ph2,ph2sf};
 }
 
-document.addEventListener('DOMContentLoaded', init);
+/* ════════════════════════════════════
+   RENDER ALL
+════════════════════════════════════ */
+function renderAll(){renderTable();updateBudget();updateGTN();renderLog();renderScenarios();if(document.getElementById('tab-adj').classList.contains('active'))renderAdj()}
+
+/* ════════════════════════════════════
+   RENDER TABLE
+════════════════════════════════════ */
+function renderTable(){
+  const tbody=document.getElementById('prog-tbody');
+  tbody.innerHTML='';
+  const filtered=program.filter(s=>activeFilter==='all'||s.phase===activeFilter);
+  const groups={};CAT_ORDER.forEach(c=>groups[c]=[]);
+  filtered.forEach(s=>{if(groups[s.category])groups[s.category].push(s)});
+  CAT_ORDER.forEach(cat=>{
+    const rows=groups[cat];if(!rows.length)return;
+    const cc=CAT_COLORS[cat]||'#999';
+    const ctr=document.createElement('tr');
+    ctr.className='cat-row';
+    ctr.innerHTML=`<td colspan="14"><span style="display:inline-block;width:10px;height:10px;background:${cc};border-radius:1px;margin-right:8px;vertical-align:middle"></span>${escHtml(cat)}</td>`;
+    tbody.appendChild(ctr);
+    rows.forEach(s=>{
+      const m=s.unitCostMid||0,lo=Math.round(m*0.85),hi=Math.round(m*1.15);
+      const tsf=(s.qty||1)*(s.unitSF||0),cost=s.excluded?0:tsf*m;
+      const phC=PHASE_COLORS[s.phase]||'#999';
+      const bench=getBench(s.name,s.unitSF||0);
+      const pvCls=s._preview?' p-'+s._preview:'';
+      const tr=document.createElement('tr');
+      tr.className='data-row'+pvCls;tr.dataset.id=s.id;tr.dataset.cat=s.category;tr.draggable=true;
+      tr.innerHTML=`
+        <td><span class="drag-h">⋮⋮</span></td>
+        <td style="padding:0;width:4px"><div style="width:4px;min-height:36px;height:100%;background:${cc}"></div></td>
+        <td class="editable" data-field="name" data-id="${s.id}">${escHtml(s.name)}${s.excluded?'<span class="excl-badge">EXCL.</span>':''}</td>
+        <td class="num editable" data-field="qty" data-id="${s.id}">${s.qty}</td>
+        <td class="num editable col-hide" data-field="unitSF" data-id="${s.id}">${(s.unitSF||0).toLocaleString()}</td>
+        <td class="num${s.excluded?' muted':''}">${s.excluded?'—':fmtSF(tsf)}</td>
+        <td class="num col-hide">${s.excluded?'—':fmt$(lo)+'/SF'}</td>
+        <td class="num editable" data-field="unitCostMid" data-id="${s.id}">${s.excluded?'—':fmt$(m)+'/SF'}</td>
+        <td class="num col-hide">${s.excluded?'—':fmt$(hi)+'/SF'}</td>
+        <td class="num${s.excluded?' muted':''}">${s.excluded?'<em>EXCL.</em>':fmt$(cost)}</td>
+        <td class="editable" data-field="phase" data-id="${s.id}"><span class="phase-badge" style="background:${phC}22;color:${phC};border:1px solid ${phC}55">${escHtml(s.phase)}</span></td>
+        <td class="col-hide">${bench}</td>
+        <td class="editable col-hide" data-field="notes" data-id="${s.id}">${escHtml(s.notes||'')}</td>
+        <td><button class="btn-icon" onclick="deleteRow('${s.id}')" title="Delete">✕</button></td>`;
+      tr.addEventListener('click',e=>{
+        if(e.target.closest('.editable')||e.target.closest('.btn-icon')||e.target.closest('.drag-h'))return;
+        if(window.innerWidth<=767)toggleDetail(s.id);
+      });
+      tbody.appendChild(tr);
+      const dtr=document.createElement('tr');
+      dtr.className='detail-row';dtr.id='dr-'+s.id;
+      dtr.innerHTML=`<td colspan="14"><strong>Qty:</strong> ${s.qty} &nbsp;<strong>Unit SF:</strong> ${(s.unitSF||0).toLocaleString()} &nbsp;<strong>$/SF:</strong> ${fmt$(lo)} / ${fmt$(m)} / ${fmt$(hi)} &nbsp;<strong>Phase:</strong> ${escHtml(s.phase)}${s.notes?` &nbsp;<strong>Notes:</strong> ${escHtml(s.notes)}`:''}</td>`;
+      tbody.appendChild(dtr);
+    });
+    const atr=document.createElement('tr');
+    atr.innerHTML=`<td colspan="14"><button class="add-row-btn" onclick="openAddRow('${escHtml(cat)}')">+ Add Space to ${escHtml(cat)}</button></td>`;
+    tbody.appendChild(atr);
+  });
+  setText('row-count',program.filter(s=>!s.excluded&&(activeFilter==='all'||s.phase===activeFilter)).length);
+  setText('cur-scenario',currentScenario);
+  setupEditCells();
+}
+
+function toggleDetail(id){const dr=document.getElementById('dr-'+id);if(dr)dr.classList.toggle('show')}
+
+/* ════════════════════════════════════
+   INLINE EDITING
+════════════════════════════════════ */
+function setupEditCells(){
+  document.querySelectorAll('.prog-tbl td.editable').forEach(td=>{
+    td.addEventListener('click',function(){
+      if(this.querySelector('input,select'))return;
+      makeEditable(this,this.dataset.id,this.dataset.field);
+    });
+  });
+}
+function makeEditable(td,id,field){
+  const s=program.find(x=>x.id===id);if(!s)return;
+  if(s.excluded&&field==='unitCostMid')return;
+  const oldHtml=td.innerHTML;let input;
+  if(field==='phase'){
+    input=document.createElement('select');input.className='inl';
+    ['Phase 1','Phase 2','Optional','Alternate'].forEach(p=>{
+      const o=document.createElement('option');o.value=p;o.textContent=p;
+      if(p===s.phase)o.selected=true;input.appendChild(o);
+    });
+  }else{
+    input=document.createElement('input');input.className='inl';
+    if(['qty','unitSF','unitCostMid'].includes(field)){input.type='number';input.min='0';input.value=s[field]||0}
+    else{input.type='text';input.value=s[field]||''}
+  }
+  td.innerHTML='';td.appendChild(input);input.focus();
+  if(input.select&&input.type!=='number')input.select();
+  function commit(){
+    const oldVal=s[field];let nv;
+    if(field==='phase')nv=input.value;
+    else if(['qty','unitSF','unitCostMid'].includes(field))nv=parseFloat(input.value)||0;
+    else nv=input.value;
+    if(String(nv)!==String(oldVal)){s[field]=nv;logChange('mod',s.name,`${field}: ${oldVal} → ${nv}`);saveState()}
+    renderTable();updateBudget();updateGTN();
+  }
+  input.addEventListener('blur',commit);
+  input.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();input.blur()}if(e.key==='Escape')td.innerHTML=oldHtml});
+}
+
+/* ════════════════════════════════════
+   DELETE / ADD ROW
+════════════════════════════════════ */
+function deleteRow(id){
+  const s=program.find(x=>x.id===id);if(!s)return;
+  if(!confirm(`Delete "${s.name}"?`))return;
+  program=program.filter(x=>x.id!==id);
+  logChange('del',s.name,'Space removed');saveState();
+  renderTable();updateBudget();updateGTN();
+}
+function openAddRow(cat){
+  document.getElementById('add-cat-sel').value=cat;
+  ['add-name','add-notes'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('add-qty').value=1;
+  document.getElementById('add-usf').value=1000;
+  document.getElementById('add-mid').value=300;
+  document.getElementById('add-phase').value='Phase 1';
+  openModal('add-modal');
+}
+function confirmAddRow(){
+  const name=document.getElementById('add-name').value.trim();
+  if(!name){alert('Space name is required.');return}
+  const cat=document.getElementById('add-cat-sel').value;
+  const m=parseFloat(document.getElementById('add-mid').value)||0;
+  const ns={id:uid(),category:cat,name,qty:parseInt(document.getElementById('add-qty').value)||1,
+    unitSF:parseInt(document.getElementById('add-usf').value)||0,unitCostMid:m,
+    unitCostLow:Math.round(m*0.85),unitCostHigh:Math.round(m*1.15),
+    phase:document.getElementById('add-phase').value,notes:document.getElementById('add-notes').value,
+    excluded:cat==='Parking & Circulation'};
+  program.push(ns);
+  logChange('add',name,`${ns.qty}×${ns.unitSF.toLocaleString()} SF @ ${fmt$(m)}/SF`);
+  saveState();closeModal('add-modal');renderTable();updateBudget();updateGTN();
+}
+
+/* ════════════════════════════════════
+   DRAG AND DROP
+════════════════════════════════════ */
+function setupDragDrop(){
+  const tbody=document.getElementById('prog-tbody');
+  tbody.addEventListener('dragstart',e=>{const tr=e.target.closest('tr.data-row');if(!tr)return;dragSrcId=tr.dataset.id;tr.classList.add('dragging');e.dataTransfer.effectAllowed='move'});
+  tbody.addEventListener('dragend',()=>{document.querySelectorAll('.data-row.dragging,.data-row.drop-tgt').forEach(el=>el.classList.remove('dragging','drop-tgt'));dragSrcId=null});
+  tbody.addEventListener('dragover',e=>{e.preventDefault();const tr=e.target.closest('tr.data-row');if(!tr||tr.dataset.id===dragSrcId)return;document.querySelectorAll('.data-row.drop-tgt').forEach(el=>el.classList.remove('drop-tgt'));tr.classList.add('drop-tgt')});
+  tbody.addEventListener('drop',e=>{
+    e.preventDefault();const tr=e.target.closest('tr.data-row');
+    if(!tr||!dragSrcId||tr.dataset.id===dragSrcId)return;
+    const fi=program.findIndex(s=>s.id===dragSrcId),ti=program.findIndex(s=>s.id===tr.dataset.id);
+    if(fi===-1||ti===-1||program[fi].category!==program[ti].category)return;
+    const[item]=program.splice(fi,1);program.splice(ti,0,item);
+    logChange('mod',item.name,'Reordered');saveState();renderTable();
+  });
+}
+
+/* ════════════════════════════════════
+   BENCHMARK
+════════════════════════════════════ */
+function getBench(name,usf){
+  const r=BENCHMARKS[name];if(!r||!usf)return'';
+  if(usf<r[0])return`<em class="bench-icon b-lo" title="Below typical range (${r[0].toLocaleString()}–${r[1].toLocaleString()} SF)">↓</em>`;
+  if(usf>r[1])return`<em class="bench-icon b-hi" title="Above typical range (${r[0].toLocaleString()}–${r[1].toLocaleString()} SF)">↑</em>`;
+  return`<em class="bench-icon b-ok" title="Within typical range (${r[0].toLocaleString()}–${r[1].toLocaleString()} SF)">✓</em>`;
+}
+
+/* ════════════════════════════════════
+   BUDGET BAR
+════════════════════════════════════ */
+function updateBudget(){
+  const{costMid,costLow,costHigh,nsf,ph1,ph1sf,ph2,ph2sf}=calcTotals();
+  const variance=costMid-TARGET_GMP,pct=TARGET_GMP>0?costMid/TARGET_GMP*100:0;
+  setText('b-cost',fmt$(costMid));
+  setText('b-range',`Range: ${fmt$(costLow)} – ${fmt$(costHigh)}`);
+  setText('b-var',fmt$(Math.abs(variance))+(variance>=0?' over':' under'));
+  setText('b-var-pct',((variance/TARGET_GMP)*100).toFixed(1)+'%');
+  setText('b-psf',nsf>0?fmt$(costMid/nsf)+'/SF':'$0/SF');
+  setText('b-ph1',fmt$(ph1));setText('b-ph1-sf',fmtSF(ph1sf));
+  setText('b-ph2',fmt$(ph2));setText('b-ph2-sf',fmtSF(ph2sf));
+  setText('b-pct',pct.toFixed(0)+'%');
+  const absVPct=Math.abs(variance/TARGET_GMP*100);
+  const vEl=document.getElementById('b-var');
+  if(vEl)vEl.className='bv '+(absVPct>10?'bad':absVPct>5?'warn':'ok');
+  const fill=document.getElementById('b-fill');
+  if(fill){fill.style.width=Math.min(pct,100)+'%';fill.style.background=pct>100?'#EF5350':'var(--red)'}
+}
+
+/* ════════════════════════════════════
+   GROSS-TO-NET
+════════════════════════════════════ */
+function updateGTN(){
+  const{nsf}=calcTotals();
+  const eff=parseInt(document.getElementById('g-eff').value)/100;
+  const grossSF=eff>0?Math.round(nsf/eff):0;
+  const target=parseInt(document.getElementById('g-target').value)||TARGET_GSF;
+  const varSF=grossSF-target;
+  setText('g-nsf',nsf.toLocaleString()+' SF');
+  setText('g-gsf',grossSF.toLocaleString()+' SF');
+  const ve=document.getElementById('g-var');
+  if(ve){ve.textContent=(varSF>=0?'+':'')+varSF.toLocaleString()+' SF';const a=Math.abs(varSF);ve.className='var-badge '+(a<=2000?'ok':a<=5000?'warn':'bad')}
+  const we=document.getElementById('g-warn');
+  if(we)Math.abs(varSF)>5000?we.classList.add('show'):we.classList.remove('show');
+}
+function onEffChange(v){setText('g-eff-val',v+'%');updateGTN()}
+
+/* ════════════════════════════════════
+   CHANGE LOG
+════════════════════════════════════ */
+function logChange(op,name,detail){
+  changelog.push({ts:new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',second:'2-digit'}),op,name,detail});
+  renderLog();
+}
+function renderLog(){
+  const body=document.getElementById('log-body');if(!body)return;
+  body.innerHTML='';
+  [...changelog].reverse().forEach(e=>{
+    const div=document.createElement('div');div.className='log-entry';
+    div.innerHTML=`<span class="log-ts">${escHtml(e.ts)}</span><span class="log-op ${e.op}">${e.op.toUpperCase()}</span><span>${escHtml(e.name?e.name+' — ':'')+escHtml(e.detail)}</span>`;
+    body.appendChild(div);
+  });
+}
+
+/* ════════════════════════════════════
+   ADJACENCY MATRIX
+════════════════════════════════════ */
+function renderAdj(){
+  const spaces=program.filter(s=>!s.excluded);
+  const wrap=document.getElementById('adj-wrap');if(!wrap)return;
+  const tbl=document.createElement('table');tbl.className='adj-tbl';
+  const thead=document.createElement('thead');const hr=document.createElement('tr');
+  hr.innerHTML='<th></th>';
+  spaces.forEach(s=>{const th=document.createElement('th');th.className='rot';th.innerHTML=`<div>${escHtml(s.name)}</div>`;hr.appendChild(th)});
+  thead.appendChild(hr);tbl.appendChild(thead);
+  const tbody=document.createElement('tbody');
+  spaces.forEach((rs,ri)=>{
+    const tr=document.createElement('tr');const th=document.createElement('th');th.textContent=rs.name;tr.appendChild(th);
+    spaces.forEach((cs,ci)=>{
+      const td=document.createElement('td');
+      if(ri===ci){td.className='adj-diag'}else{
+        const key=rs.id+'-'+cs.id,state=adjMatrix[key]||'none';
+        td.className='adj-cell adj-'+(state==='separate'?'sep':state);
+        td.title={must:'Must Be Adjacent',should:'Should Be Adjacent',separate:'Should Be Separated',none:'No Requirement'}[state]||'';
+        td.addEventListener('click',()=>{cycleAdj(rs.id,cs.id);renderAdj()});
+      }
+      tr.appendChild(td);
+    });
+    tbody.appendChild(tr);
+  });
+  tbl.appendChild(tbody);wrap.innerHTML='';wrap.appendChild(tbl);
+}
+function cycleAdj(a,b){
+  const states=['none','must','should','separate'],key=a+'-'+b,keyR=b+'-'+a;
+  const next=states[(states.indexOf(adjMatrix[key]||'none')+1)%states.length];
+  adjMatrix[key]=next;adjMatrix[keyR]=next;
+}
+function exportAdj(){
+  const spaces=program.filter(s=>!s.excluded),lines=['Adjacency Matrix — Burbank Central Library',''];
+  spaces.forEach(a=>spaces.forEach(b=>{
+    if(a.id>=b.id)return;
+    const state=adjMatrix[a.id+'-'+b.id]||'none';
+    if(state!=='none')lines.push(`${a.name} ↔ ${b.name}: ${state.toUpperCase()}`);
+  }));
+  download(lines.join('\n'),'adjacency.txt','text/plain');
+}
+
+/* ════════════════════════════════════
+   SCENARIOS
+════════════════════════════════════ */
+function saveScenario(){
+  const n=(prompt('Name this scenario:','Scenario '+(Object.keys(scenarios).length+1))||'').trim();
+  if(!n)return;
+  scenarios[n]={program:JSON.parse(JSON.stringify(program)),ts:new Date().toISOString(),baseline:false};
+  currentScenario=n;saveSc();saveState();logChange('sys','','Saved: '+n);renderAll();
+}
+function loadScenario(n){
+  if(!scenarios[n])return;
+  program=JSON.parse(JSON.stringify(scenarios[n].program));
+  currentScenario=n;saveState();logChange('sys','','Loaded: '+n);renderAll();
+}
+function branchScenario(n){
+  if(!scenarios[n])return;
+  program=JSON.parse(JSON.stringify(scenarios[n].program));
+  currentScenario=n+' (branch)';saveState();logChange('sys','','Branched from: '+n);renderAll();
+}
+function deleteScenario(n){
+  if(n==='Baseline — Full Program'){alert('Cannot delete baseline.');return}
+  if(!confirm(`Delete "${n}"?`))return;
+  delete scenarios[n];if(currentScenario===n)currentScenario='Baseline — Full Program';
+  saveSc();saveState();renderScenarios();
+}
+function resetBaseline(){
+  if(!confirm('Reset to baseline? Unsaved changes will be lost.'))return;
+  program=cloneBase();currentScenario='Baseline — Full Program';
+  saveState();logChange('sys','','Reset to baseline');renderAll();
+}
+function renderScenarios(){
+  const list=document.getElementById('sc-list'),cmpBody=document.getElementById('cmp-tbody');
+  if(!list||!cmpBody)return;
+  list.innerHTML='';cmpBody.innerHTML='';
+  const baseSnap=scenarios['Baseline — Full Program'];
+  const baseStats=baseSnap?compStats(baseSnap.program):null;
+  Object.entries(scenarios).forEach(([n,sc])=>{
+    const stats=compStats(sc.program);
+    const card=document.createElement('div');
+    card.className='sc-card'+(n===currentScenario?' active':'')+(sc.baseline?' baseline':'');
+    card.innerHTML=`<div class="sc-name">${escHtml(n)}</div><div class="sc-stats">${fmtSF(stats.nsf)} net · ${fmt$(stats.costMid)} mid</div><div class="sc-actions"><button class="btn btn-sm" onclick="loadScenario('${escHtml(n)}')">Load</button><button class="btn-ghost btn-sm" onclick="branchScenario('${escHtml(n)}')">Branch</button>${!sc.baseline?`<button class="btn-ghost btn-sm" onclick="deleteScenario('${escHtml(n)}')">Delete</button>`:''}</div>`;
+    list.appendChild(card);
+    const delta=baseStats?stats.costMid-baseStats.costMid:0;
+    const dGMP=stats.costMid-TARGET_GMP;
+    const gsf=stats.nsf/0.68,psf=gsf>0?stats.costMid/gsf:0;
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td>${escHtml(n)}${sc.baseline?' ★':''}</td><td class="num">${fmtSF(stats.nsf)}</td><td class="num">${fmtSF(Math.round(gsf))}</td><td class="num">${fmt$(stats.costMid)}</td><td class="num">${fmt$(psf)}/GSF</td><td class="num ${delta>0?'delta-p':delta<0?'delta-n':''}">${delta===0?'—':(delta>0?'+':'')+fmt$(delta)}</td><td class="num ${dGMP>0?'delta-p':'delta-n'}">${(dGMP>0?'+':'')+fmt$(dGMP)}</td>`;
+    cmpBody.appendChild(tr);
+  });
+}
+function compStats(prog){
+  let nsf=0,costMid=0;
+  prog.forEach(s=>{if(s.excluded)return;const tsf=(s.qty||1)*(s.unitSF||0);nsf+=tsf;costMid+=tsf*(s.unitCostMid||0)});
+  return{nsf,costMid};
+}
+
+/* ════════════════════════════════════
+   AI FUNCTIONS
+════════════════════════════════════ */
+async function submitAI(){
+  const input=document.getElementById('ai-input').value.trim();
+  if(!input){alert('Please describe the change.');return}
+  const btn=document.getElementById('ai-btn'),lbl=document.getElementById('ai-lbl');
+  const errEl=document.getElementById('ai-err');
+  errEl.classList.remove('show');document.getElementById('prev-box').classList.remove('show');
+  btn.disabled=true;lbl.innerHTML='<span class="spinner"></span>Thinking…';
+  const curProg=program.map(s=>({id:s.id,category:s.category,name:s.name,qty:s.qty,unitSF:s.unitSF,unitCostMid:s.unitCostMid,phase:s.phase,notes:s.notes,excluded:s.excluded}));
+  try{
+    const res=await fetch('/api/suggest',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({currentProgram:curProg,request:input})});
+    const data=await res.json();
+    if(!res.ok)throw new Error(data.error||'API error');
+    if(!data.changes?.length)throw new Error('No changes returned.');
+    preview=data;applyPreviewHL(data.changes);renderTable();
+    document.getElementById('prev-title').textContent=`Preview: ${data.changes.length} change(s)`;
+    document.getElementById('prev-summary').textContent=data.summary||'';
+    document.getElementById('prev-box').classList.add('show');
+  }catch(err){errEl.textContent=err.message;errEl.classList.add('show')}
+  finally{btn.disabled=false;lbl.textContent='Suggest Changes'}
+}
+function applyPreviewHL(changes){
+  program.forEach(s=>{delete s._preview;delete s._temp});
+  changes.forEach(ch=>{
+    if(ch.op==='delete'){const s=program.find(x=>x.id===ch.targetId);if(s)s._preview='del'}
+    else if(ch.op==='modify'){const s=program.find(x=>x.id===ch.targetId);if(s)s._preview='mod'}
+    else if(ch.op==='add'&&ch.space){
+      const tmp=Object.assign({},ch.space,{_preview:'add',_temp:true,excluded:ch.space.category==='Parking & Circulation'});
+      if(!tmp.id)tmp.id=uid();program.push(tmp);
+    }
+  });
+}
+function acceptPreview(){
+  if(!preview)return;
+  preview.changes.forEach(ch=>{
+    if(ch.op==='delete'){const s=program.find(x=>x.id===ch.targetId);if(s)logChange('del',s.name,'AI: '+(ch.rationale||''));program=program.filter(x=>x.id!==ch.targetId)}
+    else if(ch.op==='modify'&&ch.space){
+      const idx=program.findIndex(x=>x.id===ch.targetId);
+      if(idx!==-1){logChange('mod',program[idx].name,'AI: '+(ch.rationale||''));const m=ch.space.unitCostMid||program[idx].unitCostMid;program[idx]=Object.assign({},program[idx],ch.space,{unitCostLow:Math.round(m*0.85),unitCostHigh:Math.round(m*1.15)});delete program[idx]._preview;delete program[idx]._temp}
+    }else if(ch.op==='add'&&ch.space){
+      const exists=program.find(x=>x._temp&&x.id===ch.space.id);
+      if(exists){delete exists._preview;delete exists._temp;logChange('add',exists.name,'AI: '+(ch.rationale||''))}
+    }
+  });
+  program=program.filter(s=>!s._temp);program.forEach(s=>{delete s._preview;delete s._temp});
+  preview=null;document.getElementById('prev-box').classList.remove('show');saveState();renderAll();
+}
+function rejectPreview(){
+  program=program.filter(s=>!s._temp);program.forEach(s=>delete s._preview);
+  preview=null;document.getElementById('prev-box').classList.remove('show');renderTable();
+}
+async function submitGenerate(){
+  const btn=document.getElementById('gen-btn'),lbl=document.getElementById('gen-lbl');
+  btn.disabled=true;lbl.innerHTML='<span class="spinner"></span>Generating…';
+  try{
+    const res=await fetch('/api/generate-program',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({buildingType:document.getElementById('gen-type').value,totalSF:document.getElementById('gen-sf').value,budget:document.getElementById('gen-budget').value,description:document.getElementById('gen-desc').value})});
+    const data=await res.json();
+    if(!res.ok)throw new Error(data.error||'API error');
+    if(!data.program?.spaces?.length)throw new Error('No program returned.');
+    program=data.program.spaces.map(s=>({...s,unitCostLow:Math.round((s.unitCostMid||0)*0.85),unitCostHigh:Math.round((s.unitCostMid||0)*1.15),excluded:s.category==='Parking & Circulation'}));
+    currentScenario='AI Generated — '+document.getElementById('gen-type').value;
+    logChange('sys','','Generated: '+program.length+' spaces');saveState();closeModal('gen-modal');renderAll();
+  }catch(err){alert('Error: '+err.message)}
+  finally{btn.disabled=false;lbl.textContent='Generate Program'}
+}
+async function generateNarrative(){
+  const btn=document.getElementById('narr-btn');btn.disabled=true;btn.textContent='Generating…';
+  document.getElementById('narr-content').innerHTML='<span class="spinner"></span> Generating…';
+  openModal('narr-modal');
+  try{
+    const res=await fetch('/api/narrative',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({program,scenarioName:currentScenario})});
+    const data=await res.json();
+    if(!res.ok)throw new Error(data.error||'API error');
+    narrativeText=data.narrative||'';
+    document.getElementById('narr-content').innerHTML=md2html(narrativeText);
+  }catch(err){document.getElementById('narr-content').innerHTML=`<span style="color:var(--err-txt)">Error: ${escHtml(err.message)}</span>`}
+  finally{btn.disabled=false;btn.textContent='📄 Stakeholder Narrative'}
+}
+function md2html(text){
+  let h=escHtml(text);
+  h=h.replace(/^## (.+)$/gm,'<h2>$1</h2>');
+  h=h.replace(/^### (.+)$/gm,'<strong>$1</strong>');
+  h=h.replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>');
+  h=h.replace(/^[*-] (.+)$/gm,'<li>$1</li>');
+  h=h.replace(/(<li>[^]*?<\/li>)/g,'<ul>$1</ul>');
+  h=h.replace(/\n\n/g,'<br><br>');
+  return'<div class="narr-box">'+h+'</div>';
+}
+function copyNarrative(){navigator.clipboard.writeText(narrativeText).then(()=>alert('Copied to clipboard.'))}
+
+/* ════════════════════════════════════
+   EXPORT
+════════════════════════════════════ */
+function exportCSV(){
+  const hdrs=['Category','Space Name','Qty','Unit SF','Total SF','$/SF Low','$/SF Mid','$/SF High','Total Cost Mid','Phase','Notes','Excluded'];
+  const rows=program.map(s=>{
+    const lo=Math.round((s.unitCostMid||0)*0.85),hi=Math.round((s.unitCostMid||0)*1.15);
+    const tsf=(s.qty||1)*(s.unitSF||0);
+    return[s.category,s.name,s.qty,s.unitSF||0,tsf,lo,s.unitCostMid||0,hi,s.excluded?0:tsf*(s.unitCostMid||0),s.phase,s.notes||'',s.excluded?'Yes':'No'];
+  });
+  download([hdrs,...rows].map(r=>r.map(v=>`"${String(v||'').replace(/"/g,'""')}"`).join(',')).join('\n'),'burbank-program.csv','text/csv');
+}
+function exportLogCSV(){
+  const hdrs=['Time','Operation','Space','Detail'];
+  const rows=changelog.map(e=>[e.ts,e.op.toUpperCase(),e.name||'',e.detail||'']);
+  download([hdrs,...rows].map(r=>r.map(v=>`"${String(v||'').replace(/"/g,'""')}"`).join(',')).join('\n'),'burbank-changelog.csv','text/csv');
+}
+function download(content,filename,mime){
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([content],{type:mime}));
+  a.download=filename;document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(a.href);
+}
+
+/* ════════════════════════════════════
+   UI HELPERS
+════════════════════════════════════ */
+function openModal(id){document.getElementById(id).classList.add('show')}
+function closeModal(id){document.getElementById(id).classList.remove('show')}
+function togglePanel(headEl){
+  const panel=headEl.closest('.panel');panel.classList.toggle('collapsed');
+  const c=headEl.querySelector('.chevron');if(c)c.textContent=panel.classList.contains('collapsed')?'▲':'▼';
+}
+function toggleRpPanel(bodyId,chevId){
+  const body=document.getElementById(bodyId),chev=document.getElementById(chevId);if(!body)return;
+  const hidden=body.style.display==='none';body.style.display=hidden?'':'none';
+  if(chev)chev.textContent=hidden?'▼':'▲';
+}
+function switchTab(name,btn){
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));
+  btn.classList.add('active');document.getElementById('tab-'+name).classList.add('active');
+  if(name==='adj')renderAdj();
+}
+function setupPills(){
+  document.querySelectorAll('.phase-pill').forEach(pill=>{
+    pill.addEventListener('click',function(){
+      document.querySelectorAll('.phase-pill').forEach(p=>p.classList.remove('active'));
+      this.classList.add('active');activeFilter=this.dataset.filter;
+      renderTable();updateBudget();updateGTN();
+    });
+  });
+}
+function setupChips(){
+  document.querySelectorAll('.chip').forEach(c=>{
+    c.addEventListener('click',function(){
+      document.getElementById('ai-input').value=this.dataset.ex||'';
+      document.getElementById('ai-input').focus();
+    });
+  });
+}
+function dismissBanner(){document.getElementById('mob-banner').style.display='none';localStorage.setItem('pcl_banner','1')}
+
+/* Close modals on backdrop click */
+document.querySelectorAll('.modal-bg').forEach(bg=>{bg.addEventListener('click',e=>{if(e.target===bg)bg.classList.remove('show')})});
+
+/* BOOT */
+document.addEventListener('DOMContentLoaded',init);
 </script>
 </body>
 </html>
