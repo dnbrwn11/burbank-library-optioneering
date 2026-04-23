@@ -8,7 +8,9 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json({ limit: '2mb' }));
-app.use(express.static(__dirname));
+
+// 1. Serve static files first (js/, css/, index.html, etc.)
+app.use(express.static(path.join(__dirname)));
 
 const API_KEY = process.env.ANTHROPIC_API_KEY || '';
 const client = new Anthropic({ apiKey: API_KEY });
@@ -57,13 +59,7 @@ async function timedClaude(params) {
   ]);
 }
 
-app.get('/health',     (req, res) => res.json({ status: 'ok', model: MODEL, keyPresent: !!API_KEY }));
-app.get('/api/health', (req, res) => res.json({ status: 'ok', model: MODEL, keyPresent: !!API_KEY }));
-
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html'));
-});
-
+// 2. API routes
 app.post('/api/generate-program', async (req, res) => {
   if (!assertKey(res)) return;
   try {
@@ -196,6 +192,11 @@ Under 500 words. Return only the markdown text.`
   }
 });
 
+// 3. Health checks
+app.get('/health',     (req, res) => res.json({ status: 'ok', model: MODEL, keyPresent: !!API_KEY }));
+app.get('/api/health', (req, res) => res.json({ status: 'ok', model: MODEL, keyPresent: !!API_KEY }));
+
+// 4. Catch-all — serve index.html for any non-file, non-api route
 app.get('/{*path}', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
