@@ -13,16 +13,26 @@ function calcSpaceCost(s){
 }
 function calcTotals(){
   let nsf=0,mid=0,parkingSF=0,libCost=0;
+  let bsysSkipped=0,progCost=0,parkCost=0,siteCost=0;
   program.forEach(s=>{
+    /* Exclude Building Systems rows — reference only, LIBRARY_BSYS_TOTAL added below */
+    if(s.category==='Building Systems'){bsysSkipped+=calcSpaceCost(s);return}
     const ct=s.costType||'persf';
     const cost=calcSpaceCost(s);
-    if(ct==='lumpsum'){mid+=cost}
-    else if(ct==='perstall'){const tsf=(s.qty||1)*(s.unitSF||0);parkingSF+=tsf;mid+=cost}
-    else{const tsf=(s.qty||1)*(s.unitSF||0);nsf+=tsf;mid+=cost;libCost+=cost}
+    if(ct==='lumpsum'){mid+=cost;siteCost+=cost}
+    else if(ct==='perstall'){const tsf=(s.qty||1)*(s.unitSF||0);parkingSF+=tsf;mid+=cost;parkCost+=cost}
+    else{const tsf=(s.qty||1)*(s.unitSF||0);nsf+=tsf;mid+=cost;libCost+=cost;progCost+=cost}
   });
   /* Add fixed Building Systems structural/envelope component */
   mid+=LIBRARY_BSYS_TOTAL;
   libCost+=LIBRARY_BSYS_TOTAL;
+  console.log('Building systems (excluded):',Math.round(bsysSkipped));
+  console.log('Program spaces:',Math.round(progCost));
+  console.log('Parking:',Math.round(parkCost));
+  console.log('Site work:',Math.round(siteCost));
+  console.log('Direct costs:',Math.round(mid));
+  console.log('Target direct costs:',108775455);
+  console.log('Delta:',Math.round(mid-108775455));
   return{nsf,costMid:mid,parkingSF,libCost};
 }
 function getSpread(){return parseInt(document.getElementById('spread-slider').value||15)/100}
