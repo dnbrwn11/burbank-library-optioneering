@@ -196,7 +196,7 @@ Under 500 words. Return only the markdown text.`
   }
 });
 
-app.get('*', (req, res) => {
+app.get('/{*path}', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
