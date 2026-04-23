@@ -1,6 +1,6 @@
 /* PRINT — DEFAULT (program table view) */
 @media print{
-  #viz-drawer,#viz-tab,#print-summary{display:none!important}
+  #viz-drawer,#viz-tab,#print-summary,#print-summary-container{display:none!important}
   .nav,.team-strip,.ribbon,.budget-bar,.mob-banner,.right-sb,.toolbar,.tab-bar,.tab-pane,.footer,.modal-bg,.spread-ctrl,.bsys-panel{display:none!important}
   .main{display:block}.content-col{padding:0;overflow:visible}
   body{background:#FFF;color:#000;font-size:11px}
@@ -14,4 +14,33 @@
   .add-row-btn,.btn-icon,.drag-h{display:none!important}
   .detail-row{display:none!important}
   #page-wrapper{margin-left:0!important}
+}
+
+/* PRINT — SUMMARY MODE (triggered by ⎙ Print Summary button) */
+@media print{
+  body.print-summary-mode *{visibility:hidden!important}
+  body.print-summary-mode #print-summary-container,
+  body.print-summary-mode #print-summary-container *{visibility:visible!important}
+  body.print-summary-mode #print-summary-container{
+    position:fixed!important;top:0!important;left:0!important;width:100%!important;
+    background:white!important;color:black!important;display:block!important;
+    font-family:'Barlow',sans-serif!important;padding:40px!important;
+    box-sizing:border-box!important;overflow:visible!important;
+  }
+  body.print-summary-mode .print-table{width:100%;border-collapse:collapse;margin-bottom:24px;font-size:11px}
+  body.print-summary-mode .print-table td{padding:6px 10px;border-bottom:1px solid #E0E0E0;vertical-align:top}
+  body.print-summary-mode .print-row-header td{background:#006330!important;color:white!important;font-weight:700;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  body.print-summary-mode .print-row-total td{font-weight:700;border-top:2px solid #006330;font-size:13px}
+  body.print-summary-mode .print-row-target td{font-weight:600;color:#006330}
+  body.print-summary-mode .print-row-over td{color:#856404}
+  body.print-summary-mode .print-row-under td{color:#155724}
+  body.print-summary-mode .print-header{text-align:center;margin-bottom:32px}
+  body.print-summary-mode .print-logo{font-size:14px;font-weight:700;color:#006330;letter-spacing:0.15em;margin-bottom:8px}
+  body.print-summary-mode .print-title{font-size:22px;font-weight:700;color:#006330;margin-bottom:4px}
+  body.print-summary-mode .print-subtitle{font-size:13px;color:#6D6D6D;margin-bottom:4px}
+  body.print-summary-mode .print-date{font-size:11px;color:#9A9A9A}
+  body.print-summary-mode .print-rule{border:none;border-top:2px solid #006330;margin:20px 0}
+  body.print-summary-mode .print-section h2{font-size:12px;font-weight:700;color:#006330;letter-spacing:0.1em;text-transform:uppercase;border-bottom:1px solid #E0E0E0;padding-bottom:6px;margin-bottom:12px;margin-top:24px}
+  body.print-summary-mode .print-footer{position:fixed;bottom:20px;left:0;right:0;text-align:center;font-size:9px;color:#9A9A9A;border-top:1px solid #E0E0E0;padding-top:8px}
+  body.print-summary-mode .print-assumptions{font-size:11px;line-height:1.8;color:#444;white-space:pre-wrap}
 }

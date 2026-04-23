@@ -1,22 +1,103 @@
 /* ════════════════════════════════════
+   PRINT SUMMARY — HELPERS
+════════════════════════════════════ */
+function getCurrentDirectCosts(){const{costMid}=calcTotals();return Math.round(costMid)}
+function getCurrentEscalation(){return Math.round(escalationLump)}
+function getCurrentContingency(){return Math.round(contingencyLump)}
+function getCurrentGCOHP(){return Math.round(gcLump)}
+function getTargetBudget(){return Math.round(targetBudget)}
+function getAssumptionsText(){
+  const el=document.getElementById('assumptions-text');
+  const txt=el?el.value:'• PCL Cost Model BE26-52-0187 · Apr 23 2026\n• For planning purposes only';
+  return escHtml(txt);
+}
+function getProgramSummaryRows(){
+  const catStats={};
+  CAT_ORDER.forEach(c=>{catStats[c]={count:0,sf:0,cost:0}});
+  program.forEach(s=>{
+    if(!catStats[s.category])return;
+    const ct=s.costType||'persf';
+    const cost=calcSpaceCost(s);
+    catStats[s.category].count++;
+    if(ct!=='lumpsum')catStats[s.category].sf+=(s.qty||1)*(s.unitSF||0);
+    catStats[s.category].cost+=cost;
+  });
+  catStats['Building Systems']={count:BUILDING_SYSTEMS.length,sf:0,cost:LIBRARY_BSYS_TOTAL};
+  return CAT_ORDER.filter(c=>catStats[c]&&catStats[c].cost>0).map(c=>{
+    const d=catStats[c];
+    const sfDisp=d.sf>0?d.sf.toLocaleString()+' SF':'—';
+    return`<tr><td>${escHtml(c)}</td><td>${d.count}</td><td>${sfDisp}</td><td>$${Math.round(d.cost).toLocaleString()}</td></tr>`;
+  }).join('');
+}
+
+/* ════════════════════════════════════
    PRINT SUMMARY
 ════════════════════════════════════ */
 function printSummary(){
-  updatePrintSummary();
-  const pw=document.getElementById('page-wrapper');
-  const vd=document.getElementById('viz-drawer');
-  const vt=document.getElementById('viz-tab');
-  const ps=document.getElementById('print-summary');
-  pw.style.display='none';
-  vd.style.display='none';
-  vt.style.display='none';
-  ps.style.display='block';
+  const directCosts=getCurrentDirectCosts();
+  const escalation=getCurrentEscalation();
+  const contingency=getCurrentContingency();
+  const gcohp=getCurrentGCOHP();
+  const programmedTotal=directCosts+escalation+contingency+gcohp;
+  const tb=getTargetBudget();
+  const variance=programmedTotal-tb;
+  const costPerGSF=Math.round(programmedTotal/97500);
+  const varClass=variance>0?'print-row-over':'print-row-under';
+  const varLabel=variance>0?'OVER':'UNDER';
+  const dateStr=new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
+  const content=`
+    <div class="print-header">
+      <div class="print-logo">PCL CONSTRUCTION</div>
+      <div class="print-title">BURBANK CENTRAL LIBRARY &amp; CIVIC CENTER</div>
+      <div class="print-subtitle">Progressive Design-Build Cost Model</div>
+      <div class="print-date">${dateStr}</div>
+    </div>
+    <hr class="print-rule">
+    <div class="print-section">
+      <h2>Project Cost Summary</h2>
+      <table class="print-table">
+        <tr class="print-row-header"><td>COST COMPONENT</td><td>AMOUNT</td><td>NOTES</td></tr>
+        <tr><td>Direct Costs</td><td>$${directCosts.toLocaleString()}</td><td>Space + Parking + Site Work</td></tr>
+        <tr><td>Escalation (11.65%)</td><td>$${escalation.toLocaleString()}</td><td>Applied to $94,945,200 base</td></tr>
+        <tr><td>Contingency (8.00%)</td><td>$${contingency.toLocaleString()}</td><td>Applied to $94,945,200 base</td></tr>
+        <tr><td>GC / GR / OHP / Design / CA</td><td>$${gcohp.toLocaleString()}</td><td>28% of direct costs</td></tr>
+        <tr class="print-row-total"><td>PROGRAMMED TOTAL</td><td>$${programmedTotal.toLocaleString()}</td><td></td></tr>
+        <tr class="print-row-target"><td>TARGET BUDGET</td><td>$${tb.toLocaleString()}</td><td>Client approved budget</td></tr>
+        <tr class="${varClass}"><td>VARIANCE</td><td>$${Math.abs(variance).toLocaleString()} ${varLabel}</td><td>${((variance/tb)*100).toFixed(1)}%</td></tr>
+      </table>
+    </div>
+    <div class="print-section">
+      <h2>Key Metrics</h2>
+      <table class="print-table">
+        <tr><td>Library Gross SF</td><td>97,500 GSF</td></tr>
+        <tr><td>Parking</td><td>310 stalls / 93,000 SF</td></tr>
+        <tr><td>Cost per GSF</td><td>$${costPerGSF.toLocaleString()}/GSF</td></tr>
+        <tr><td>Construction Start</td><td>Summer 2027</td></tr>
+        <tr><td>Estimate Basis</td><td>PCL Cost Model BE26-52-0187 · Apr 23 2026</td></tr>
+      </table>
+    </div>
+    <div class="print-section">
+      <h2>Program Summary by Category</h2>
+      <table class="print-table">
+        <tr class="print-row-header"><td>CATEGORY</td><td>SPACES</td><td>TOTAL SF</td><td>TOTAL COST</td></tr>
+        ${getProgramSummaryRows()}
+      </table>
+    </div>
+    <div class="print-section">
+      <h2>Assumptions &amp; Basis of Estimate</h2>
+      <div class="print-assumptions">${getAssumptionsText()}</div>
+    </div>
+    <div class="print-footer">PCL Construction · Proprietary and Confidential · For internal pursuit use only · Not for distribution</div>
+  `;
+  const container=document.getElementById('print-summary-container');
+  if(container)container.innerHTML=content;
+  document.body.classList.add('print-summary-mode');
   const restore=()=>{
-    pw.style.display='';vd.style.display='';vt.style.display='';ps.style.display='none';
+    document.body.classList.remove('print-summary-mode');
     window.removeEventListener('afterprint',restore);
   };
   window.addEventListener('afterprint',restore);
-  window.print();
+  setTimeout(()=>window.print(),250);
 }
 function updatePrintSummary(){
   const{costMid,nsf,parkingSF}=calcTotals();
