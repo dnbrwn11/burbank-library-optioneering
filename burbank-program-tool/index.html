@@ -333,6 +333,73 @@ body.drawer-open #page-wrapper{margin-left:560px}
   body.drawer-open #page-wrapper{margin-left:40px}
 }
 
+/* ── ADJACENCY EDIT MODE ── */
+.adj-edit-btn{font-family:'Barlow',sans-serif;font-weight:600;font-size:11px;text-transform:uppercase;padding:6px 14px;border:1px solid var(--pcl-green);color:var(--pcl-green);background:#fff;cursor:pointer;letter-spacing:0.04em;transition:all 0.15s;line-height:1.3}
+.adj-edit-btn:hover{background:var(--pcl-green);color:#fff}
+.adj-edit-btn.locked{border-color:#E8A020;color:#E8A020}
+.adj-edit-btn.locked:hover{background:#E8A020;color:#fff}
+.adj-must{background:#006330!important}.adj-should{background:#8BC34A!important}
+.adj-sep{background:#E8A020!important}.adj-none{background:#F5F5F5}
+.adj-tbl.adj-readonly .adj-cell{cursor:default!important}
+.adj-tbl.adj-readonly .adj-cell:hover{transform:none!important;outline:none!important}
+
+/* ── L2 LINE ITEMS ── */
+.l2-row{background:#F5FBF7;border-bottom:1px solid #EEF5EE}
+.l2-row td{font-size:12px;font-family:'Barlow',sans-serif;padding:3px 6px;vertical-align:middle}
+.l2-indent{padding-left:32px!important}
+.l2-input{border:none;border-bottom:1px solid transparent;background:transparent;font-family:'Barlow',sans-serif;font-size:12px;color:#1A1A1A;padding:2px 4px;width:100%;line-height:1.4}
+.l2-input:focus{border-bottom-color:#E0E0E0;outline:none}
+.l2-num-input{border:none;background:transparent;font-family:'Barlow',sans-serif;font-size:12px;font-weight:600;color:#1A1A1A;text-align:right;width:58px;padding:2px 4px}
+.l2-num-input:focus{outline:none;border-bottom:1px solid #E0E0E0}
+.l2-num-input:disabled{color:#CCCCCC}
+.l2-cost-input{border:none;background:transparent;font-family:'Barlow',sans-serif;font-size:12px;font-weight:600;color:#006330;text-align:right;width:86px;padding:2px 4px}
+.l2-cost-input:focus{outline:none;border-bottom:1px solid #E0E0E0}
+.l2-sel{border:none;background:transparent;font-family:'Barlow',sans-serif;font-size:11px;padding:2px;width:48px;cursor:pointer}
+.l2-sel:focus{outline:none}
+.l2-del-btn{opacity:0;font-size:12px;color:#CCCCCC;background:none;border:none;cursor:pointer;padding:2px 4px;transition:all 0.15s;line-height:1}
+.l2-row:hover .l2-del-btn{opacity:1}
+.l2-del-btn:hover{color:#CE2027!important}
+.l2-drag-h{opacity:0;cursor:grab;color:#CCCCCC;padding:0 3px;font-size:13px;user-select:none}
+.l2-row:hover .l2-drag-h{opacity:1}
+.l2-add-btn{width:100%;padding:6px 0 6px 32px;background:none;border:none;border-bottom:1px solid #EEF5EE;font-family:'Barlow',sans-serif;font-size:11px;font-weight:600;color:#006330;cursor:pointer;text-align:left;letter-spacing:0.04em}
+.l2-add-btn:hover{text-decoration:underline}
+.l2-badge{display:inline-block;background:#006330;color:#fff;font-family:'Barlow',sans-serif;font-weight:700;font-size:9px;padding:2px 6px;border-radius:2px;margin-left:6px;vertical-align:middle;text-transform:uppercase;letter-spacing:0.05em}
+.l2-mod-badge{display:inline-block;background:#FFF3CD;color:#856404;font-family:'Barlow',sans-serif;font-weight:700;font-size:9px;padding:2px 6px;border-radius:2px;border:1px solid #E8A020;margin-left:4px;vertical-align:middle;text-transform:uppercase}
+.l2-count{font-family:'Barlow',sans-serif;font-weight:300;font-size:11px;color:#9A9A9A;margin-left:4px;vertical-align:middle}
+.l2-chevron{font-size:11px;color:#006330;cursor:pointer;margin-right:4px;display:inline-block;user-select:none;padding:0 2px;transition:transform 0.2s ease;vertical-align:middle}
+.l2-chevron.open{transform:rotate(90deg)}
+
+/* ── NOTES CHIPS ── */
+.note-chips-panel{position:fixed;z-index:500;background:#fff;border:1px solid var(--border);padding:5px 7px;display:flex;flex-wrap:wrap;gap:4px;box-shadow:0 4px 12px rgba(0,0,0,0.12);min-width:220px}
+.note-chip{background:#F5F5F5;border:1px solid #006330;color:#006330;font-family:'Barlow',sans-serif;font-weight:600;font-size:10px;padding:3px 8px;border-radius:2px;cursor:pointer;transition:all 0.12s;line-height:1.4}
+.note-chip:hover{background:#006330;color:#fff}
+
+/* ── BUILDING SYSTEMS ── */
+.bsys-panel{background:var(--panel);border:1px solid var(--border);border-left:3px solid #4A7B9D;margin-bottom:20px;box-shadow:var(--shadow)}
+.bsys-hd{background:#F8FAFC;border-bottom:3px solid #4A7B9D;padding:12px 16px;display:flex;justify-content:space-between;align-items:center}
+.bsys-hd h3{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;letter-spacing:0.08em;text-transform:uppercase;color:#1A1A1A}
+.bsys-hd p{font-size:10px;color:#6D6D6D;font-weight:300;margin-top:2px;font-family:'Barlow',sans-serif}
+.bsys-warn{background:#FFF3CD;padding:6px 12px;font-family:'Barlow',sans-serif;font-weight:300;font-size:10px;color:#856404;border-bottom:1px solid #F5E5A0;letter-spacing:0.01em}
+.bsys-tbl{width:100%;border-collapse:collapse;font-size:12px}
+.bsys-tbl thead th{background:#4A7B9D;color:#fff;font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:10px;text-transform:uppercase;letter-spacing:0.08em;padding:8px;text-align:left;white-space:nowrap}
+.bsys-tbl thead th.num{text-align:right}
+.bsys-tbl tbody tr{background:#F8FAFC}
+.bsys-tbl tbody tr:nth-child(even){background:#EFF4F8}
+.bsys-tbl td{padding:7px 8px;border-bottom:1px solid #D8E4EC;vertical-align:middle;color:#1A1A1A}
+.bsys-tbl td.num{text-align:right;font-variant-numeric:tabular-nums}
+.bsys-div{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:12px;color:#4A7B9D;text-transform:uppercase;letter-spacing:0.04em}
+.bsys-psf{font-family:'Barlow',sans-serif;font-weight:600;font-size:12px;color:#4A7B9D}
+.bsys-total{font-family:'Barlow',sans-serif;font-weight:700;font-size:13px}
+.bsys-pct{font-family:'Barlow',sans-serif;font-weight:400;font-size:11px;color:#6D6D6D}
+.bsys-chevron{font-size:11px;color:#4A7B9D;cursor:pointer;margin-right:4px;display:inline-block;user-select:none;transition:transform 0.2s ease;vertical-align:middle}
+.bsys-chevron.open{transform:rotate(90deg)}
+.bsys-subtotal-row td{background:#006330!important;color:#fff!important;font-weight:700!important;font-size:13px!important;border-bottom:none!important}
+.bsys-sub-row{background:#EFF4F8!important}
+.bsys-sub-row td{padding:5px 8px!important;font-size:11px!important;border-bottom:1px solid #D8E4EC!important}
+.bsys-sub-row td:first-child{padding-left:40px!important}
+.bsys-inp{border:none;border-bottom:1px solid #4A7B9D;background:transparent;font-family:'Barlow',sans-serif;font-size:12px;color:#4A7B9D;font-weight:600;text-align:right;width:78px;padding:2px;outline:none}
+.bsys-inp:focus{border-bottom-color:#006330}
+
 /* PRINT — DEFAULT (program table view) */
 @media print{
   #viz-drawer,#viz-tab,#print-summary{display:none!important}
@@ -541,6 +608,22 @@ body.drawer-open #page-wrapper{margin-left:560px}
       </div>
     </div>
 
+    <!-- Building Systems Panel -->
+    <div class="panel bsys-panel" id="bsys-panel">
+      <div class="bsys-hd">
+        <div style="flex:1">
+          <h3>Building Systems</h3>
+          <p>Building-wide systems · PCL Cost Model BE26-52-0187 · 97,500 GSF basis</p>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
+          <span id="bsys-lock-icon" style="font-size:16px;color:#CCCCCC">🔒</span>
+          <button id="bsys-edit-btn" class="adj-edit-btn" onclick="toggleBsEdit()">EDIT SYSTEMS</button>
+        </div>
+      </div>
+      <div class="bsys-warn">⚠ These totals are included in the space costs above. This breakdown is for reference only — not additive.</div>
+      <div class="table-wrap" id="bsys-table-wrap"></div>
+    </div>
+
     <!-- Tabs: Change Log / Adjacency Matrix -->
     <div class="panel" style="margin-bottom:20px">
       <div class="tab-bar">
@@ -555,16 +638,21 @@ body.drawer-open #page-wrapper{margin-left:560px}
         <div id="log-body"></div>
       </div>
       <div class="tab-pane" id="tab-adj">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-          <div class="sh" style="margin-bottom:0"><h2>Adjacency Matrix</h2></div>
-          <button class="btn-ghost btn-sm" onclick="exportAdj()">⤓ Export</button>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;flex-wrap:wrap;gap:8px">
+          <div class="sh" style="margin-bottom:0"><h2><span id="adj-lock-icon">🔒</span> Adjacency Matrix</h2></div>
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+            <span id="adj-mode-label" style="font-family:'Barlow',sans-serif;font-weight:300;font-size:11px;color:#9A9A9A">Read Only — click Edit to modify</span>
+            <button id="adj-edit-btn" class="adj-edit-btn" onclick="toggleAdjEdit()">EDIT MATRIX</button>
+            <button class="adj-edit-btn" onclick="exportRelationships()">EXPORT RELATIONSHIPS</button>
+          </div>
         </div>
+        <div id="adj-export-feedback" style="font-size:11px;color:#006330;font-weight:600;display:none;margin-bottom:6px">Copied to clipboard ✓</div>
         <div class="adj-legend">
-          <span><span class="sw" style="background:#1B5E20"></span>Must Be Adjacent</span>
-          <span><span class="sw" style="background:#81C784"></span>Should Be Adjacent</span>
-          <span><span class="sw" style="background:var(--pcl-green)"></span>Should Be Separated</span>
+          <span><span class="sw" style="background:#006330"></span>Must Be Adjacent</span>
+          <span><span class="sw" style="background:#8BC34A"></span>Should Be Adjacent</span>
+          <span><span class="sw" style="background:#E8A020"></span>Should Be Separated</span>
           <span><span class="sw" style="background:#F5F5F5"></span>No Requirement</span>
-          <span style="margin-left:auto;font-size:11px;color:var(--dim)">Click cell to cycle</span>
+          <span id="adj-legend-hint" style="margin-left:auto;font-size:11px;color:var(--dim)">Read Only — click Edit to modify</span>
         </div>
         <div class="adj-wrap" id="adj-wrap"></div>
       </div>
@@ -917,6 +1005,57 @@ const INITIAL_ADJ={
   's13-s14':'must','s14-s13':'must','s15-s18':'should','s18-s15':'should',
   's7-s9':'separate','s9-s7':'separate'
 };
+const BUILDING_SYSTEMS=[
+  {id:'bs1',div:'03+05',name:'Structure',gsf:97500,psf:162.51,total:15844725,pct:19.94,note:'Concrete frame, steel, structural steel',
+   subs:[{id:'bs1a',div:'03',name:'Div 03 Concrete',gsf:97500,psf:99.21,total:9672975},{id:'bs1b',div:'05',name:'Div 05 Metals',gsf:97500,psf:63.30,total:6171750}]},
+  {id:'bs2',div:'07+08',name:'Envelope',gsf:97500,psf:114.43,total:11156925,pct:14.04,note:'Curtain wall, glazing, roofing, waterproofing',
+   subs:[{id:'bs2a',div:'07',name:'Div 07 Thermal & Moisture',gsf:97500,psf:34.00,total:3315000},{id:'bs2b',div:'08',name:'Div 08 Openings/Curtain Wall',gsf:97500,psf:80.43,total:7841925}]},
+  {id:'bs3',div:'09',name:'Finishes',gsf:97500,psf:123.71,total:12061725,pct:15.18,note:'Flooring, ceilings, painting, tile — all spaces',
+   subs:[{id:'bs3a',div:'09',name:'Div 09 Finishes',gsf:97500,psf:123.71,total:12061725}]},
+  {id:'bs4',div:'12',name:'Furnishings',gsf:97500,psf:71.88,total:7008300,pct:8.82,note:'FF&E — furniture, fixtures, equipment',
+   subs:[{id:'bs4a',div:'12',name:'Div 12 Furnishings',gsf:97500,psf:71.88,total:7008300}]},
+  {id:'bs5',div:'21+22+23+26',name:'MEP & Fire Protection',gsf:97500,psf:267.25,total:26056875,pct:32.80,note:'Full MEP — plumbing, HVAC, electrical, FP',
+   subs:[{id:'bs5a',div:'21',name:'Div 21 Fire Suppression',gsf:97500,psf:9.00,total:877500},{id:'bs5b',div:'22',name:'Div 22 Plumbing',gsf:97500,psf:36.60,total:3568500},{id:'bs5c',div:'23',name:'Div 23 HVAC',gsf:97500,psf:72.18,total:7037550},{id:'bs5d',div:'26',name:'Div 26 Electrical & Low Voltage',gsf:97500,psf:149.47,total:14573325}]},
+  {id:'bs6',div:'10+11',name:'Specialties & Equipment',gsf:97500,psf:18.97,total:1849575,pct:2.33,note:'Specialties, library-specific equipment',
+   subs:[{id:'bs6a',div:'10',name:'Div 10 Specialties',gsf:97500,psf:10.06,total:980850},{id:'bs6b',div:'11',name:'Div 11 Equipment',gsf:97500,psf:8.91,total:868725}]},
+  {id:'bs7',div:'14',name:'Conveying Systems',gsf:97500,psf:36.10,total:3520000,pct:4.43,note:'Elevators, escalators, lifts',
+   subs:[{id:'bs7a',div:'14',name:'Div 14 Conveying',gsf:97500,psf:36.10,total:3520000}]},
+  {id:'bs8',div:'04+06',name:'Masonry & Wood/Composites',gsf:97500,psf:19.97,total:1947075,pct:2.45,note:'Masonry, millwork, wood framing',
+   subs:[{id:'bs8a',div:'04',name:'Div 04 Masonry',gsf:97500,psf:3.92,total:382200},{id:'bs8b',div:'06',name:'Div 06 Wood & Composites',gsf:97500,psf:16.05,total:1564875}]}
+];
+const PRE_LINE_ITEMS={
+  's4':[
+    {id:'li4a',name:'Acoustic Booth Construction',qty:3,unitType:'/EA',unitCost:85000,notes:'prefab acoustic pods'},
+    {id:'li4b',name:'AV/Recording Equipment',qty:1,unitType:'/LS',unitCost:145000,notes:'mixing boards, mics, monitors, patch bays'},
+    {id:'li4c',name:'Acoustic Treatment & Finishes',qty:600,unitType:'/SF',unitCost:180,notes:'wall panels, ceiling clouds, flooring'},
+    {id:'li4d',name:'Dedicated MEP (HVAC + electrical)',qty:1,unitType:'/LS',unitCost:80000,notes:'silent HVAC, dedicated circuits, grounding'},
+    {id:'li4e',name:'IT & Network Infrastructure',qty:1,unitType:'/LS',unitCost:42000,notes:'fiber, patch panels, streaming capability'}
+  ],
+  's5':[
+    {id:'li5a',name:'Commercial Kitchen Equipment',qty:1,unitType:'/LS',unitCost:285000,notes:'allowance — confirm if tenant supplied'},
+    {id:'li5b',name:'FRP Wall Panels',qty:800,unitType:'/SF',unitCost:18,notes:'food-safe fiberglass reinforced panels'},
+    {id:'li5c',name:'Grease Trap & Plumbing (Div 22)',qty:1,unitType:'/LS',unitCost:95000,notes:'grease interceptor, floor drains, HW'},
+    {id:'li5d',name:'Exhaust Hood & Kitchen MEP (Div 23)',qty:1,unitType:'/LS',unitCost:165000,notes:'Type 1 hood, makeup air, exhaust fans'},
+    {id:'li5e',name:'Finishes — Floor, Wall, Ceiling',qty:1500,unitType:'/SF',unitCost:145,notes:'quarry tile floor, painted CMU, ACT ceiling'},
+    {id:'li5f',name:'Millwork & Service Counter',qty:1,unitType:'/LS',unitCost:185000,notes:'service counter, display shelving, cabinetry'},
+    {id:'li5g',name:'Electrical & Lighting (Div 26)',qty:1500,unitType:'/SF',unitCost:125,notes:'food service lighting, dedicated circuits'},
+    {id:'li5h',name:'Signage & Graphics',qty:1,unitType:'/LS',unitCost:35000,notes:'wayfinding, menu boards, exterior signage'},
+    {id:'li5i',name:'Furniture & Seating',qty:1,unitType:'/LS',unitCost:155600,notes:'tables, chairs, outdoor seating allowance'},
+    {id:'li5j',name:'Miscellaneous & Coordination',qty:1,unitType:'/LS',unitCost:85000,notes:'café-specific coordination, contingency'}
+  ],
+  's9':[
+    {id:'li9a',name:'Theatrical Structural Systems',qty:5500,unitType:'/SF',unitCost:185,notes:'fly tower structure, rigging loft, catwalks'},
+    {id:'li9b',name:'Seating & Risers',qty:1,unitType:'/LS',unitCost:485000,notes:'350 seats, retractable riser system'},
+    {id:'li9c',name:'AV & Theatrical Lighting',qty:1,unitType:'/LS',unitCost:895000,notes:'lighting grid, dimmer racks, projectors, screens'},
+    {id:'li9d',name:'Sound System',qty:1,unitType:'/LS',unitCost:425000,notes:'line array, mixing console, stage monitors'},
+    {id:'li9e',name:'Stage & Backstage Finishes',qty:5500,unitType:'/SF',unitCost:165,notes:'sprung wood floor, acoustic wall panels'},
+    {id:'li9f',name:'Theatrical MEP',qty:5500,unitType:'/SF',unitCost:145,notes:'dedicated HVAC, high-amperage electrical'},
+    {id:'li9g',name:'Stage Rigging & Soft Goods',qty:1,unitType:'/LS',unitCost:285000,notes:'motorized fly system, grand drape, legs'},
+    {id:'li9h',name:'Backstage Support',qty:1,unitType:'/LS',unitCost:295000,notes:'4 dressing rooms, green room, prop storage'},
+    {id:'li9i',name:'Orchestra Pit',qty:1,unitType:'/LS',unitCost:195000,notes:'hydraulic lift pit — confirm with architect'},
+    {id:'li9j',name:'Theater Systems Coordination',qty:1,unitType:'/LS',unitCost:23500,notes:'specialty consultant coordination allowance'}
+  ]
+};
 
 /* ════════════════════════════════════
    STATE
@@ -927,6 +1066,10 @@ let preview=null,dragSrcId=null,narrativeText='';
 let drawerOpen=false,divChartDone=false;
 let charts={};
 let chartUpdateTimeout=null;
+let adjEditMode=false;
+let lineItems={},expandedSpaces=new Set();
+let bsEditMode=false,bsEdits={},bsExpanded=new Set();
+let chipHideTimeout=null;
 
 /* ════════════════════════════════════
    INIT
@@ -938,7 +1081,20 @@ function init(){
   if(savedSc){try{scenarios=JSON.parse(savedSc)}catch{scenarios={}}}
   const savedAssm=localStorage.getItem('pcl_assumptions');
   if(savedAssm){const el=document.getElementById('assumptions-text');if(el)el.value=savedAssm}
-  adjMatrix=Object.assign({},INITIAL_ADJ);
+  const savedAdj=localStorage.getItem('pcl_adj_matrix');
+  if(savedAdj){try{adjMatrix=JSON.parse(savedAdj)}catch{adjMatrix=Object.assign({},INITIAL_ADJ)}}
+  else{adjMatrix=Object.assign({},INITIAL_ADJ)}
+  adjEditMode=localStorage.getItem('pcl_adj_edit')==='1';
+  const savedLI=localStorage.getItem('pcl_li');
+  if(savedLI){try{lineItems=JSON.parse(savedLI)}catch{}}
+  Object.entries(PRE_LINE_ITEMS).forEach(([sid,items])=>{if(!lineItems[sid])lineItems[sid]=JSON.parse(JSON.stringify(items))});
+  const savedExp=localStorage.getItem('pcl_exp');
+  if(savedExp){try{expandedSpaces=new Set(JSON.parse(savedExp))}catch{}}
+  bsEditMode=localStorage.getItem('pcl_bs_edit')==='1';
+  const savedBSE=localStorage.getItem('pcl_bs_edits');
+  if(savedBSE){try{bsEdits=JSON.parse(savedBSE)}catch{}}
+  const savedBSX=localStorage.getItem('pcl_bsexp');
+  if(savedBSX){try{bsExpanded=new Set(JSON.parse(savedBSX))}catch{}}
   currentScenario=localStorage.getItem('pcl_cur_sc')||'Baseline — Full Program';
   if(!scenarios['Baseline — Full Program']){
     scenarios['Baseline — Full Program']={program:cloneBase(),ts:new Date().toISOString(),baseline:true};
@@ -974,20 +1130,24 @@ function setText(id,v){const e=document.getElementById(id);if(e)e.textContent=v}
 /* ════════════════════════════════════
    CALCULATIONS
 ════════════════════════════════════ */
+function calcSpaceCost(s){
+  const ct=s.costType||'persf';
+  const items=lineItems[s.id];
+  if(ct==='persf'&&items&&items.length>0){
+    return items.reduce((sum,c)=>sum+(c.unitType==='/LS'?(c.unitCost||0):(c.qty||0)*(c.unitCost||0)),0);
+  }
+  if(ct==='lumpsum')return s.unitCostMid||0;
+  if(ct==='perstall')return(s.qty||1)*(s.unitCostMid||0);
+  return(s.qty||1)*(s.unitSF||0)*(s.unitCostMid||0);
+}
 function calcTotals(){
   let nsf=0,mid=0,parkingSF=0,libCost=0;
   program.forEach(s=>{
     const ct=s.costType||'persf';
-    if(ct==='lumpsum'){mid+=s.unitCostMid||0}
-    else if(ct==='perstall'){
-      const tsf=(s.qty||1)*(s.unitSF||0);
-      parkingSF+=tsf;
-      mid+=(s.qty||1)*(s.unitCostMid||0);
-    }else{
-      const tsf=(s.qty||1)*(s.unitSF||0);
-      const c=tsf*(s.unitCostMid||0);
-      nsf+=tsf;mid+=c;libCost+=c;
-    }
+    const cost=calcSpaceCost(s);
+    if(ct==='lumpsum'){mid+=cost}
+    else if(ct==='perstall'){const tsf=(s.qty||1)*(s.unitSF||0);parkingSF+=tsf;mid+=cost}
+    else{const tsf=(s.qty||1)*(s.unitSF||0);nsf+=tsf;mid+=cost;libCost+=cost}
   });
   return{nsf,costMid:mid,parkingSF,libCost};
 }
@@ -1007,6 +1167,7 @@ function renderAll(){
   renderTable();updateBudget();updateGTN();updateEscalation();renderLog();
   renderScenarios();
   if(document.getElementById('tab-adj').classList.contains('active'))renderAdj();
+  renderBuildingSystems();
   scheduleChartUpdate();
 }
 
@@ -1027,50 +1188,63 @@ function renderTable(){
     tbody.appendChild(ctr);
     rows.forEach(s=>{
       const ct=s.costType||'persf';
-      let tsf=0,cost=0,qtyDisp='—',usfDisp='—',psfDisp='—';
+      const items=lineItems[s.id]||[];
+      const hasL2=ct==='persf'&&items.length>0;
+      const isExpanded=expandedSpaces.has(s.id);
+      let tsf=0,cost=0,qtyDisp='—',usfDisp='—';
       if(ct==='persf'){
-        tsf=(s.qty||1)*(s.unitSF||0);cost=tsf*(s.unitCostMid||0);
+        tsf=(s.qty||1)*(s.unitSF||0);
+        const rawCost=tsf*(s.unitCostMid||0);
+        cost=hasL2?items.reduce((sum,c)=>sum+(c.unitType==='/LS'?(c.unitCost||0):(c.qty||0)*(c.unitCost||0)),0):rawCost;
         qtyDisp=s.qty;usfDisp=(s.unitSF||0).toLocaleString();
-        psfDisp=fmt$(s.unitCostMid||0)+'/SF';
       }else if(ct==='perstall'){
         tsf=(s.qty||1)*(s.unitSF||0);cost=(s.qty||1)*(s.unitCostMid||0);
         qtyDisp=s.qty+' stalls';usfDisp=(s.unitSF||0)+' SF/stall';
-        psfDisp=fmt$(s.unitCostMid||0)+'/stall';
-      }else{// lumpsum
+      }else{
         cost=s.unitCostMid||0;
-        qtyDisp='—';usfDisp='—';psfDisp='Lump Sum';
+        qtyDisp='—';usfDisp='—';
       }
+      const derivedPsf=hasL2&&tsf>0?cost/tsf:null;
+      const psfHtml=hasL2
+        ?`<span style="font-style:italic;color:#3D8B37;cursor:help" title="Derived from line items below">${fmt$(derivedPsf)}/SF</span>`
+        :(ct==='persf'?fmt$(s.unitCostMid||0)+'/SF':ct==='perstall'?fmt$(s.unitCostMid||0)+'/stall':'Lump Sum');
       const bench=(ct==='persf')?getBench(s.name,s.unitSF||0):'';
       const pvCls=s._preview?' p-'+s._preview:'';
-      const tr=document.createElement('tr');
-      tr.className='data-row'+pvCls;tr.dataset.id=s.id;tr.dataset.cat=s.category;tr.draggable=true;
       const qtyA=ct==='persf'?`class="num editable" data-field="qty" data-id="${s.id}"`:`class="num${ct==='lumpsum'?' muted':''}"`;
       const usfA=ct==='persf'?`class="num editable col-hide" data-field="unitSF" data-id="${s.id}"`:`class="num col-hide${ct==='lumpsum'?' muted':''}"`;
-      const psfA=ct!=='lumpsum'?`class="num editable" data-field="unitCostMid" data-id="${s.id}"`:`class="num muted"`;
+      const psfA=hasL2?`class="num"`:ct!=='lumpsum'?`class="num editable" data-field="unitCostMid" data-id="${s.id}"`:`class="num muted"`;
+      const chevron=ct==='persf'?`<span class="l2-chevron${isExpanded?' open':''}" onclick="toggleL2('${s.id}',event)">▶</span>`:`<span style="display:inline-block;width:16px"></span>`;
+      const rawParentCost=tsf*(s.unitCostMid||0);
+      const l2Badge=hasL2?`<span class="l2-badge" onclick="event.stopPropagation()">L2</span><span class="l2-count" onclick="event.stopPropagation()">(${items.length} item${items.length===1?'':'s'})</span>`:'';
+      const modBadge=hasL2&&Math.abs(cost-rawParentCost)>1?`<span class="l2-mod-badge" onclick="event.stopPropagation()">MOD</span>`:'';
+      const tr=document.createElement('tr');
+      tr.className='data-row'+pvCls;tr.dataset.id=s.id;tr.dataset.cat=s.category;tr.draggable=true;
       tr.innerHTML=`
         <td><span class="drag-h">⋮⋮</span></td>
         <td style="padding:0;width:4px"><div style="width:4px;min-height:36px;height:100%;background:${cc}"></div></td>
-        <td class="editable" data-field="name" data-id="${s.id}">${escHtml(s.name)}</td>
+        <td class="editable" data-field="name" data-id="${s.id}">${chevron}${escHtml(s.name)}${l2Badge}${modBadge}</td>
         <td ${qtyA}>${qtyDisp}</td>
         <td ${usfA}>${usfDisp}</td>
         <td class="num${ct==='lumpsum'?' muted':''}">${ct==='lumpsum'?'—':fmtSF(tsf)}</td>
-        <td ${psfA}>${psfDisp}</td>
+        <td ${psfA}>${psfHtml}</td>
         <td class="num">${fmt$(cost)}</td>
         <td class="col-hide">${bench}</td>
         <td class="editable col-hide" data-field="notes" data-id="${s.id}">${escHtml(s.notes||'')}</td>
         <td><button class="btn-icon" onclick="deleteRow('${s.id}')" title="Delete">✕</button></td>`;
       tr.addEventListener('click',e=>{
-        if(e.target.closest('.editable')||e.target.closest('.btn-icon')||e.target.closest('.drag-h'))return;
+        if(e.target.closest('.editable')||e.target.closest('.btn-icon')||e.target.closest('.drag-h')||e.target.closest('.l2-chevron'))return;
         if(window.innerWidth<=767)toggleDetail(s.id);
       });
       tbody.appendChild(tr);
       const dtr=document.createElement('tr');
       dtr.className='detail-row';dtr.id='dr-'+s.id;
-      let detailStr=`<strong>Cost Type:</strong> ${ct} &nbsp;<strong>Total Cost:</strong> ${fmt$(cost)}`;
-      if(ct==='persf')detailStr+=` &nbsp;<strong>$/SF:</strong> ${fmt$(s.unitCostMid||0)}`;
+      let detailStr=`<strong>Cost Type:</strong> ${ct}`;
+      if(hasL2)detailStr+=` &nbsp;<strong>L2 Total:</strong> ${fmt$(cost)}`;
+      else if(ct==='persf')detailStr+=` &nbsp;<strong>$/SF:</strong> ${fmt$(s.unitCostMid||0)}`;
       if(s.notes)detailStr+=` &nbsp;<strong>Notes:</strong> ${escHtml(s.notes)}`;
       dtr.innerHTML=`<td colspan="11">${detailStr}</td>`;
       tbody.appendChild(dtr);
+      if(isExpanded&&ct==='persf')renderL2Rows(tbody,s,items,cc);
     });
     const atr=document.createElement('tr');
     atr.innerHTML=`<td colspan="11"><button class="add-row-btn" onclick="openAddRow('${escHtml(cat)}')">+ Add Space to ${escHtml(cat)}</button></td>`;
@@ -1081,6 +1255,102 @@ function renderTable(){
   setupEditCells();
 }
 function toggleDetail(id){const dr=document.getElementById('dr-'+id);if(dr)dr.classList.toggle('show')}
+
+function renderL2Rows(tbody,s,items,catColor){
+  const borderColor=catColor+'66';
+  items.forEach(child=>{
+    const isLS=child.unitType==='/LS';
+    const total=isLS?(child.unitCost||0):(child.qty||0)*(child.unitCost||0);
+    const tr=document.createElement('tr');
+    tr.className='l2-row';tr.dataset.lid=child.id;tr.dataset.pid=s.id;
+    tr.innerHTML=`
+      <td style="padding:2px 4px"><span class="l2-drag-h">⋮⋮</span></td>
+      <td style="padding:0;width:4px"><div style="width:4px;height:34px;background:${borderColor};border-left:2px solid ${catColor}88"></div></td>
+      <td class="l2-indent">
+        <input class="l2-input" type="text" data-field="name" data-lid="${child.id}"
+          value="${escHtml(child.name||'')}" placeholder="Line item description"
+          oninput="updateL2Field('${s.id}','${child.id}','name',this.value)">
+      </td>
+      <td class="num">
+        <input class="l2-num-input" type="number" min="0" value="${isLS?'':child.qty||0}"
+          ${isLS?'disabled':''}
+          oninput="updateL2Field('${s.id}','${child.id}','qty',parseFloat(this.value)||0)">
+      </td>
+      <td class="num col-hide">
+        <select class="l2-sel" onchange="updateL2Type('${s.id}','${child.id}',this.value)">
+          ${['/LS','/SF','/EA','/LF'].map(t=>`<option${t===child.unitType?' selected':''}>${t}</option>`).join('')}
+        </select>
+      </td>
+      <td class="num col-hide" style="color:#9A9A9A;font-size:11px;text-align:center">${isLS?'—':'×'}</td>
+      <td class="num">
+        <input class="l2-cost-input" type="number" min="0" value="${child.unitCost||0}"
+          oninput="updateL2Field('${s.id}','${child.id}','unitCost',parseFloat(this.value)||0)">
+      </td>
+      <td class="num" style="font-weight:700;font-size:12px">${fmt$(total)}</td>
+      <td class="col-hide"></td>
+      <td class="col-hide" style="min-width:100px">
+        <input class="l2-input" type="text" data-field="notes" data-lid="${child.id}"
+          value="${escHtml(child.notes||'')}"
+          placeholder="allowance, NIC, by owner..."
+          style="font-style:italic;color:#6D6D6D;font-size:11px"
+          oninput="updateL2Field('${s.id}','${child.id}','notes',this.value)"
+          onfocus="showNoteChips(this,'${s.id}','${child.id}','notes')"
+          onblur="hideNoteChips()">
+      </td>
+      <td><button class="l2-del-btn" onclick="deleteL2('${s.id}','${child.id}')" title="Remove line item">✕</button></td>`;
+    tbody.appendChild(tr);
+  });
+  const addRow=document.createElement('tr');
+  addRow.innerHTML=`<td colspan="11"><button class="l2-add-btn" onclick="addL2Row('${s.id}')">+ ADD LINE ITEM</button></td>`;
+  tbody.appendChild(addRow);
+}
+function toggleL2(sid,evt){
+  if(evt)evt.stopPropagation();
+  if(expandedSpaces.has(sid))expandedSpaces.delete(sid);
+  else expandedSpaces.add(sid);
+  saveExpanded();renderTable();
+}
+function addL2Row(sid){
+  const s=program.find(x=>x.id===sid);if(!s)return;
+  if(!lineItems[sid])lineItems[sid]=[];
+  lineItems[sid].push({id:'l'+uid(),name:'',qty:(s.qty||1)*(s.unitSF||0),unitType:'/LS',unitCost:0,notes:''});
+  if(!expandedSpaces.has(sid))expandedSpaces.add(sid);
+  saveL2();saveExpanded();renderTable();updateBudget();updateGTN();
+}
+function deleteL2(sid,cid){
+  if(!lineItems[sid])return;
+  lineItems[sid]=lineItems[sid].filter(c=>c.id!==cid);
+  saveL2();renderTable();updateBudget();updateGTN();scheduleChartUpdate();
+}
+function updateL2Field(sid,cid,field,value){
+  const items=lineItems[sid];if(!items)return;
+  const child=items.find(c=>c.id===cid);if(!child)return;
+  child[field]=value;saveL2();
+  const row=document.querySelector(`tr[data-lid="${cid}"]`);
+  if(row){
+    const isLS=child.unitType==='/LS';
+    const total=isLS?(child.unitCost||0):(child.qty||0)*(child.unitCost||0);
+    const cells=row.querySelectorAll('td');
+    if(cells[7])cells[7].textContent=fmt$(total);
+  }
+  const parentRow=document.querySelector(`tr.data-row[data-id="${sid}"]`);
+  if(parentRow){
+    const newTotal=items.reduce((sum,c)=>sum+(c.unitType==='/LS'?(c.unitCost||0):(c.qty||0)*(c.unitCost||0)),0);
+    const sp=program.find(x=>x.id===sid);
+    const tsf=sp?(sp.qty||1)*(sp.unitSF||0):1;
+    const pc=parentRow.querySelectorAll('td');
+    if(pc[6])pc[6].innerHTML=`<span style="font-style:italic;color:#3D8B37;cursor:help" title="Derived from line items below">${fmt$(tsf>0?newTotal/tsf:0)}/SF</span>`;
+    if(pc[7])pc[7].textContent=fmt$(newTotal);
+  }
+  updateBudget();updateGTN();scheduleChartUpdate();
+}
+function updateL2Type(sid,cid,type){
+  const items=lineItems[sid];if(!items)return;
+  const child=items.find(c=>c.id===cid);if(!child)return;
+  child.unitType=type;saveL2();renderTable();updateBudget();updateGTN();
+}
+function saveL2(){localStorage.setItem('pcl_li',JSON.stringify(lineItems))}
+function saveExpanded(){localStorage.setItem('pcl_exp',JSON.stringify([...expandedSpaces]))}
 
 /* ════════════════════════════════════
    INLINE EDITING
@@ -1101,6 +1371,10 @@ function makeEditable(td,id,field){
   else{input.type='text';input.value=s[field]||''}
   td.innerHTML='';td.appendChild(input);input.focus();
   if(input.select&&input.type!=='number')input.select();
+  if(field==='notes'){
+    input.addEventListener('focus',()=>showNoteChips(input,id,null,'notes'));
+    input.addEventListener('blur',hideNoteChips);
+  }
   function commit(){
     const oldVal=s[field];let nv;
     if(['qty','unitSF','unitCostMid'].includes(field))nv=parseFloat(input.value)||0;
@@ -1118,6 +1392,10 @@ function makeEditable(td,id,field){
 function deleteRow(id){
   const s=program.find(x=>x.id===id);if(!s)return;
   if(!confirm(`Delete "${s.name}"?`))return;
+  if(lineItems[id]){delete lineItems[id];saveL2()}
+  expandedSpaces.delete(id);saveExpanded();
+  Object.keys(adjMatrix).forEach(k=>{if(k.startsWith(id+'-')||k.endsWith('-'+id))delete adjMatrix[k]});
+  localStorage.setItem('pcl_adj_matrix',JSON.stringify(adjMatrix));
   program=program.filter(x=>x.id!==id);
   logChange('del',s.name,'Space removed');saveState();
   renderTable();updateBudget();updateGTN();scheduleChartUpdate();
@@ -1277,7 +1555,16 @@ function renderLog(){
 function renderAdj(){
   const spaces=program.filter(s=>s.costType!=='lumpsum');
   const wrap=document.getElementById('adj-wrap');if(!wrap)return;
-  const tbl=document.createElement('table');tbl.className='adj-tbl';
+  const li=document.getElementById('adj-lock-icon');
+  if(li)li.textContent=adjEditMode?'🔓':'🔒';
+  const eb=document.getElementById('adj-edit-btn');
+  if(eb){eb.textContent=adjEditMode?'LOCK MATRIX':'EDIT MATRIX';eb.className='adj-edit-btn'+(adjEditMode?' locked':'')}
+  const ml=document.getElementById('adj-mode-label');
+  if(ml)ml.style.display=adjEditMode?'none':'inline';
+  const hint=document.getElementById('adj-legend-hint');
+  if(hint)hint.textContent=adjEditMode?'Click cell to cycle':'Read Only — click Edit to modify';
+  const tbl=document.createElement('table');
+  tbl.className='adj-tbl'+(adjEditMode?'':' adj-readonly');
   const thead=document.createElement('thead');const hr=document.createElement('tr');
   hr.innerHTML='<th></th>';
   spaces.forEach(s=>{const th=document.createElement('th');th.className='rot';th.innerHTML=`<div>${escHtml(s.name)}</div>`;hr.appendChild(th)});
@@ -1289,9 +1576,9 @@ function renderAdj(){
       const td=document.createElement('td');
       if(ri===ci){td.className='adj-diag'}else{
         const key=rs.id+'-'+cs.id,state=adjMatrix[key]||'none';
-        td.className='adj-cell adj-'+(state==='separate'?'sep':state);
+        td.className='adj-cell adj-'+(state==='separate'?'sep':state==='must'?'must':state==='should'?'should':'none');
         td.title={must:'Must Be Adjacent',should:'Should Be Adjacent',separate:'Should Be Separated',none:'No Requirement'}[state]||'';
-        td.addEventListener('click',()=>{cycleAdj(rs.id,cs.id);renderAdj()});
+        td.addEventListener('click',()=>{if(!adjEditMode)return;cycleAdj(rs.id,cs.id);renderAdj()});
       }
       tr.appendChild(td);
     });
@@ -1303,6 +1590,7 @@ function cycleAdj(a,b){
   const states=['none','must','should','separate'],key=a+'-'+b,keyR=b+'-'+a;
   const next=states[(states.indexOf(adjMatrix[key]||'none')+1)%states.length];
   adjMatrix[key]=next;adjMatrix[keyR]=next;
+  localStorage.setItem('pcl_adj_matrix',JSON.stringify(adjMatrix));
 }
 function exportAdj(){
   const spaces=program.filter(s=>s.costType!=='lumpsum'),lines=['Adjacency Matrix — Burbank Central Library',''];
@@ -1312,6 +1600,110 @@ function exportAdj(){
     if(state!=='none')lines.push(`${a.name} ↔ ${b.name}: ${state.toUpperCase()}`);
   }));
   download(lines.join('\n'),'adjacency.txt','text/plain');
+}
+function toggleAdjEdit(){
+  adjEditMode=!adjEditMode;
+  localStorage.setItem('pcl_adj_edit',adjEditMode?'1':'0');
+  renderAdj();
+}
+function exportRelationships(){
+  const spaces=program.filter(s=>s.costType!=='lumpsum');
+  const must=[],should=[],sep=[];
+  spaces.forEach(a=>spaces.forEach(b=>{
+    if(a.id>=b.id)return;
+    const state=adjMatrix[a.id+'-'+b.id]||'none';
+    const line=`  ${a.name} ↔ ${b.name}`;
+    if(state==='must')must.push(line);
+    else if(state==='should')should.push(line);
+    else if(state==='separate')sep.push(line);
+  }));
+  let text='';
+  if(must.length)text+='MUST BE ADJACENT:\n'+must.join('\n')+'\n\n';
+  if(should.length)text+='SHOULD BE ADJACENT:\n'+should.join('\n')+'\n\n';
+  if(sep.length)text+='SHOULD BE SEPARATED:\n'+sep.join('\n')+'\n\n';
+  if(!text.trim())text='No relationships defined.';
+  navigator.clipboard.writeText(text.trim()).then(()=>{
+    const fb=document.getElementById('adj-export-feedback');
+    if(fb){fb.style.display='block';setTimeout(()=>{fb.style.display='none'},2000)}
+  }).catch(()=>download(text.trim(),'relationships.txt','text/plain'));
+}
+
+/* ════════════════════════════════════
+   BUILDING SYSTEMS
+════════════════════════════════════ */
+function toggleBsEdit(){
+  bsEditMode=!bsEditMode;
+  localStorage.setItem('pcl_bs_edit',bsEditMode?'1':'0');
+  renderBuildingSystems();
+}
+function toggleBsRow(id){
+  if(bsExpanded.has(id))bsExpanded.delete(id);
+  else bsExpanded.add(id);
+  localStorage.setItem('pcl_bsexp',JSON.stringify([...bsExpanded]));
+  renderBuildingSystems();
+}
+function updateBsField(id,field,value){
+  if(!bsEdits[id])bsEdits[id]={};
+  bsEdits[id][field]=value;
+  localStorage.setItem('pcl_bs_edits',JSON.stringify(bsEdits));
+}
+function renderBuildingSystems(){
+  const wrap=document.getElementById('bsys-table-wrap');if(!wrap)return;
+  const li=document.getElementById('bsys-lock-icon');
+  if(li)li.textContent=bsEditMode?'🔓':'🔒';
+  const eb=document.getElementById('bsys-edit-btn');
+  if(eb){eb.textContent=bsEditMode?'LOCK SYSTEMS':'EDIT SYSTEMS';eb.className='adj-edit-btn'+(bsEditMode?' locked':'')}
+  let html=`<table class="bsys-tbl"><thead><tr>
+    <th style="width:24px"></th><th style="width:90px">Division</th><th>System</th>
+    <th class="num">GSF</th><th class="num">$/SF</th><th class="num">Total Cost</th>
+    <th class="num">% Bldg</th><th class="num col-hide">Notes</th><th style="width:24px"></th>
+  </tr></thead><tbody>`;
+  BUILDING_SYSTEMS.forEach(row=>{
+    const e=bsEdits[row.id]||{};
+    const total=e.total!==undefined?e.total:row.total;
+    const psf=e.psf!==undefined?e.psf:row.psf;
+    const note=e.note!==undefined?e.note:row.note;
+    const isExp=bsExpanded.has(row.id);
+    const psfDisp=bsEditMode?`<input class="bsys-inp" type="number" step="0.01" value="${psf}" oninput="updateBsField('${row.id}','psf',parseFloat(this.value)||0)">`:`<span class="bsys-psf">$${parseFloat(psf).toFixed(2)}/SF</span>`;
+    const totalDisp=bsEditMode?`<input class="bsys-inp" type="number" value="${total}" oninput="updateBsField('${row.id}','total',parseFloat(this.value)||0)">`:`<span class="bsys-total">$${parseInt(total).toLocaleString()}</span>`;
+    const noteDisp=bsEditMode?`<input style="width:100%;font-size:11px;font-style:italic;border:none;border-bottom:1px solid #ccc;background:transparent;font-family:'Barlow',sans-serif;color:#6D6D6D;outline:none" type="text" value="${escHtml(note)}" oninput="updateBsField('${row.id}','note',this.value)">`:`<span style="font-size:11px;font-style:italic;color:#6D6D6D">${escHtml(note)}</span>`;
+    html+=`<tr>
+      <td><span class="bsys-chevron${isExp?' open':''}" onclick="toggleBsRow('${row.id}')">▶</span></td>
+      <td><span class="bsys-div">${escHtml(row.div)}</span></td>
+      <td>${escHtml(row.name)}</td>
+      <td class="num" style="color:#6D6D6D;font-size:11px">${row.gsf.toLocaleString()}</td>
+      <td class="num">${psfDisp}</td>
+      <td class="num">${totalDisp}</td>
+      <td class="num"><span class="bsys-pct">${row.pct.toFixed(2)}%</span></td>
+      <td class="col-hide">${noteDisp}</td>
+      <td style="text-align:center;font-size:12px;color:#CCCCCC">${bsEditMode?'':'🔒'}</td>
+    </tr>`;
+    if(isExp){
+      row.subs.forEach(sub=>{
+        const se=bsEdits[sub.id]||{};
+        const stotal=se.total!==undefined?se.total:sub.total;
+        const spsf=se.psf!==undefined?se.psf:sub.psf;
+        const spsfD=bsEditMode?`<input class="bsys-inp" type="number" step="0.01" value="${spsf}" oninput="updateBsField('${sub.id}','psf',parseFloat(this.value)||0)">`:`<span class="bsys-psf" style="font-size:11px">$${parseFloat(spsf).toFixed(2)}/SF</span>`;
+        const stotalD=bsEditMode?`<input class="bsys-inp" type="number" value="${stotal}" oninput="updateBsField('${sub.id}','total',parseFloat(this.value)||0)">`:`$${parseInt(stotal).toLocaleString()}`;
+        html+=`<tr class="bsys-sub-row">
+          <td></td>
+          <td><span style="font-size:10px;color:#4A7B9D;font-weight:700;font-family:'Barlow Condensed',sans-serif">${escHtml(sub.div)}</span></td>
+          <td>${escHtml(sub.name)}</td>
+          <td class="num" style="font-size:10px;color:#9A9A9A">${sub.gsf.toLocaleString()}</td>
+          <td class="num">${spsfD}</td><td class="num">${stotalD}</td>
+          <td class="num" style="color:#9A9A9A">—</td>
+          <td class="col-hide"></td><td></td>
+        </tr>`;
+      });
+    }
+  });
+  html+=`<tr class="bsys-subtotal-row">
+    <td></td><td colspan="2">LIBRARY BUILDING TOTAL</td>
+    <td class="num">97,500 SF</td><td class="num">$814.82/SF</td>
+    <td class="num">$79,445,200</td><td class="num">100%</td>
+    <td class="col-hide"></td><td></td>
+  </tr></tbody></table>`;
+  wrap.innerHTML=html;
 }
 
 /* ════════════════════════════════════
@@ -1507,9 +1899,10 @@ function getChartTotals(){
   let libCost=0,parkCost=0,siteCost=0;
   program.forEach(s=>{
     const ct=s.costType||'persf';
-    if(s.category==='Site Work'){siteCost+=s.unitCostMid||0}
-    else if(ct==='perstall'){parkCost+=(s.qty||1)*(s.unitCostMid||0)}
-    else{libCost+=(s.qty||1)*(s.unitSF||0)*(s.unitCostMid||0)}
+    const cost=calcSpaceCost(s);
+    if(s.category==='Site Work'){siteCost+=cost}
+    else if(ct==='perstall'){parkCost+=cost}
+    else{libCost+=cost}
   });
   const direct=libCost+parkCost+siteCost;
   const cont=direct*CONTINGENCY_RATE;
@@ -1832,6 +2225,40 @@ function setupChips(){
 }
 function dismissBanner(){document.getElementById('mob-banner').style.display='none';localStorage.setItem('pcl_banner','1')}
 
+/* ════════════════════════════════════
+   NOTES CHIPS
+════════════════════════════════════ */
+function showNoteChips(input,pid,cid,field){
+  clearTimeout(chipHideTimeout);
+  let panel=document.getElementById('note-chips-panel');
+  if(!panel){panel=document.createElement('div');panel.id='note-chips-panel';panel.className='note-chips-panel';document.body.appendChild(panel)}
+  const tags=['Allowance','NIC','By Owner','Excluded','TBC','Div 11','Div 22','Div 23','Div 26'];
+  panel.innerHTML=tags.map(t=>`<span class="note-chip" onmousedown="event.preventDefault()" onclick="appendNoteChip('${pid}','${cid||''}','${field}','${t}')">${t}</span>`).join('');
+  const rect=input.getBoundingClientRect();
+  panel.style.top=(rect.bottom+2)+'px';
+  panel.style.left=rect.left+'px';
+  panel.style.display='flex';
+}
+function hideNoteChips(){
+  chipHideTimeout=setTimeout(()=>{const p=document.getElementById('note-chips-panel');if(p)p.style.display='none'},150);
+}
+function appendNoteChip(pid,cid,field,tag){
+  if(cid){
+    const items=lineItems[pid];if(!items)return;
+    const child=items.find(c=>c.id===cid);if(!child)return;
+    const inp=document.querySelector(`input[data-field="${field}"][data-lid="${cid}"]`);
+    const cur=inp?inp.value:(child[field]||'');
+    const nv=cur?cur+', '+tag:tag;
+    child[field]=nv;if(inp)inp.value=nv;saveL2();
+  }else{
+    const s=program.find(x=>x.id===pid);if(!s)return;
+    const inp=document.querySelector(`.prog-tbl td[data-field="notes"][data-id="${pid}"] input.inl`);
+    const cur=inp?inp.value:(s[field]||'');
+    const nv=cur?cur+', '+tag:tag;
+    s[field]=nv;if(inp)inp.value=nv;else renderTable();saveState();
+  }
+}
+
 /* Close modals on backdrop click */
 document.querySelectorAll('.modal-bg').forEach(bg=>{bg.addEventListener('click',e=>{if(e.target===bg)bg.classList.remove('show')})});
 
@@ -1840,3 +2267,4 @@ document.addEventListener('DOMContentLoaded',init);
 </script>
 </body>
 </html>
+2
