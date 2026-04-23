@@ -1,4 +1,5 @@
 require('dotenv').config();
+const path = require('path');
 const express = require('express');
 const cors = require('cors');
 const Anthropic = require('@anthropic-ai/sdk');
@@ -58,6 +59,10 @@ async function timedClaude(params) {
 
 app.get('/health',     (req, res) => res.json({ status: 'ok', model: MODEL, keyPresent: !!API_KEY }));
 app.get('/api/health', (req, res) => res.json({ status: 'ok', model: MODEL, keyPresent: !!API_KEY }));
+
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'index.html'));
+});
 
 app.post('/api/generate-program', async (req, res) => {
   if (!assertKey(res)) return;
@@ -189,6 +194,10 @@ Under 500 words. Return only the markdown text.`
     const { status, body } = friendlyError(err);
     res.status(status).json(body);
   }
+});
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'index.html'));
 });
 
 app.listen(PORT, () => {
