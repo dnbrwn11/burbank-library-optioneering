@@ -7,14 +7,15 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Barlow+Condensed:wght@500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
 /* ── VARIABLES ── */
 :root{
-  --red:#CE2027;--red-dark:#A01820;
-  --pcl-green:#3D6B35;--gold:#FFD700;
+  --pcl-green:#006330;--pcl-green-dark:#004d24;--pcl-light-green:#3D8B37;
+  --pcl-yellow:#FFDF1B;
   --bg:#F5F5F5;--panel:#FFFFFF;--border:#E0E0E0;
   --text:#1A1A1A;--dim:#6D6D6D;--inv:#FFFFFF;
-  --nav:#1A1A1A;--row-alt:#F9F9F9;
+  --nav:#006330;--row-alt:#F9F9F9;
   --ok-bg:#D4EDDA;--ok-txt:#155724;
   --warn-bg:#FFF3CD;--warn-txt:#856404;
   --err-bg:#F8D7DA;--err-txt:#721C24;
@@ -30,53 +31,49 @@ input,select,textarea{font-family:'Barlow',sans-serif;font-size:14px}
 /* ── SCROLLBARS ── */
 *::-webkit-scrollbar{width:8px;height:8px}
 *::-webkit-scrollbar-track{background:var(--bg)}
-*::-webkit-scrollbar-thumb{background:var(--red)}
-*::-webkit-scrollbar-thumb:hover{background:var(--red-dark)}
-*{scrollbar-width:thin;scrollbar-color:var(--red) var(--bg)}
+*::-webkit-scrollbar-thumb{background:var(--pcl-green)}
+*::-webkit-scrollbar-thumb:hover{background:var(--pcl-green-dark)}
+*{scrollbar-width:thin;scrollbar-color:var(--pcl-green) var(--bg)}
 
 /* NAV */
-.nav{background:var(--nav);height:64px;display:flex;align-items:center;padding:0 24px;gap:20px;position:sticky;top:0;z-index:200;border-bottom:2px solid var(--red)}
+.nav{background:var(--nav);height:64px;display:flex;align-items:center;padding:0 24px;gap:20px;position:sticky;top:0;z-index:200;border-bottom:2px solid var(--pcl-green-dark)}
 .nav-logo{display:flex;align-items:center;gap:10px;flex-shrink:0}
-.pcl-oval{width:48px;height:40px;background:var(--pcl-green);border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0}
-.pcl-oval .ol-pcl{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:16px;color:var(--gold);letter-spacing:0.05em;line-height:1}
-.pcl-oval .ol-sub{font-family:'Barlow Condensed',sans-serif;font-weight:500;font-size:5.5px;color:var(--inv);letter-spacing:0.1em;text-transform:uppercase;margin-top:1px}
+.nav-logo-text{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:14px;letter-spacing:0.15em;color:var(--inv);text-transform:uppercase}
 .nav-center{flex:1;text-align:center}
 .nav-center .t1{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:18px;letter-spacing:0.12em;color:var(--inv);text-transform:uppercase;display:block}
-.nav-center .t2{font-family:'Barlow',sans-serif;font-weight:400;font-size:12px;letter-spacing:0.08em;color:var(--red);display:block;margin-top:2px}
-.nav-right{font-size:11px;color:#9A9A9A;text-align:right;flex-shrink:0;letter-spacing:0.03em}
+.nav-center .t2{font-family:'Barlow',sans-serif;font-weight:400;font-size:12px;letter-spacing:0.08em;color:var(--pcl-yellow);display:block;margin-top:2px}
+.nav-right{font-size:11px;color:rgba(255,255,255,0.65);text-align:right;flex-shrink:0;letter-spacing:0.03em}
 
 /* TEAM STRIP */
 .team-strip{background:var(--panel);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 24px;height:72px;gap:0}
 .team-lbl{font-family:'Barlow Condensed',sans-serif;font-size:9px;color:var(--dim);text-transform:uppercase;letter-spacing:0.12em;white-space:nowrap;margin-right:20px;font-weight:600}
 .firm{display:flex;flex-direction:column;justify-content:center;align-items:center;padding:0 20px;border-left:1px solid var(--border);height:100%;gap:3px}
 .firm-role{font-size:9px;color:var(--dim);text-transform:uppercase;letter-spacing:0.1em}
-.firm-pcl-row{display:flex;align-items:center;gap:7px}
-.firm-oval{width:30px;height:26px;background:var(--pcl-green);border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0}
-.firm-oval .fo-pcl{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:10px;color:var(--gold);line-height:1}
-.firm-oval .fo-sub{font-family:'Barlow Condensed',sans-serif;font-weight:500;font-size:4px;color:var(--inv);letter-spacing:0.1em;text-transform:uppercase}
-.firm-pcl-name{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:12px;color:var(--text);letter-spacing:0.06em;text-transform:uppercase}
-.firm-gruen-wm{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:14px;color:var(--red);letter-spacing:0.06em;text-transform:uppercase}
-.firm-gruen-tl{font-size:7.5px;color:var(--red);letter-spacing:0.04em;text-transform:uppercase}
+.firm-pcl-block{display:flex;flex-direction:column;align-items:center;gap:1px}
+.firm-pcl-gc{font-size:9px;color:var(--dim);text-transform:uppercase;letter-spacing:0.1em}
+.firm-pcl-name{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:14px;color:var(--pcl-green);letter-spacing:0.06em;text-transform:uppercase}
+.firm-gruen-wm{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:14px;color:var(--pcl-green);letter-spacing:0.06em;text-transform:uppercase}
+.firm-gruen-tl{font-size:7.5px;color:var(--dim);letter-spacing:0.04em;text-transform:uppercase}
 .firm-grimshaw-wm{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:18px;color:var(--text);letter-spacing:0.15em;text-transform:uppercase}
 .firm-arup-wm{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:18px;color:#E3000F;letter-spacing:0.08em;text-transform:uppercase}
 .team-pill{margin-left:auto;background:var(--bg);border:1px solid var(--border);padding:6px 12px;font-size:10px;color:var(--dim);letter-spacing:0.04em;white-space:nowrap;font-family:'Barlow',sans-serif}
 
 /* RIBBON */
-.ribbon{height:4px;background:linear-gradient(to right,#CE2027 0%,#CE2027 33%,#3D6B35 33%,#3D6B35 66%,#1A1A1A 66%,#1A1A1A 100%)}
+.ribbon{height:4px;background:linear-gradient(to right,var(--pcl-yellow) 0%,var(--pcl-yellow) 33%,var(--pcl-green) 33%,var(--pcl-green) 66%,var(--pcl-light-green) 66%,var(--pcl-light-green) 100%)}
 
 /* BUDGET BAR */
-.budget-bar{background:#1A1A1A;position:sticky;top:64px;z-index:190;display:grid;grid-template-columns:repeat(6,1fr);padding:12px 24px;gap:0;border-bottom:1px solid #2D2D2D;box-shadow:0 2px 8px rgba(0,0,0,0.25)}
-.bc{padding:0 16px;border-left:1px solid #333}
+.budget-bar{background:var(--pcl-green);position:sticky;top:64px;z-index:190;display:grid;grid-template-columns:repeat(5,1fr);padding:12px 24px;gap:0;border-bottom:1px solid var(--pcl-green-dark);box-shadow:0 2px 8px rgba(0,0,0,0.25)}
+.bc{padding:0 16px;border-left:1px solid rgba(255,255,255,0.15)}
 .bc:first-child{border-left:none}
-.bc.accent{border-left:3px solid var(--red)}
-.bl{font-size:9px;text-transform:uppercase;letter-spacing:0.1em;color:#9A9A9A;font-family:'Barlow',sans-serif;font-weight:400}
+.bc.accent{border-left:3px solid var(--pcl-yellow)}
+.bl{font-size:9px;text-transform:uppercase;letter-spacing:0.1em;color:rgba(255,255,255,0.65);font-family:'Barlow',sans-serif;font-weight:400}
 .bv{font-family:'Barlow',sans-serif;font-weight:600;font-size:20px;color:#FFFFFF;margin-top:2px;transition:color 0.3s;font-variant-numeric:tabular-nums}
-.bv.ok{color:#66BB6A}.bv.warn{color:#FFD54F}.bv.bad{color:#EF5350}
-.bs{font-size:10px;color:#666;margin-top:1px}
+.bv.ok{color:#66BB6A}.bv.warn{color:var(--pcl-yellow)}.bv.bad{color:#EF5350}
+.bs{font-size:10px;color:rgba(255,255,255,0.55);margin-top:1px}
 .bpw{grid-column:1/-1;margin-top:8px;display:flex;flex-direction:column;gap:3px}
-.bpl{display:flex;justify-content:space-between;font-size:9px;text-transform:uppercase;letter-spacing:0.1em;color:#9A9A9A}
-.bpt{height:4px;background:#3D3D3D;overflow:hidden}
-.bpf{height:100%;background:var(--red);width:0%;transition:width 0.55s cubic-bezier(.4,0,.2,1)}
+.bpl{display:flex;justify-content:space-between;font-size:9px;text-transform:uppercase;letter-spacing:0.1em;color:rgba(255,255,255,0.65)}
+.bpt{height:5px;background:var(--pcl-green-dark);overflow:hidden}
+.bpf{height:100%;background:var(--pcl-yellow);width:0%;transition:width 0.55s cubic-bezier(.4,0,.2,1)}
 
 /* MOBILE BANNER */
 .mob-banner{display:none;background:var(--bg);border-bottom:1px solid var(--border);padding:8px 16px;font-size:11px;color:var(--dim);justify-content:space-between;align-items:center}
@@ -87,35 +84,43 @@ input,select,textarea{font-family:'Barlow',sans-serif;font-size:14px}
 .content-col{flex:1;overflow-y:auto;padding:20px 24px 80px;min-width:0}
 .right-sb{width:340px;flex-shrink:0;background:var(--panel);border-left:1px solid var(--border);overflow-y:auto;display:flex;flex-direction:column}
 
+/* VISUALIZATION DRAWER */
+#viz-tab{position:fixed;left:0;top:50%;transform:translateY(-50%);width:40px;height:180px;background:var(--pcl-green);display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:400;writing-mode:vertical-rl;text-orientation:mixed;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:12px;letter-spacing:0.15em;color:#fff;text-transform:uppercase;user-select:none;transition:background 0.15s}
+#viz-tab:hover{background:var(--pcl-green-dark)}
+#viz-drawer{position:fixed;left:40px;top:0;width:520px;height:100vh;background:var(--panel);z-index:399;transform:translateX(-560px);transition:transform 0.3s ease;display:flex;flex-direction:column;box-shadow:4px 0 20px rgba(0,0,0,0.18);overflow:hidden}
+#viz-drawer.open{transform:translateX(0)}
+#viz-hd{background:var(--pcl-green);padding:14px 18px;display:flex;justify-content:space-between;align-items:flex-start;flex-shrink:0}
+#viz-content{flex:1;overflow-y:auto;padding:16px}
+.chart-card{background:var(--panel);border:1px solid var(--border);padding:14px;margin-bottom:16px;box-shadow:var(--shadow)}
+.chart-title{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:var(--pcl-green);margin-bottom:10px}
+#page-wrapper{margin-left:40px;transition:margin-left 0.3s ease}
+body.drawer-open #page-wrapper{margin-left:560px}
+
 /* PANELS */
 .panel{background:var(--panel);border:1px solid var(--border);margin-bottom:20px;box-shadow:var(--shadow)}
-.ph{padding:12px 16px;border-bottom:3px solid var(--red);display:flex;justify-content:space-between;align-items:center;background:var(--panel)}
+.ph{padding:12px 16px;border-bottom:4px solid var(--pcl-green);display:flex;justify-content:space-between;align-items:center;background:var(--panel)}
 .ph h3{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;letter-spacing:0.08em;text-transform:uppercase;color:var(--text)}
 .ph-toggle{cursor:pointer;user-select:none}
 .chevron{color:var(--dim);font-size:11px;transition:transform 0.2s ease}
 .panel.collapsed .chevron{transform:rotate(-180deg)}
 .panel.collapsed .pb,.panel.collapsed .pf{display:none}
 .pb{padding:16px}
-.sh{border-left:4px solid var(--red);padding:3px 0 3px 10px;margin-bottom:12px}
+.sh{border-left:4px solid var(--pcl-green);padding:3px 0 3px 10px;margin-bottom:12px}
 .sh h2{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:var(--text)}
 .sh p{font-size:11px;color:var(--dim);margin-top:2px}
 
 /* BUTTONS */
-.btn{background:var(--red);color:var(--inv);font-family:'Barlow',sans-serif;font-weight:600;font-size:12px;letter-spacing:0.05em;text-transform:uppercase;padding:9px 18px;border:none;transition:background 0.15s;cursor:pointer;display:inline-flex;align-items:center;gap:6px;min-height:36px}
-.btn:hover{background:var(--red-dark)}.btn:active{background:#7A1218}
+.btn{background:var(--pcl-green);color:var(--inv);font-family:'Barlow',sans-serif;font-weight:600;font-size:12px;letter-spacing:0.05em;text-transform:uppercase;padding:9px 18px;border:none;transition:background 0.15s;cursor:pointer;display:inline-flex;align-items:center;gap:6px;min-height:36px}
+.btn:hover{background:var(--pcl-green-dark)}.btn:active{background:#003018}
 .btn:disabled{background:#ccc;color:#999;cursor:not-allowed}
 .btn-ghost{background:var(--panel);color:var(--text);border:1px solid var(--border);font-family:'Barlow',sans-serif;font-weight:600;font-size:12px;letter-spacing:0.05em;text-transform:uppercase;padding:8px 14px;transition:all 0.15s;cursor:pointer;display:inline-flex;align-items:center;gap:6px;min-height:36px}
-.btn-ghost:hover{border-color:var(--red);color:var(--red)}
-.btn-ghost.active{background:var(--red);color:var(--inv);border-color:var(--red)}
+.btn-ghost:hover{border-color:var(--pcl-green);color:var(--pcl-green)}
+.btn-ghost.active{background:var(--pcl-yellow);color:var(--pcl-green);border-color:var(--pcl-yellow)}
 .btn-sm{padding:5px 10px!important;font-size:11px!important;min-height:30px!important}
 .btn-icon{background:transparent;color:var(--dim);padding:3px 5px;border:none;cursor:pointer;line-height:1}
-.btn-icon:hover{color:var(--red)}
-
-/* PHASE PILLS */
-.pill-group{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:0}
-.phase-pill{background:var(--bg);color:var(--text);border:1px solid var(--border);font-family:'Barlow',sans-serif;font-weight:600;font-size:11px;letter-spacing:0.05em;text-transform:uppercase;padding:8px 14px;border-radius:4px;transition:all 0.15s;cursor:pointer;min-height:36px;display:flex;align-items:center}
-.phase-pill:hover{border-color:var(--red)}
-.phase-pill.active{background:var(--red);color:var(--inv);border-color:var(--red)}
+.btn-icon:hover{color:var(--pcl-green)}
+.btn-print{background:var(--pcl-green);color:var(--inv)!important}
+.btn-print:hover{background:var(--pcl-green-dark)!important;border-color:var(--pcl-green-dark)!important}
 
 /* TOOLBAR */
 .toolbar{display:flex;gap:8px;align-items:center;margin-bottom:14px;flex-wrap:wrap;background:var(--panel);padding:10px 14px;border:1px solid var(--border);box-shadow:var(--shadow)}
@@ -123,33 +128,35 @@ input,select,textarea{font-family:'Barlow',sans-serif;font-size:14px}
 .tb-lbl{font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--dim);font-weight:400}
 .tb-val{font-weight:600;font-size:13px;color:var(--text)}
 
+/* SPREAD CONTROL */
+.spread-ctrl{display:flex;align-items:center;gap:16px;padding:10px 14px;background:var(--panel);border:1px solid var(--border);box-shadow:var(--shadow);margin-bottom:10px}
+.spread-lbl{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:12px;letter-spacing:0.12em;color:var(--pcl-green);text-transform:uppercase;flex-shrink:0}
+
 /* PROGRAM TABLE */
 .table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
 .prog-tbl{width:100%;border-collapse:collapse;font-size:13px;background:var(--panel);color:var(--text)}
-.prog-tbl thead th{background:var(--red);color:var(--inv);font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:0.08em;padding:10px 8px;text-align:left;white-space:nowrap}
+.prog-tbl thead th{background:var(--pcl-green);color:var(--inv);font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:0.08em;padding:10px 8px;text-align:left;white-space:nowrap}
 .prog-tbl thead th.num{text-align:right}
 .cat-row td{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:0.1em;padding:7px 10px;border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
 .data-row{background:var(--panel);border-bottom:1px solid var(--border);transition:background 0.12s}
 .data-row:nth-child(even){background:var(--row-alt)}
-.data-row:hover{background:#F0F0F0}
+.data-row:hover{background:#F0F5F0}
 .data-row.p-add{background:var(--add-bg)!important;border-left:4px solid #28A745}
 .data-row.p-del{background:var(--del-bg)!important;border-left:4px solid #DC3545;text-decoration:line-through;opacity:0.75}
 .data-row.p-mod{background:var(--mod-bg)!important;border-left:4px solid #FFC107}
 .data-row.dragging{opacity:0.35}
-.data-row.drop-tgt{border-top:3px solid var(--red)}
+.data-row.drop-tgt{border-top:3px solid var(--pcl-green)}
 .prog-tbl td{padding:7px 8px;vertical-align:middle;color:var(--text)}
 .prog-tbl td.num{text-align:right;font-variant-numeric:tabular-nums}
 .prog-tbl td.editable{cursor:text}
-.prog-tbl td.editable:hover{background:#FFF5F5;outline:1px solid var(--red)}
-.prog-tbl input.inl,.prog-tbl select.inl{width:100%;padding:3px 6px;border:1px solid var(--red);background:var(--panel);color:var(--text);font-size:12px;font-family:'Barlow',sans-serif;outline:none}
-.excl-badge{display:inline-block;margin-left:6px;padding:1px 5px;font-size:9px;font-weight:700;letter-spacing:0.04em;background:#8B3DB8;color:var(--inv);font-family:'Barlow',sans-serif}
+.prog-tbl td.editable:hover{background:#F0FCF4;outline:1px solid var(--pcl-green)}
+.prog-tbl input.inl,.prog-tbl select.inl{width:100%;padding:3px 6px;border:1px solid var(--pcl-green);background:var(--panel);color:var(--text);font-size:12px;font-family:'Barlow',sans-serif;outline:none}
 .bench-icon{font-size:11px;margin-left:3px;cursor:help;font-style:normal}
 .b-lo{color:#2060CE}.b-ok{color:#3D8B37}.b-hi{color:#CE6020}
-.phase-badge{display:inline-block;padding:2px 7px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;font-family:'Barlow',sans-serif}
 .drag-h{cursor:grab;color:#CCCCCC;user-select:none;padding:0 3px;font-size:14px}
 .drag-h:active{cursor:grabbing}
 .add-row-btn{width:100%;padding:8px 12px;background:var(--bg);color:var(--dim);font-size:11px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;border:none;border-top:1px dashed var(--border);text-align:left;font-family:'Barlow',sans-serif;cursor:pointer;display:block}
-.add-row-btn:hover{background:#EAEAEA;color:var(--red)}
+.add-row-btn:hover{background:#EAF4EB;color:var(--pcl-green)}
 .muted{color:var(--dim)!important}
 .detail-row{display:none}
 .detail-row.show{display:table-row}
@@ -157,11 +164,11 @@ input,select,textarea{font-family:'Barlow',sans-serif;font-size:14px}
 
 /* CHIPS */
 .chip-row{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
-.chip{background:var(--bg);border:1px solid var(--red);color:var(--text);padding:5px 10px;font-size:11px;font-family:'Barlow',sans-serif;cursor:pointer;border-radius:4px;transition:all 0.15s}
-.chip:hover{background:var(--red);color:var(--inv)}
+.chip{background:var(--bg);border:1px solid var(--pcl-green);color:var(--text);padding:5px 10px;font-size:11px;font-family:'Barlow',sans-serif;cursor:pointer;border-radius:0;transition:all 0.15s}
+.chip:hover{background:var(--pcl-green);color:var(--inv)}
 
 /* RIGHT SIDEBAR */
-.rp-hd{background:var(--panel);border-bottom:3px solid var(--red);padding:12px 16px}
+.rp-hd{background:var(--panel);border-bottom:3px solid var(--pcl-green);padding:12px 16px}
 .rp-hd h3{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;letter-spacing:0.08em;text-transform:uppercase;color:var(--text)}
 .rp-hd p{font-size:11px;color:var(--dim);margin-top:3px}
 .widget{margin-bottom:22px}
@@ -170,31 +177,31 @@ input,select,textarea{font-family:'Barlow',sans-serif;font-size:14px}
 .wr .k{color:var(--dim);font-weight:400}
 .wr .v{font-family:'Barlow',sans-serif;font-weight:600;color:var(--text);font-variant-numeric:tabular-nums;transition:color 0.3s}
 .slider-w{padding:10px 0 4px}
-.slider-w input[type=range]{width:100%;accent-color:var(--red)}
+.slider-w input[type=range]{width:100%;accent-color:var(--pcl-green)}
 .slider-lbl{display:flex;justify-content:space-between;font-size:10px;color:var(--dim);margin-top:3px}
 .var-badge{display:inline-block;padding:3px 8px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.04em;border:1px solid var(--border);background:var(--bg);font-family:'Barlow',sans-serif}
 .var-badge.ok{color:var(--ok-txt);border-color:#28A745;background:var(--ok-bg)}
 .var-badge.warn{color:var(--warn-txt);border-color:#FFC107;background:var(--warn-bg)}
-.var-badge.bad{color:var(--err-txt);border-color:var(--red);background:var(--err-bg)}
+.var-badge.bad{color:var(--err-txt);border-color:#DC3545;background:var(--err-bg)}
 .warn-banner{background:var(--warn-bg);border-left:4px solid #FFC107;padding:8px 10px;font-size:12px;color:var(--warn-txt);margin-top:8px;display:none}
 .warn-banner.show{display:block}
 .ai-textarea{width:100%;min-height:80px;padding:10px;border:1px solid var(--border);background:var(--panel);color:var(--text);font-size:13px;resize:vertical;font-family:'Barlow',sans-serif}
 .ai-textarea::placeholder{color:var(--dim)}
-.ai-textarea:focus{border-color:var(--red);outline:none}
+.ai-textarea:focus{border-color:var(--pcl-green);outline:none}
 .prev-box{display:none;padding:12px;background:var(--warn-bg);border:1px solid #FFC107;margin-top:12px}
 .prev-box.show{display:block}
 .prev-box h4{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;color:var(--warn-txt);margin-bottom:6px}
 .prev-box p{font-size:12px;color:var(--text);margin-bottom:10px}
 .prev-box .br{display:flex;gap:8px}
-.ai-err{background:var(--err-bg);border-left:4px solid var(--red);padding:8px 10px;font-size:12px;color:var(--err-txt);margin-top:10px;display:none}
+.ai-err{background:var(--err-bg);border-left:4px solid #DC3545;padding:8px 10px;font-size:12px;color:var(--err-txt);margin-top:10px;display:none}
 .ai-err.show{display:block}
-.spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(206,32,39,0.25);border-top-color:var(--red);border-radius:50%;animation:spin 0.8s linear infinite;vertical-align:middle;margin-right:6px}
+.spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(0,99,48,0.25);border-top-color:var(--pcl-green);border-radius:50%;animation:spin 0.8s linear infinite;vertical-align:middle;margin-right:6px}
 @keyframes spin{to{transform:rotate(360deg)}}
 
 /* TABS */
 .tab-bar{display:flex;border-bottom:1px solid var(--border);background:var(--panel)}
 .tab-btn{padding:10px 18px;font-size:12px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:var(--dim);border-bottom:3px solid transparent;font-family:'Barlow',sans-serif;background:none;border-top:none;border-left:none;border-right:none;cursor:pointer;transition:all 0.15s}
-.tab-btn.active{color:var(--text);border-bottom-color:var(--red)}
+.tab-btn.active{color:var(--text);border-bottom-color:var(--pcl-green)}
 .tab-pane{display:none;padding:16px}
 .tab-pane.active{display:block}
 
@@ -202,7 +209,7 @@ input,select,textarea{font-family:'Barlow',sans-serif;font-size:14px}
 .log-entry{display:grid;grid-template-columns:140px 70px 1fr;gap:8px;padding:7px 0;border-bottom:1px solid var(--border);font-size:12px;align-items:center}
 .log-ts{color:var(--dim);font-variant-numeric:tabular-nums}
 .log-op{font-weight:700;font-size:10px;text-transform:uppercase;letter-spacing:0.04em}
-.log-op.add{color:#28A745}.log-op.del{color:var(--red)}.log-op.mod{color:#856404}.log-op.sys{color:var(--dim)}
+.log-op.add{color:#28A745}.log-op.del{color:#DC3545}.log-op.mod{color:#856404}.log-op.sys{color:var(--dim)}
 
 /* ADJACENCY MATRIX */
 .adj-legend{display:flex;gap:14px;padding:10px 0;font-size:11px;align-items:center;flex-wrap:wrap;color:var(--text)}
@@ -215,53 +222,84 @@ input,select,textarea{font-family:'Barlow',sans-serif;font-size:14px}
 .adj-tbl thead th.rot>div{transform:rotate(-60deg);transform-origin:left bottom;white-space:nowrap;padding-left:20px;width:26px;color:var(--text);font-family:'Barlow',sans-serif;font-size:10px}
 .adj-tbl tbody th{background:var(--bg);color:var(--text);text-align:left;padding:4px 8px;font-weight:500;white-space:nowrap;position:sticky;left:0;z-index:1;font-size:10px;font-family:'Barlow',sans-serif}
 .adj-cell{cursor:pointer;transition:transform 0.1s}
-.adj-cell:hover{transform:scale(1.15);outline:1px solid var(--red)}
+.adj-cell:hover{transform:scale(1.15);outline:1px solid var(--pcl-green)}
 .adj-must{background:#1B5E20!important}.adj-should{background:#81C784!important}
-.adj-sep{background:var(--red)!important}.adj-none{background:#F5F5F5}
+.adj-sep{background:var(--pcl-green)!important}.adj-none{background:#F5F5F5}
 .adj-diag{background:#E0E0E0}
 
 /* SCENARIO MANAGER */
 .sc-card{border:1px solid var(--border);padding:10px;margin-bottom:8px;background:var(--panel)}
-.sc-card.active{border-left:4px solid var(--red)}
-.sc-card.baseline{border-right:3px solid #3D8B37}
+.sc-card.active{border-left:4px solid var(--pcl-green)}
+.sc-card.baseline{border-right:3px solid var(--pcl-light-green)}
 .sc-name{font-weight:600;font-size:13px;color:var(--text)}
 .sc-stats{font-size:11px;color:var(--dim);margin-top:2px}
 .sc-actions{margin-top:6px;display:flex;gap:4px}
 .cmp-tbl{width:100%;border-collapse:collapse;font-size:12px}
-.cmp-tbl th{background:var(--red);color:var(--inv);font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:0.08em;padding:8px;text-align:left}
+.cmp-tbl th{background:var(--pcl-green);color:var(--inv);font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:0.08em;padding:8px;text-align:left}
 .cmp-tbl td{padding:8px;border-bottom:1px solid var(--border);color:var(--text)}
 .cmp-tbl tr:nth-child(even) td{background:var(--row-alt)}
 .cmp-tbl td.num{text-align:right;font-variant-numeric:tabular-nums}
-.delta-p{color:var(--red);font-weight:600}.delta-n{color:#28A745;font-weight:600}
+.delta-p{color:#DC3545;font-weight:600}.delta-n{color:#28A745;font-weight:600}
 
 /* MODALS */
 .modal-bg{position:fixed;inset:0;background:rgba(0,0,0,0.6);display:none;align-items:center;justify-content:center;z-index:1000;backdrop-filter:blur(2px)}
 .modal-bg.show{display:flex}
 .modal{background:var(--panel);width:90%;max-width:640px;max-height:90vh;display:flex;flex-direction:column;box-shadow:0 16px 48px rgba(0,0,0,0.22);border:1px solid var(--border)}
-.modal-hd{background:var(--red);color:var(--inv);padding:14px 18px;display:flex;justify-content:space-between;align-items:center}
+.modal-hd{background:var(--pcl-green);color:var(--inv);padding:14px 18px;display:flex;justify-content:space-between;align-items:center}
 .modal-hd h3{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:14px;letter-spacing:0.08em;text-transform:uppercase}
 .modal-cl{background:transparent;color:var(--inv);font-size:22px;line-height:1;padding:0;width:28px;height:28px;border:none;cursor:pointer}
-.modal-cl:hover{color:#FFD2D5}
+.modal-cl:hover{color:rgba(255,255,255,0.7)}
 .modal-bd{padding:20px;overflow-y:auto;flex:1}
 .modal-ft{padding:12px 18px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:8px;background:var(--bg)}
 .fg{margin-bottom:14px}
 .fg label{display:block;font-size:11px;text-transform:uppercase;letter-spacing:0.1em;color:var(--dim);font-weight:400;margin-bottom:4px;font-family:'Barlow',sans-serif}
 .fg input,.fg select,.fg textarea{width:100%;padding:8px 10px;border:1px solid var(--border);background:var(--panel);color:var(--text);font-size:13px;font-family:'Barlow',sans-serif}
-.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--red);outline:none}
-.narr-box{background:var(--bg);padding:18px;border-left:4px solid var(--red);font-size:13px;line-height:1.7;font-family:'Barlow',sans-serif}
-.narr-box h2{font-size:14px;font-weight:700;text-transform:uppercase;color:var(--red);margin:14px 0 6px}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--pcl-green);outline:none}
+.narr-box{background:var(--bg);padding:18px;border-left:4px solid var(--pcl-green);font-size:13px;line-height:1.7;font-family:'Barlow',sans-serif}
+.narr-box h2{font-size:14px;font-weight:700;text-transform:uppercase;color:var(--pcl-green);margin:14px 0 6px}
 .narr-box h2:first-child{margin-top:0}
 .narr-box ul{margin:0 0 10px 18px}.narr-box li{margin-bottom:4px}.narr-box p{margin-bottom:8px}
 .narr-box strong{font-weight:700}
 
+/* ESCALATION PANEL */
+.esc-total-highlight{font-family:'Barlow',sans-serif;font-weight:700;font-size:16px;color:var(--pcl-yellow);background:var(--pcl-green);padding:2px 8px;font-variant-numeric:tabular-nums}
+.esc-field{margin-bottom:10px}
+.esc-field label{display:block;font-size:10px;text-transform:uppercase;letter-spacing:0.1em;color:var(--dim);font-weight:400;margin-bottom:3px;font-family:'Barlow',sans-serif}
+.esc-field input,.esc-field select{width:100%;padding:6px 8px;border:1px solid var(--border);background:var(--panel);color:var(--text);font-family:'Barlow',sans-serif;font-size:13px}
+.esc-field input:focus,.esc-field select:focus{border-color:var(--pcl-green);outline:none}
+
 /* FOOTER */
-.footer{background:var(--bg);border-top:2px solid var(--red);padding:16px 24px 48px;text-align:center;font-size:11px;color:var(--dim);font-family:'Barlow',sans-serif;line-height:1.9}
+.footer{background:var(--bg);border-top:2px solid var(--pcl-green);padding:16px 24px 48px;text-align:center;font-size:11px;color:var(--dim);font-family:'Barlow',sans-serif;line-height:1.9}
 .footer strong{color:var(--text);font-weight:600}
 
 /* UTIL */
 .hidden{display:none!important}
 .flex{display:flex;gap:8px;align-items:center}
 .flex-col{display:flex;flex-direction:column;gap:6px}
+
+/* PRINT SUMMARY (hidden normally) */
+#print-summary{display:none;font-family:'Barlow',sans-serif}
+.ps-header{margin-bottom:18px}
+.ps-pcl{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:18px;color:#006330;letter-spacing:0.12em;text-transform:uppercase}
+.ps-title{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:22px;color:#006330;letter-spacing:0.1em;text-transform:uppercase;text-align:center;margin-top:4px}
+.ps-sub{font-size:12px;color:#6D6D6D;text-align:center;font-weight:400;margin-top:4px}
+.ps-date{font-size:11px;color:#6D6D6D;text-align:right;margin-top:-28px}
+.ps-rule{height:2px;background:#006330;margin:10px 0}
+.ps-section{margin-bottom:16px}
+.ps-section-title{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:#006330;border-bottom:1px solid #E0E0E0;padding-bottom:4px;margin-bottom:8px}
+.ps-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+.ps-grid-item{background:#F5F5F5;padding:8px 10px}
+.ps-grid-label{font-size:9px;text-transform:uppercase;letter-spacing:0.08em;color:#6D6D6D;font-family:'Barlow',sans-serif}
+.ps-grid-value{font-family:'Barlow',sans-serif;font-weight:700;font-size:14px;color:#006330;margin-top:2px;font-variant-numeric:tabular-nums}
+.ps-tbl{width:100%;border-collapse:collapse;font-size:11px;margin-bottom:12px}
+.ps-tbl thead th{background:#006330;color:#fff;font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:10px;text-transform:uppercase;letter-spacing:0.08em;padding:6px 8px;text-align:left}
+.ps-tbl thead th.num{text-align:right}
+.ps-tbl tbody td{padding:5px 8px;border-bottom:1px solid #E0E0E0;color:#1A1A1A}
+.ps-tbl tbody td.num{text-align:right;font-variant-numeric:tabular-nums}
+.ps-tbl tbody tr:nth-child(even) td{background:#F9F9F9}
+.ps-assumptions{font-size:11px;line-height:1.7;color:#1A1A1A;white-space:pre-wrap}
+.ps-footer-rule{height:1px;background:#006330;margin:10px 0 6px}
+.ps-footer-text{font-size:10px;color:#6D6D6D;text-align:center;font-family:'Barlow',sans-serif}
 
 /* TABLET */
 @media(max-width:1024px){
@@ -286,51 +324,96 @@ input,select,textarea{font-family:'Barlow',sans-serif;font-size:14px}
   .content-col{padding:12px 12px 60px}
   .right-sb{width:100%;border-left:none;border-top:1px solid var(--border)}
   .col-hide{display:none!important}
-  .phase-pill,.btn,.btn-ghost{min-height:44px}
+  .btn,.btn-ghost{min-height:44px}
   .prog-tbl td,.prog-tbl thead th{padding:5px 6px;font-size:12px}
   .log-entry{grid-template-columns:100px 60px 1fr;font-size:11px}
   .toolbar{flex-wrap:wrap;gap:6px}
   .flex-col .btn-ghost,.flex-col .btn{width:100%;justify-content:center}
+  #viz-tab{display:none}
+  body.drawer-open #page-wrapper{margin-left:40px}
 }
 
-/* PRINT */
+/* PRINT — DEFAULT (program table view) */
 @media print{
-  .nav,.team-strip,.ribbon,.budget-bar,.mob-banner,.right-sb,.toolbar,.tab-bar,.tab-pane,.footer,.modal-bg{display:none!important}
+  #viz-drawer,#viz-tab,#print-summary{display:none!important}
+  .nav,.team-strip,.ribbon,.budget-bar,.mob-banner,.right-sb,.toolbar,.tab-bar,.tab-pane,.footer,.modal-bg,.spread-ctrl{display:none!important}
   .main{display:block}.content-col{padding:0;overflow:visible}
   body{background:#FFF;color:#000;font-size:11px}
   .panel{border:1px solid #999;box-shadow:none;margin-bottom:10px;page-break-inside:avoid}
-  .ph{border-bottom:2px solid #CE2027}
+  .ph{border-bottom:2px solid #006330}
   .prog-tbl{font-size:10px}
-  .prog-tbl thead th{background:#CE2027!important;color:#FFF!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .prog-tbl thead th{background:#006330!important;color:#FFF!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
   .cat-row td{background:#EEE!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
   .data-row{background:#FFF!important}
   .col-hide{display:table-cell!important}
   .add-row-btn,.btn-icon,.drag-h{display:none!important}
   .detail-row{display:none!important}
+  #page-wrapper{margin-left:0!important}
 }
 </style>
 </head>
 <body>
 
-<!-- LAYER 1: NAV -->
+<!-- VISUALIZATION TAB (always visible, fixed left) -->
+<div id="viz-tab" onclick="toggleDrawer()">ANALYTICS</div>
+
+<!-- VISUALIZATION DRAWER (slides from left) -->
+<div id="viz-drawer">
+  <div id="viz-hd">
+    <div>
+      <div style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:14px;color:#fff;letter-spacing:0.08em;text-transform:uppercase">BURBANK LIBRARY — COST ANALYTICS</div>
+      <div style="font-size:11px;color:var(--pcl-yellow);margin-top:2px">Live · Updates as you edit the program</div>
+    </div>
+    <button onclick="toggleDrawer()" style="color:#fff;background:none;border:none;font-size:24px;cursor:pointer;line-height:1;padding:0;margin-left:12px;flex-shrink:0">×</button>
+  </div>
+  <div id="viz-content">
+    <div class="chart-card">
+      <div class="chart-title">Total Project Cost Breakdown</div>
+      <canvas id="chart-donut"></canvas>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Programmed Cost by Category</div>
+      <canvas id="chart-cat"></canvas>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Budget Utilization</div>
+      <canvas id="chart-gauge"></canvas>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Cost per SF by Space Type</div>
+      <div style="position:relative;height:280px">
+        <canvas id="chart-psf"></canvas>
+      </div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Library Building — Division Cost Breakdown</div>
+      <canvas id="chart-div"></canvas>
+      <div style="font-size:10px;color:var(--dim);text-align:center;margin-top:6px">Source: PCL Cost Model BE26-52-0187 (Static)</div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE WRAPPER (shifts when drawer opens) -->
+<div id="page-wrapper">
+
+<!-- NAV -->
 <nav class="nav">
   <div class="nav-logo">
-    <div class="pcl-oval"><span class="ol-pcl">PCL</span><span class="ol-sub">Const.</span></div>
+    <span class="nav-logo-text">PCL Construction</span>
   </div>
   <div class="nav-center">
     <span class="t1">Burbank Central Library &amp; Civic Center</span>
     <span class="t2">Progressive Design-Build Optioneering Tool</span>
   </div>
-  <div class="nav-right">Pursuit Phase &nbsp;|&nbsp; $155M GMP Target</div>
+  <div class="nav-right">Pursuit Phase &nbsp;|&nbsp; Cost Model Apr 2026</div>
 </nav>
 
-<!-- LAYER 2: TEAM STRIP -->
+<!-- TEAM STRIP -->
 <div class="team-strip">
   <span class="team-lbl">Project Team:</span>
   <div class="firm">
-    <span class="firm-role">General Contractor</span>
-    <div class="firm-pcl-row">
-      <div class="firm-oval"><span class="fo-pcl">PCL</span><span class="fo-sub">CONST.</span></div>
+    <div class="firm-pcl-block">
+      <span class="firm-pcl-gc">General Contractor</span>
       <span class="firm-pcl-name">PCL Construction</span>
     </div>
   </div>
@@ -350,7 +433,7 @@ input,select,textarea{font-family:'Barlow',sans-serif;font-size:14px}
   <div class="team-pill">RFQ: May 2026 &nbsp;|&nbsp; GMP Target: 2028</div>
 </div>
 
-<!-- LAYER 3: RIBBON -->
+<!-- RIBBON -->
 <div class="ribbon"></div>
 
 <!-- BUDGET BAR -->
@@ -358,12 +441,16 @@ input,select,textarea{font-family:'Barlow',sans-serif;font-size:14px}
   <div class="bc accent">
     <div class="bl">Programmed Cost (Mid)</div>
     <div class="bv" id="b-cost">$0</div>
-    <div class="bs" id="b-range">Range: $0 – $0</div>
+    <div id="b-esc-label" style="font-size:10px;color:var(--pcl-yellow);display:none">(escalated)</div>
+    <div class="bs" id="b-range" style="color:var(--pcl-yellow);font-size:10px">Range: $0 — $0 — $0</div>
+    <label style="font-size:10px;color:rgba(255,255,255,0.65);margin-top:4px;display:flex;align-items:center;gap:4px;cursor:pointer;font-family:'Barlow',sans-serif">
+      <input type="checkbox" id="show-escalated" onchange="updateBudget()" style="cursor:pointer;accent-color:var(--pcl-yellow)"> Show Escalated
+    </label>
   </div>
   <div class="bc">
-    <div class="bl">Target GMP</div>
-    <div class="bv">$155,000,000</div>
-    <div class="bs">Progressive Design-Build</div>
+    <div class="bl">Target Budget</div>
+    <div class="bv">$163,113,199</div>
+    <div class="bs">PCL Cost Model 2026</div>
   </div>
   <div class="bc accent">
     <div class="bl">Variance</div>
@@ -371,23 +458,23 @@ input,select,textarea{font-family:'Barlow',sans-serif;font-size:14px}
     <div class="bs" id="b-var-pct">0.0%</div>
   </div>
   <div class="bc">
-    <div class="bl">Cost / GSF (Building)</div>
+    <div class="bl">Cost / GSF (Library)</div>
     <div class="bv" id="b-psf">$0</div>
-    <div class="bs" id="b-gsf">87,500 GSF · parking excluded</div>
+    <div class="bs" id="b-gsf">— lib GSF</div>
   </div>
-  <div class="bc">
-    <div class="bl">Phase 1 Cost</div>
-    <div class="bv" id="b-ph1">$0</div>
-    <div class="bs" id="b-ph1-sf">0 SF</div>
+  <div class="bc" style="text-align:center;display:flex;flex-direction:column;justify-content:center">
+    <div style="font-size:10px;text-transform:uppercase;letter-spacing:0.1em;color:rgba(255,255,255,0.65);font-family:'Barlow',sans-serif;font-weight:400">Construction Start</div>
+    <div style="font-family:'Barlow',sans-serif;font-weight:600;font-size:16px;color:#FFFFFF;margin-top:3px">Summer 2027</div>
   </div>
-  <div class="bc">
-    <div class="bl">Phase 2 Cost</div>
-    <div class="bv" id="b-ph2">$0</div>
-    <div class="bs" id="b-ph2-sf">0 SF</div>
+  <div style="grid-column:1/-1;font-family:'Barlow',sans-serif;font-weight:300;font-size:10px;color:rgba(255,255,255,0.6);letter-spacing:0.04em;padding:6px 0 2px;border-top:1px solid rgba(255,255,255,0.12);margin-top:4px">
+    PCL Cost Model Basis — BE26-52-0187 &nbsp;|&nbsp; Direct Costs: $108,775,455 &nbsp;|&nbsp; Contingency (14.64%): $18,656,732 &nbsp;|&nbsp; GC/GR/OHP (28%): $35,681,012 &nbsp;|&nbsp; TOTAL: $163,113,199
   </div>
   <div class="bpw">
     <div class="bpl"><span>Budget Utilization</span><span id="b-pct">0%</span></div>
     <div class="bpt"><div class="bpf" id="b-fill"></div></div>
+    <div style="font-size:10px;color:var(--pcl-yellow);margin-top:4px;text-align:center;letter-spacing:0.03em;font-family:'Barlow',sans-serif">
+      PCL Cost Model BE26-52-0187 · Apr 10 2026 · 97,500 GSF Library + 310-Stall Parking
+    </div>
   </div>
 </div>
 
@@ -403,16 +490,11 @@ input,select,textarea{font-family:'Barlow',sans-serif;font-size:14px}
   <!-- LEFT: CONTENT COLUMN -->
   <div class="content-col">
 
-    <!-- Phase filter -->
-    <div class="toolbar" style="margin-bottom:10px">
-      <span class="tb-lbl">Phase:</span>
-      <div class="pill-group" id="phase-pills">
-        <button class="phase-pill active" data-filter="all">All</button>
-        <button class="phase-pill" data-filter="Phase 1">Phase 1</button>
-        <button class="phase-pill" data-filter="Phase 2">Phase 2</button>
-        <button class="phase-pill" data-filter="Optional">Optional</button>
-        <button class="phase-pill" data-filter="Alternate">Alternate</button>
-      </div>
+    <!-- Cost Spread Control -->
+    <div class="spread-ctrl">
+      <span class="spread-lbl">Cost Spread</span>
+      <input type="range" id="spread-slider" min="5" max="25" value="15" step="1" oninput="onSpreadChange()" style="width:160px;accent-color:var(--pcl-green)">
+      <span id="spread-label" style="font-size:12px;color:var(--dim);font-family:'Barlow',sans-serif;white-space:nowrap">Showing ±15% spread</span>
     </div>
 
     <!-- Scenario toolbar -->
@@ -425,6 +507,7 @@ input,select,textarea{font-family:'Barlow',sans-serif;font-size:14px}
       <div class="tb-sep"></div>
       <button class="btn-ghost btn-sm" onclick="exportCSV()">⤓ CSV</button>
       <button class="btn-ghost btn-sm" onclick="window.print()">⎙ PDF</button>
+      <button class="btn btn-sm btn-print" onclick="printSummary()">⎙ Print Summary</button>
       <div class="tb-sep"></div>
       <span class="tb-lbl">Rows:</span>
       <span class="tb-val" id="row-count">0</span>
@@ -446,11 +529,8 @@ input,select,textarea{font-family:'Barlow',sans-serif;font-size:14px}
               <th class="num">Qty</th>
               <th class="num col-hide">Unit SF</th>
               <th class="num">Total SF</th>
-              <th class="num col-hide">$/SF Low</th>
               <th class="num">$/SF Mid</th>
-              <th class="num col-hide">$/SF High</th>
               <th class="num">Total Cost</th>
-              <th>Phase</th>
               <th class="col-hide">Bench</th>
               <th class="col-hide">Notes</th>
               <th style="width:40px"></th>
@@ -482,7 +562,7 @@ input,select,textarea{font-family:'Barlow',sans-serif;font-size:14px}
         <div class="adj-legend">
           <span><span class="sw" style="background:#1B5E20"></span>Must Be Adjacent</span>
           <span><span class="sw" style="background:#81C784"></span>Should Be Adjacent</span>
-          <span><span class="sw" style="background:var(--red)"></span>Should Be Separated</span>
+          <span><span class="sw" style="background:var(--pcl-green)"></span>Should Be Separated</span>
           <span><span class="sw" style="background:#F5F5F5"></span>No Requirement</span>
           <span style="margin-left:auto;font-size:11px;color:var(--dim)">Click cell to cycle</span>
         </div>
@@ -509,7 +589,7 @@ input,select,textarea{font-family:'Barlow',sans-serif;font-size:14px}
                 <th class="num">Total Cost (Mid)</th>
                 <th class="num">$/GSF</th>
                 <th class="num">Δ vs Baseline</th>
-                <th class="num">Δ vs GMP</th>
+                <th class="num">Δ vs Budget</th>
               </tr>
             </thead>
             <tbody id="cmp-tbody"></tbody>
@@ -528,29 +608,66 @@ input,select,textarea{font-family:'Barlow',sans-serif;font-size:14px}
       <div class="rp-hd" style="display:flex;justify-content:space-between;align-items:center;cursor:pointer" onclick="toggleRpPanel('gtn-body','gtn-chev')">
         <div>
           <h3>Gross-to-Net</h3>
-          <p>Building efficiency · parking excluded</p>
+          <p>Building efficiency · includes parking</p>
         </div>
         <span id="gtn-chev" style="color:var(--dim);font-size:11px;margin-left:8px">▼</span>
       </div>
       <div id="gtn-body" style="padding:16px">
         <div class="widget">
-          <div class="wr"><span class="k">Total Net SF</span><span class="v" id="g-nsf">0</span></div>
+          <div class="wr"><span class="k">Library Net SF</span><span class="v" id="g-nsf">0</span></div>
           <div class="slider-w">
             <div class="wr" style="border:none;padding-bottom:4px">
               <span class="k">Efficiency Factor</span><span class="v" id="g-eff-val">68%</span>
             </div>
-            <input type="range" min="60" max="80" value="68" id="g-eff" oninput="onEffChange(this.value)"/>
-            <div class="slider-lbl"><span>60%</span><span>68%</span><span>80%</span></div>
+            <input type="range" min="60" max="90" value="68" id="g-eff" oninput="onEffChange(this.value)"/>
+            <div class="slider-lbl"><span>60%</span><span>68%</span><span>90%</span></div>
           </div>
+          <div class="wr"><span class="k">Library Gross SF</span><span class="v" id="g-lib-gsf">0</span></div>
+          <div class="wr"><span class="k">Parking SF</span><span class="v" id="g-park-sf">93,000 SF</span></div>
           <div class="wr"><span class="k">Calculated Gross SF</span><span class="v" id="g-gsf">0</span></div>
-          <div class="wr">
+          <div style="font-size:10px;color:var(--dim);margin-top:4px;font-style:italic">Includes 93,000 SF parking structure</div>
+          <div class="wr" style="margin-top:8px">
             <span class="k">Target GSF</span>
-            <input type="number" id="g-target" value="87500" min="0" oninput="updateGTN()"
+            <input type="number" id="g-target" value="97500" min="0" oninput="updateGTN()"
               style="width:90px;text-align:right;border:1px solid var(--border);background:var(--panel);color:var(--text);padding:4px 6px;font-size:12px;font-family:'Barlow',sans-serif"/>
           </div>
           <div class="wr"><span class="k">Variance</span><span class="v"><span class="var-badge" id="g-var">0 SF</span></span></div>
           <div class="warn-banner" id="g-warn">⚠ GSF variance exceeds ±5,000 SF. Review efficiency or program scope.</div>
         </div>
+      </div>
+    </div>
+
+    <!-- Escalation Calculator -->
+    <div style="border-bottom:1px solid var(--border)">
+      <div class="rp-hd" style="display:flex;justify-content:space-between;align-items:center;cursor:pointer" onclick="toggleRpPanel('esc-body','esc-chev')">
+        <div>
+          <h3 style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;letter-spacing:0.08em;text-transform:uppercase;color:var(--pcl-green)">Escalation</h3>
+          <p>Base: April 2026 · PCL Cost Model</p>
+        </div>
+        <span id="esc-chev" style="color:var(--dim);font-size:11px;margin-left:8px">▼</span>
+      </div>
+      <div id="esc-body" style="padding:16px">
+        <div class="wr"><span class="k">Base Date</span><span class="v" style="color:var(--dim);font-size:12px">April 2026 (locked)</span></div>
+        <div class="esc-field" style="margin-top:8px">
+          <label>Construction Start</label>
+          <select id="esc-start" onchange="updateEscalation()">
+            <option>Q1 2027</option><option>Q2 2027</option>
+            <option selected>Q3 2027</option><option>Q4 2027</option>
+            <option>Q1 2028</option><option>Q2 2028</option>
+          </select>
+        </div>
+        <div class="esc-field">
+          <label>Annual Escalation Rate (%)</label>
+          <input type="number" id="esc-rate" value="5.0" min="0" max="15" step="0.5" oninput="updateEscalation()">
+        </div>
+        <div class="wr"><span class="k">Months to Midpoint</span><span class="v" id="esc-months" style="color:var(--dim);font-size:12px">27 mo</span></div>
+        <div class="wr"><span class="k">Escalation Factor</span><span class="v" id="esc-factor" style="color:var(--pcl-green);font-weight:700;font-size:16px">1.12×</span></div>
+        <div class="wr"><span class="k">Escalated Direct Cost</span><span class="v" id="esc-direct" style="color:var(--pcl-green);font-size:13px">$0</span></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)">
+          <span style="color:var(--dim);font-size:12px;font-weight:400">Escalated Total Budget</span>
+          <span id="esc-total" class="esc-total-highlight">$0</span>
+        </div>
+        <div class="wr"><span class="k">Delta vs $163M Base</span><span class="v" id="esc-delta" style="color:var(--dim);font-size:12px">+$0</span></div>
       </div>
     </div>
 
@@ -571,7 +688,7 @@ input,select,textarea{font-family:'Barlow',sans-serif;font-size:14px}
           <span class="chip" data-ex="Remove the Rooftop Terrace">− Rooftop</span>
           <span class="chip" data-ex="Split the Performing Arts Theater into two 3,500 SF black box theaters">Split theater</span>
           <span class="chip" data-ex="Increase all meeting rooms by 20%">+20% mtg rooms</span>
-          <span class="chip" data-ex="Show me what $140M buys vs $155M">$140M vs $155M</span>
+          <span class="chip" data-ex="Show me what $140M buys vs $163M">$140M vs $163M</span>
           <span class="chip" data-ex="Add a 1,500 SF outdoor reading garden">+ Reading garden</span>
         </div>
         <button class="btn" style="width:100%" id="ai-btn" onclick="submitAI()">
@@ -596,6 +713,27 @@ input,select,textarea{font-family:'Barlow',sans-serif;font-size:14px}
       </div>
     </div>
 
+    <!-- Assumptions & Clarifications -->
+    <div style="border-top:1px solid var(--border)">
+      <div class="rp-hd" style="display:flex;justify-content:space-between;align-items:center;cursor:pointer" onclick="toggleRpPanel('assm-body','assm-chev')">
+        <div>
+          <h3 style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:var(--pcl-green)">Assumptions &amp; Clarifications</h3>
+        </div>
+        <span id="assm-chev" style="color:var(--dim);font-size:11px;margin-left:8px">▲</span>
+      </div>
+      <div id="assm-body" style="padding:16px;display:none">
+        <textarea id="assumptions-text" oninput="saveAssumptions()"
+          style="width:100%;min-height:180px;padding:10px;border:1px solid var(--border);background:#F5F5F5;color:var(--text);font-size:12px;font-family:'Barlow',sans-serif;resize:vertical;outline:none;line-height:1.6">• Parking based on $50,000/stall — structured concrete, 310 stalls
+• Library building at $814.82/GSF blended rate per PCL Cost Model BE26-52-0187
+• Theater AV/theatrical systems included in $1,100/SF rate
+• FF&amp;E included at $71.88/SF per Div 12
+• Site work based on 3-acre site
+• Escalation not included in base costs — see Escalation Calculator
+• GC/GR/OHP/Design/CA at 28% per cost model
+• This estimate is for planning purposes only</textarea>
+      </div>
+    </div>
+
     <!-- Sidebar exports -->
     <div style="padding:16px;border-top:1px solid var(--border)">
       <div class="sh"><h2>Export</h2></div>
@@ -616,6 +754,8 @@ input,select,textarea{font-family:'Barlow',sans-serif;font-size:14px}
   Project Team: PCL Construction · Gruen Associates · Grimshaw · Arup
 </footer>
 
+</div><!-- /page-wrapper -->
+
 <!-- MODAL: ADD ROW -->
 <div class="modal-bg" id="add-modal">
   <div class="modal">
@@ -627,17 +767,13 @@ input,select,textarea{font-family:'Barlow',sans-serif;font-size:14px}
           <option>Public Spaces</option><option>Children &amp; Teen</option>
           <option>Special Facilities</option><option>Staff &amp; Operations</option>
           <option>Parking &amp; Circulation</option><option>Support Spaces</option>
+          <option>Site Work</option>
         </select>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
         <div class="fg"><label>Qty</label><input type="number" id="add-qty" value="1" min="1"/></div>
         <div class="fg"><label>Unit SF</label><input type="number" id="add-usf" value="1000" min="0"/></div>
-        <div class="fg"><label>$/SF Mid</label><input type="number" id="add-mid" value="300" min="0"/></div>
-        <div class="fg"><label>Phase</label>
-          <select id="add-phase">
-            <option>Phase 1</option><option>Phase 2</option><option>Optional</option><option>Alternate</option>
-          </select>
-        </div>
+        <div class="fg"><label>$/SF Mid (or $/Stall or Lump Sum)</label><input type="number" id="add-mid" value="300" min="0"/></div>
       </div>
       <div class="fg"><label>Notes</label><input type="text" id="add-notes" placeholder="Optional context"/></div>
     </div>
@@ -659,11 +795,11 @@ input,select,textarea{font-family:'Barlow',sans-serif;font-size:14px}
           <option>City Hall</option><option>Recreation Center</option><option>Mixed-Use Civic</option>
         </select>
       </div>
-      <div class="fg"><label>Total Target GSF</label><input type="number" id="gen-sf" value="87500"/></div>
-      <div class="fg"><label>Total Budget (USD)</label><input type="number" id="gen-budget" value="155000000"/></div>
+      <div class="fg"><label>Total Target GSF</label><input type="number" id="gen-sf" value="97500"/></div>
+      <div class="fg"><label>Total Budget (USD)</label><input type="number" id="gen-budget" value="163113199"/></div>
       <div class="fg">
         <label>Description &amp; Special Requirements</label>
-        <textarea id="gen-desc" rows="5" placeholder="Context, stakeholder priorities, unique requirements...">Burbank Central Library progressive design-build replacement. Serves 108K residents. City priorities: children's &amp; teen programs, digital/maker tech, community meeting space, a performance venue, city office co-location, and a rooftop amenity. 1-acre public plaza adjacent. 310-stall parking structure.</textarea>
+        <textarea id="gen-desc" rows="5" placeholder="Context, stakeholder priorities, unique requirements...">Burbank Central Library progressive design-build replacement. Serves 108K residents. City priorities: children's &amp; teen programs, digital/maker tech, community meeting space, a performance venue, city office co-location, and a rooftop amenity. 1-acre public plaza adjacent. 310-stall parking structure at $50,000/stall.</textarea>
       </div>
     </div>
     <div class="modal-ft">
@@ -685,46 +821,95 @@ input,select,textarea{font-family:'Barlow',sans-serif;font-size:14px}
   </div>
 </div>
 
+<!-- PRINT SUMMARY (hidden, shown only via printSummary()) -->
+<div id="print-summary">
+  <div class="ps-header">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start">
+      <div class="ps-pcl">PCL Construction</div>
+      <div class="ps-date" id="ps-date"></div>
+    </div>
+    <div class="ps-title">Burbank Central Library &amp; Civic Center</div>
+    <div class="ps-sub">Progressive Design-Build Cost Model</div>
+    <div class="ps-rule"></div>
+  </div>
+  <div class="ps-section">
+    <div class="ps-section-title">Project Summary</div>
+    <div class="ps-grid" id="ps-summary-grid"></div>
+  </div>
+  <div class="ps-section">
+    <div class="ps-section-title">Cost by Category</div>
+    <table class="ps-tbl">
+      <thead><tr><th>Category</th><th class="num">Total SF</th><th class="num">$/SF Mid</th><th class="num">Total Cost</th></tr></thead>
+      <tbody id="ps-cost-tbody"></tbody>
+    </table>
+  </div>
+  <div class="ps-section">
+    <div class="ps-section-title">Key Assumptions</div>
+    <div id="ps-assumptions" class="ps-assumptions"></div>
+  </div>
+  <div class="ps-footer-rule"></div>
+  <div class="ps-footer-text">PCL Construction | Proprietary and Confidential | For internal pursuit use only</div>
+</div>
+
 <script>
 /* ════════════════════════════════════
    CONSTANTS
 ════════════════════════════════════ */
-const CAT_ORDER=['Public Spaces','Children & Teen','Special Facilities','Staff & Operations','Parking & Circulation','Support Spaces'];
-const CAT_COLORS={'Public Spaces':'#CE2027','Children & Teen':'#E8A020','Special Facilities':'#2060CE','Staff & Operations':'#3D8B37','Parking & Circulation':'#8B3DB8','Support Spaces':'#CE6020'};
-const PHASE_COLORS={'Phase 1':'#2060CE','Phase 2':'#CE6020','Optional':'#8B3DB8','Alternate':'#3D8B37'};
-const TARGET_GMP=155000000,TARGET_GSF=87500;
+const CAT_ORDER=['Public Spaces','Children & Teen','Special Facilities','Staff & Operations','Parking & Circulation','Support Spaces','Site Work'];
+const CAT_COLORS={
+  'Public Spaces':'#006330','Children & Teen':'#3D8B37',
+  'Special Facilities':'#FFDF1B','Staff & Operations':'#006330',
+  'Parking & Circulation':'#6D6D6D','Support Spaces':'#3D8B37','Site Work':'#6D6D6D'
+};
+const TARGET_GMP=163113199,TARGET_GSF=97500;
+const PCL_BASELINE_PSF=1267;
+const CONTINGENCY_RATE=0.1715; // PCL Cost Model BE26-52-0187
+const GCOHP_RATE=0.28;
+const PCL_CONTINGENCY=18656732; // locked — BE26-52-0187
+const PCL_GCOHP=35681012;       // locked — BE26-52-0187
+const ESC_OFFSETS={'Q1 2027':9,'Q2 2027':12,'Q3 2027':15,'Q4 2027':18,'Q1 2028':21,'Q2 2028':24};
 const BENCHMARKS={
   'Adult Reading Room':[8000,16000],'Digital Media Lab':[1500,3500],'Makerspace':[2000,4500],
   'Podcast/Recording Studios':[200,500],'Café':[1500,3000],'Rooftop Terrace':[2000,6000],
   "Children's Library":[6000,12000],'Teen Zone':[1800,4500],'Performing Arts Theater':[6000,12000],
   'Community Meeting Room Large':[1200,2500],'Community Meeting Room Small':[400,900],
   'City Offices':[10000,20000],'Staff Workroom':[1800,3000],'Collections/Stacks':[4000,9000],
-  'Parking Structure 310 stalls':[80000,130000],'Restrooms':[2000,4000],
-  'Mechanical/Electrical':[2500,4500],'Vertical Circulation/Lobbies':[3000,6000]
+  'Restrooms':[2000,4000],'Mechanical/Electrical':[2500,4500],'Vertical Circulation/Lobbies':[3000,6000]
 };
 
 /* ════════════════════════════════════
    BASELINE DATA
 ════════════════════════════════════ */
 const BASELINE=[
-  {id:'s1',category:'Public Spaces',name:'Adult Reading Room',qty:1,unitSF:12000,unitCostMid:285,phase:'Phase 1',notes:'Main stacks + reading area',excluded:false},
-  {id:'s2',category:'Public Spaces',name:'Digital Media Lab',qty:1,unitSF:2800,unitCostMid:320,phase:'Phase 1',notes:'Computers, editing bays',excluded:false},
-  {id:'s3',category:'Public Spaces',name:'Makerspace',qty:1,unitSF:3500,unitCostMid:310,phase:'Phase 1',notes:'Fab tools, 3D printing',excluded:false},
-  {id:'s4',category:'Public Spaces',name:'Podcast/Recording Studios',qty:3,unitSF:300,unitCostMid:450,phase:'Phase 1',notes:'Soundproofed',excluded:false},
-  {id:'s5',category:'Public Spaces',name:'Café',qty:1,unitSF:2200,unitCostMid:380,phase:'Phase 1',notes:'Public-facing F&B',excluded:false},
-  {id:'s6',category:'Public Spaces',name:'Rooftop Terrace',qty:1,unitSF:4500,unitCostMid:180,phase:'Phase 2',notes:'Outdoor amenity',excluded:false},
-  {id:'s7',category:'Children & Teen',name:"Children's Library",qty:1,unitSF:8500,unitCostMid:295,phase:'Phase 1',notes:'0–12 programming area',excluded:false},
-  {id:'s8',category:'Children & Teen',name:'Teen Zone',qty:1,unitSF:3200,unitCostMid:290,phase:'Phase 1',notes:'13–18 YA + digital',excluded:false},
-  {id:'s9',category:'Special Facilities',name:'Performing Arts Theater',qty:1,unitSF:8000,unitCostMid:520,phase:'Phase 1',notes:'300-seat proscenium',excluded:false},
-  {id:'s10',category:'Special Facilities',name:'Community Meeting Room Large',qty:2,unitSF:1800,unitCostMid:310,phase:'Phase 1',notes:'Divisible, AV ready',excluded:false},
-  {id:'s11',category:'Special Facilities',name:'Community Meeting Room Small',qty:4,unitSF:600,unitCostMid:295,phase:'Phase 1',notes:'8–12 person',excluded:false},
-  {id:'s12',category:'Staff & Operations',name:'City Offices',qty:1,unitSF:14000,unitCostMid:265,phase:'Phase 1',notes:'Co-located city services',excluded:false},
-  {id:'s13',category:'Staff & Operations',name:'Staff Workroom',qty:1,unitSF:2400,unitCostMid:260,phase:'Phase 1',notes:'Processing + staff support',excluded:false},
-  {id:'s14',category:'Staff & Operations',name:'Collections/Stacks',qty:1,unitSF:6000,unitCostMid:195,phase:'Phase 1',notes:'Compact shelving ready',excluded:false},
-  {id:'s15',category:'Parking & Circulation',name:'Parking Structure 310 stalls',qty:1,unitSF:93000,unitCostMid:95,phase:'Phase 1',notes:'Above/below grade TBD',excluded:true},
-  {id:'s16',category:'Support Spaces',name:'Restrooms',qty:1,unitSF:2800,unitCostMid:285,phase:'Phase 1',notes:'Public + ADA',excluded:false},
-  {id:'s17',category:'Support Spaces',name:'Mechanical/Electrical',qty:1,unitSF:3200,unitCostMid:165,phase:'Phase 1',notes:'MEP rooms',excluded:false},
-  {id:'s18',category:'Support Spaces',name:'Vertical Circulation/Lobbies',qty:1,unitSF:4100,unitCostMid:210,phase:'Phase 1',notes:'Stairs, elevators, entry',excluded:false}
+  // PUBLIC SPACES
+  {id:'s1',category:'Public Spaces',name:'Adult Reading Room',qty:1,unitSF:8000,unitCostMid:1364,costType:'persf',notes:'Main stacks + reading area'},
+  {id:'s2',category:'Public Spaces',name:'Digital Media Lab',qty:1,unitSF:1800,unitCostMid:1477,costType:'persf',notes:'Computers, editing bays'},
+  {id:'s3',category:'Public Spaces',name:'Makerspace',qty:1,unitSF:2500,unitCostMid:1428,costType:'persf',notes:'Fab tools, 3D printing'},
+  {id:'s4',category:'Public Spaces',name:'Podcast/Recording Studios',qty:3,unitSF:200,unitCostMid:1685,costType:'persf',notes:'Soundproofed'},
+  {id:'s5',category:'Public Spaces',name:'Café',qty:1,unitSF:1500,unitCostMid:1525,costType:'persf',notes:'Public-facing F&B'},
+  {id:'s6',category:'Public Spaces',name:'Rooftop Terrace',qty:1,unitSF:3000,unitCostMid:770,costType:'persf',notes:'Outdoor amenity'},
+  // CHILDREN & TEEN
+  {id:'s7',category:'Children & Teen',name:"Children's Library",qty:1,unitSF:6500,unitCostMid:1380,costType:'persf',notes:'0–12 programming area'},
+  {id:'s8',category:'Children & Teen',name:'Teen Zone',qty:1,unitSF:2500,unitCostMid:1364,costType:'persf',notes:'13–18 YA + digital'},
+  // SPECIAL FACILITIES
+  {id:'s9',category:'Special Facilities',name:'Performing Arts Theater',qty:1,unitSF:5500,unitCostMid:1846,costType:'persf',notes:'300-seat proscenium'},
+  {id:'s10',category:'Special Facilities',name:'Community Meeting Room Large',qty:2,unitSF:1200,unitCostMid:1380,costType:'persf',notes:'Divisible, AV ready'},
+  {id:'s11',category:'Special Facilities',name:'Community Meeting Room Small',qty:4,unitSF:400,unitCostMid:1372,costType:'persf',notes:'8–12 person'},
+  // STAFF & OPERATIONS
+  {id:'s12',category:'Staff & Operations',name:'City Offices',qty:1,unitSF:10000,unitCostMid:1172,costType:'persf',notes:'Co-located city services'},
+  {id:'s13',category:'Staff & Operations',name:'Staff Workroom',qty:1,unitSF:1800,unitCostMid:1139,costType:'persf',notes:'Processing + staff support'},
+  {id:'s14',category:'Staff & Operations',name:'Collections/Stacks',qty:1,unitSF:5000,unitCostMid:1003,costType:'persf',notes:'Compact shelving ready'},
+  // PARKING & CIRCULATION
+  {id:'s15',category:'Parking & Circulation',name:'Parking Structure — 310 Stalls',qty:310,unitSF:300,unitCostMid:50000,costType:'perstall',notes:'PCL Cost Model Apr 2026 — $50,000/stall'},
+  // SUPPORT SPACES
+  {id:'s16',category:'Support Spaces',name:'Restrooms',qty:1,unitSF:2200,unitCostMid:1268,costType:'persf',notes:'Public + ADA'},
+  {id:'s17',category:'Support Spaces',name:'Mechanical/Electrical',qty:1,unitSF:3800,unitCostMid:715,costType:'persf',notes:'MEP rooms'},
+  {id:'s18',category:'Support Spaces',name:'Vertical Circulation/Lobbies',qty:1,unitSF:4000,unitCostMid:1091,costType:'persf',notes:'Stairs, elevators, entry'},
+  // SITE WORK
+  {id:'s19',category:'Site Work',name:'Existing Conditions/Demo',qty:1,unitSF:0,unitCostMid:1264375,costType:'lumpsum',notes:'PCL Cost Model Apr 2026'},
+  {id:'s20',category:'Site Work',name:'Earthwork',qty:1,unitSF:0,unitCostMid:1252994,costType:'lumpsum',notes:'PCL Cost Model Apr 2026'},
+  {id:'s21',category:'Site Work',name:'Exterior Improvements/Plaza',qty:1,unitSF:0,unitCostMid:8827500,costType:'lumpsum',notes:'PCL Cost Model Apr 2026'},
+  {id:'s22',category:'Site Work',name:'Utilities',qty:1,unitSF:0,unitCostMid:2485386,costType:'lumpsum',notes:'PCL Cost Model Apr 2026'}
 ];
 const INITIAL_ADJ={
   's7-s16':'must','s16-s7':'must','s8-s2':'must','s2-s8':'must',
@@ -737,8 +922,11 @@ const INITIAL_ADJ={
    STATE
 ════════════════════════════════════ */
 let program=[],changelog=[],scenarios={},adjMatrix={};
-let activeFilter='all',currentScenario='Baseline — Full Program';
+let currentScenario='Baseline — Full Program';
 let preview=null,dragSrcId=null,narrativeText='';
+let drawerOpen=false,divChartDone=false;
+let charts={};
+let chartUpdateTimeout=null;
 
 /* ════════════════════════════════════
    INIT
@@ -748,28 +936,37 @@ function init(){
   if(saved){try{program=JSON.parse(saved)}catch{program=cloneBase()}}else{program=cloneBase()}
   const savedSc=localStorage.getItem('pcl_scenarios');
   if(savedSc){try{scenarios=JSON.parse(savedSc)}catch{scenarios={}}}
+  const savedAssm=localStorage.getItem('pcl_assumptions');
+  if(savedAssm){const el=document.getElementById('assumptions-text');if(el)el.value=savedAssm}
   adjMatrix=Object.assign({},INITIAL_ADJ);
   currentScenario=localStorage.getItem('pcl_cur_sc')||'Baseline — Full Program';
   if(!scenarios['Baseline — Full Program']){
     scenarios['Baseline — Full Program']={program:cloneBase(),ts:new Date().toISOString(),baseline:true};
     saveSc();
   }
+  if(localStorage.getItem('pcl_drawer')==='1'){drawerOpen=true;openDrawer()}
   if(localStorage.getItem('pcl_banner')!=='1'&&window.innerWidth<=767){
     document.getElementById('mob-banner').style.display='flex';
   }
-  setupPills();setupChips();setupDragDrop();
-  logChange('sys','','Baseline loaded — 18 spaces');
+  setupChips();setupDragDrop();
+  logChange('sys','','Baseline loaded — PCL Cost Model BE26-52-0187');
   renderAll();
+  updateEscalation();
 }
 function cloneBase(){return JSON.parse(JSON.stringify(BASELINE))}
 function saveState(){localStorage.setItem('pcl_prog',JSON.stringify(program));localStorage.setItem('pcl_cur_sc',currentScenario)}
 function saveSc(){localStorage.setItem('pcl_scenarios',JSON.stringify(scenarios))}
+function saveAssumptions(){
+  const el=document.getElementById('assumptions-text');
+  if(el)localStorage.setItem('pcl_assumptions',el.value);
+}
 
 /* ════════════════════════════════════
    HELPERS
 ════════════════════════════════════ */
 function fmt$(n){return '$'+Math.round(n||0).toLocaleString('en-US')}
 function fmtSF(n){return Math.round(n||0).toLocaleString('en-US')+' SF'}
+function fmtM(n){const m=Math.round((n||0)/1e6);return'$'+m+'M'}
 function escHtml(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
 function uid(){return 'u'+Date.now()+Math.random().toString(36).slice(2,6)}
 function setText(id,v){const e=document.getElementById(id);if(e)e.textContent=v}
@@ -778,21 +975,40 @@ function setText(id,v){const e=document.getElementById(id);if(e)e.textContent=v}
    CALCULATIONS
 ════════════════════════════════════ */
 function calcTotals(){
-  let nsf=0,mid=0,lo=0,hi=0,ph1=0,ph1sf=0,ph2=0,ph2sf=0;
+  let nsf=0,mid=0,parkingSF=0,libCost=0;
   program.forEach(s=>{
-    if(s.excluded)return;
-    const tsf=(s.qty||1)*(s.unitSF||0),m=s.unitCostMid||0;
-    nsf+=tsf;mid+=tsf*m;lo+=tsf*Math.round(m*0.85);hi+=tsf*Math.round(m*1.15);
-    if(s.phase==='Phase 1'){ph1+=tsf*m;ph1sf+=tsf}
-    if(s.phase==='Phase 2'){ph2+=tsf*m;ph2sf+=tsf}
+    const ct=s.costType||'persf';
+    if(ct==='lumpsum'){mid+=s.unitCostMid||0}
+    else if(ct==='perstall'){
+      const tsf=(s.qty||1)*(s.unitSF||0);
+      parkingSF+=tsf;
+      mid+=(s.qty||1)*(s.unitCostMid||0);
+    }else{
+      const tsf=(s.qty||1)*(s.unitSF||0);
+      const c=tsf*(s.unitCostMid||0);
+      nsf+=tsf;mid+=c;libCost+=c;
+    }
   });
-  return{nsf,costMid:mid,costLow:lo,costHigh:hi,ph1,ph1sf,ph2,ph2sf};
+  return{nsf,costMid:mid,parkingSF,libCost};
+}
+function getSpread(){return parseInt(document.getElementById('spread-slider').value||15)/100}
+function getEscalationFactor(){
+  const startQ=document.getElementById('esc-start')?.value||'Q3 2027';
+  const rate=parseFloat(document.getElementById('esc-rate')?.value||5)/100;
+  const startMonths=ESC_OFFSETS[startQ]||15;
+  const midpointMonths=startMonths+12; // 24-month build, escalate to midpoint
+  return Math.pow(1+rate,midpointMonths/12);
 }
 
 /* ════════════════════════════════════
    RENDER ALL
 ════════════════════════════════════ */
-function renderAll(){renderTable();updateBudget();updateGTN();renderLog();renderScenarios();if(document.getElementById('tab-adj').classList.contains('active'))renderAdj()}
+function renderAll(){
+  renderTable();updateBudget();updateGTN();updateEscalation();renderLog();
+  renderScenarios();
+  if(document.getElementById('tab-adj').classList.contains('active'))renderAdj();
+  scheduleChartUpdate();
+}
 
 /* ════════════════════════════════════
    RENDER TABLE
@@ -800,36 +1016,46 @@ function renderAll(){renderTable();updateBudget();updateGTN();renderLog();render
 function renderTable(){
   const tbody=document.getElementById('prog-tbody');
   tbody.innerHTML='';
-  const filtered=program.filter(s=>activeFilter==='all'||s.phase===activeFilter);
   const groups={};CAT_ORDER.forEach(c=>groups[c]=[]);
-  filtered.forEach(s=>{if(groups[s.category])groups[s.category].push(s)});
+  program.forEach(s=>{if(groups[s.category])groups[s.category].push(s)});
   CAT_ORDER.forEach(cat=>{
     const rows=groups[cat];if(!rows.length)return;
     const cc=CAT_COLORS[cat]||'#999';
     const ctr=document.createElement('tr');
     ctr.className='cat-row';
-    ctr.innerHTML=`<td colspan="14"><span style="display:inline-block;width:10px;height:10px;background:${cc};border-radius:1px;margin-right:8px;vertical-align:middle"></span>${escHtml(cat)}</td>`;
+    ctr.innerHTML=`<td colspan="11"><span style="display:inline-block;width:10px;height:10px;background:${cc};border-radius:1px;margin-right:8px;vertical-align:middle"></span>${escHtml(cat)}</td>`;
     tbody.appendChild(ctr);
     rows.forEach(s=>{
-      const m=s.unitCostMid||0,lo=Math.round(m*0.85),hi=Math.round(m*1.15);
-      const tsf=(s.qty||1)*(s.unitSF||0),cost=s.excluded?0:tsf*m;
-      const phC=PHASE_COLORS[s.phase]||'#999';
-      const bench=getBench(s.name,s.unitSF||0);
+      const ct=s.costType||'persf';
+      let tsf=0,cost=0,qtyDisp='—',usfDisp='—',psfDisp='—';
+      if(ct==='persf'){
+        tsf=(s.qty||1)*(s.unitSF||0);cost=tsf*(s.unitCostMid||0);
+        qtyDisp=s.qty;usfDisp=(s.unitSF||0).toLocaleString();
+        psfDisp=fmt$(s.unitCostMid||0)+'/SF';
+      }else if(ct==='perstall'){
+        tsf=(s.qty||1)*(s.unitSF||0);cost=(s.qty||1)*(s.unitCostMid||0);
+        qtyDisp=s.qty+' stalls';usfDisp=(s.unitSF||0)+' SF/stall';
+        psfDisp=fmt$(s.unitCostMid||0)+'/stall';
+      }else{// lumpsum
+        cost=s.unitCostMid||0;
+        qtyDisp='—';usfDisp='—';psfDisp='Lump Sum';
+      }
+      const bench=(ct==='persf')?getBench(s.name,s.unitSF||0):'';
       const pvCls=s._preview?' p-'+s._preview:'';
       const tr=document.createElement('tr');
       tr.className='data-row'+pvCls;tr.dataset.id=s.id;tr.dataset.cat=s.category;tr.draggable=true;
+      const qtyA=ct==='persf'?`class="num editable" data-field="qty" data-id="${s.id}"`:`class="num${ct==='lumpsum'?' muted':''}"`;
+      const usfA=ct==='persf'?`class="num editable col-hide" data-field="unitSF" data-id="${s.id}"`:`class="num col-hide${ct==='lumpsum'?' muted':''}"`;
+      const psfA=ct!=='lumpsum'?`class="num editable" data-field="unitCostMid" data-id="${s.id}"`:`class="num muted"`;
       tr.innerHTML=`
         <td><span class="drag-h">⋮⋮</span></td>
         <td style="padding:0;width:4px"><div style="width:4px;min-height:36px;height:100%;background:${cc}"></div></td>
-        <td class="editable" data-field="name" data-id="${s.id}">${escHtml(s.name)}${s.excluded?'<span class="excl-badge">EXCL.</span>':''}</td>
-        <td class="num editable" data-field="qty" data-id="${s.id}">${s.qty}</td>
-        <td class="num editable col-hide" data-field="unitSF" data-id="${s.id}">${(s.unitSF||0).toLocaleString()}</td>
-        <td class="num${s.excluded?' muted':''}">${s.excluded?'—':fmtSF(tsf)}</td>
-        <td class="num col-hide">${s.excluded?'—':fmt$(lo)+'/SF'}</td>
-        <td class="num editable" data-field="unitCostMid" data-id="${s.id}">${s.excluded?'—':fmt$(m)+'/SF'}</td>
-        <td class="num col-hide">${s.excluded?'—':fmt$(hi)+'/SF'}</td>
-        <td class="num${s.excluded?' muted':''}">${s.excluded?'<em>EXCL.</em>':fmt$(cost)}</td>
-        <td class="editable" data-field="phase" data-id="${s.id}"><span class="phase-badge" style="background:${phC}22;color:${phC};border:1px solid ${phC}55">${escHtml(s.phase)}</span></td>
+        <td class="editable" data-field="name" data-id="${s.id}">${escHtml(s.name)}</td>
+        <td ${qtyA}>${qtyDisp}</td>
+        <td ${usfA}>${usfDisp}</td>
+        <td class="num${ct==='lumpsum'?' muted':''}">${ct==='lumpsum'?'—':fmtSF(tsf)}</td>
+        <td ${psfA}>${psfDisp}</td>
+        <td class="num">${fmt$(cost)}</td>
         <td class="col-hide">${bench}</td>
         <td class="editable col-hide" data-field="notes" data-id="${s.id}">${escHtml(s.notes||'')}</td>
         <td><button class="btn-icon" onclick="deleteRow('${s.id}')" title="Delete">✕</button></td>`;
@@ -840,18 +1066,20 @@ function renderTable(){
       tbody.appendChild(tr);
       const dtr=document.createElement('tr');
       dtr.className='detail-row';dtr.id='dr-'+s.id;
-      dtr.innerHTML=`<td colspan="14"><strong>Qty:</strong> ${s.qty} &nbsp;<strong>Unit SF:</strong> ${(s.unitSF||0).toLocaleString()} &nbsp;<strong>$/SF:</strong> ${fmt$(lo)} / ${fmt$(m)} / ${fmt$(hi)} &nbsp;<strong>Phase:</strong> ${escHtml(s.phase)}${s.notes?` &nbsp;<strong>Notes:</strong> ${escHtml(s.notes)}`:''}</td>`;
+      let detailStr=`<strong>Cost Type:</strong> ${ct} &nbsp;<strong>Total Cost:</strong> ${fmt$(cost)}`;
+      if(ct==='persf')detailStr+=` &nbsp;<strong>$/SF:</strong> ${fmt$(s.unitCostMid||0)}`;
+      if(s.notes)detailStr+=` &nbsp;<strong>Notes:</strong> ${escHtml(s.notes)}`;
+      dtr.innerHTML=`<td colspan="11">${detailStr}</td>`;
       tbody.appendChild(dtr);
     });
     const atr=document.createElement('tr');
-    atr.innerHTML=`<td colspan="14"><button class="add-row-btn" onclick="openAddRow('${escHtml(cat)}')">+ Add Space to ${escHtml(cat)}</button></td>`;
+    atr.innerHTML=`<td colspan="11"><button class="add-row-btn" onclick="openAddRow('${escHtml(cat)}')">+ Add Space to ${escHtml(cat)}</button></td>`;
     tbody.appendChild(atr);
   });
-  setText('row-count',program.filter(s=>!s.excluded&&(activeFilter==='all'||s.phase===activeFilter)).length);
+  setText('row-count',program.filter(s=>s.costType!=='lumpsum').length);
   setText('cur-scenario',currentScenario);
   setupEditCells();
 }
-
 function toggleDetail(id){const dr=document.getElementById('dr-'+id);if(dr)dr.classList.toggle('show')}
 
 /* ════════════════════════════════════
@@ -867,28 +1095,18 @@ function setupEditCells(){
 }
 function makeEditable(td,id,field){
   const s=program.find(x=>x.id===id);if(!s)return;
-  if(s.excluded&&field==='unitCostMid')return;
   const oldHtml=td.innerHTML;let input;
-  if(field==='phase'){
-    input=document.createElement('select');input.className='inl';
-    ['Phase 1','Phase 2','Optional','Alternate'].forEach(p=>{
-      const o=document.createElement('option');o.value=p;o.textContent=p;
-      if(p===s.phase)o.selected=true;input.appendChild(o);
-    });
-  }else{
-    input=document.createElement('input');input.className='inl';
-    if(['qty','unitSF','unitCostMid'].includes(field)){input.type='number';input.min='0';input.value=s[field]||0}
-    else{input.type='text';input.value=s[field]||''}
-  }
+  input=document.createElement('input');input.className='inl';
+  if(['qty','unitSF','unitCostMid'].includes(field)){input.type='number';input.min='0';input.value=s[field]||0}
+  else{input.type='text';input.value=s[field]||''}
   td.innerHTML='';td.appendChild(input);input.focus();
   if(input.select&&input.type!=='number')input.select();
   function commit(){
     const oldVal=s[field];let nv;
-    if(field==='phase')nv=input.value;
-    else if(['qty','unitSF','unitCostMid'].includes(field))nv=parseFloat(input.value)||0;
+    if(['qty','unitSF','unitCostMid'].includes(field))nv=parseFloat(input.value)||0;
     else nv=input.value;
     if(String(nv)!==String(oldVal)){s[field]=nv;logChange('mod',s.name,`${field}: ${oldVal} → ${nv}`);saveState()}
-    renderTable();updateBudget();updateGTN();
+    renderTable();updateBudget();updateGTN();updateEscalation();scheduleChartUpdate();
   }
   input.addEventListener('blur',commit);
   input.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();input.blur()}if(e.key==='Escape')td.innerHTML=oldHtml});
@@ -902,7 +1120,7 @@ function deleteRow(id){
   if(!confirm(`Delete "${s.name}"?`))return;
   program=program.filter(x=>x.id!==id);
   logChange('del',s.name,'Space removed');saveState();
-  renderTable();updateBudget();updateGTN();
+  renderTable();updateBudget();updateGTN();scheduleChartUpdate();
 }
 function openAddRow(cat){
   document.getElementById('add-cat-sel').value=cat;
@@ -910,7 +1128,6 @@ function openAddRow(cat){
   document.getElementById('add-qty').value=1;
   document.getElementById('add-usf').value=1000;
   document.getElementById('add-mid').value=300;
-  document.getElementById('add-phase').value='Phase 1';
   openModal('add-modal');
 }
 function confirmAddRow(){
@@ -918,14 +1135,17 @@ function confirmAddRow(){
   if(!name){alert('Space name is required.');return}
   const cat=document.getElementById('add-cat-sel').value;
   const m=parseFloat(document.getElementById('add-mid').value)||0;
-  const ns={id:uid(),category:cat,name,qty:parseInt(document.getElementById('add-qty').value)||1,
-    unitSF:parseInt(document.getElementById('add-usf').value)||0,unitCostMid:m,
-    unitCostLow:Math.round(m*0.85),unitCostHigh:Math.round(m*1.15),
-    phase:document.getElementById('add-phase').value,notes:document.getElementById('add-notes').value,
-    excluded:cat==='Parking & Circulation'};
+  const costType=cat==='Parking & Circulation'?'perstall':cat==='Site Work'?'lumpsum':'persf';
+  const ns={
+    id:uid(),category:cat,name,
+    qty:parseInt(document.getElementById('add-qty').value)||1,
+    unitSF:parseInt(document.getElementById('add-usf').value)||0,
+    unitCostMid:m,costType,
+    notes:document.getElementById('add-notes').value
+  };
   program.push(ns);
-  logChange('add',name,`${ns.qty}×${ns.unitSF.toLocaleString()} SF @ ${fmt$(m)}/SF`);
-  saveState();closeModal('add-modal');renderTable();updateBudget();updateGTN();
+  logChange('add',name,`${costType} @ ${fmt$(m)}`);
+  saveState();closeModal('add-modal');renderTable();updateBudget();updateGTN();scheduleChartUpdate();
 }
 
 /* ════════════════════════════════════
@@ -960,40 +1180,79 @@ function getBench(name,usf){
    BUDGET BAR
 ════════════════════════════════════ */
 function updateBudget(){
-  const{costMid,costLow,costHigh,nsf,ph1,ph1sf,ph2,ph2sf}=calcTotals();
-  const variance=costMid-TARGET_GMP,pct=TARGET_GMP>0?costMid/TARGET_GMP*100:0;
-  setText('b-cost',fmt$(costMid));
-  setText('b-range',`Range: ${fmt$(costLow)} – ${fmt$(costHigh)}`);
+  const{costMid,nsf,parkingSF,libCost}=calcTotals();
+  const spread=getSpread();
+  const showEsc=document.getElementById('show-escalated')?.checked||false;
+  const escFactor=showEsc?getEscalationFactor():1;
+  const displayCost=costMid*escFactor;
+  const lo=displayCost*(1-spread),hi=displayCost*(1+spread);
+  const totalEstimated=(costMid+PCL_CONTINGENCY+PCL_GCOHP)*escFactor;
+  const variance=totalEstimated-TARGET_GMP;
+  const pct=TARGET_GMP>0?totalEstimated/TARGET_GMP*100:0;
+  const eff=parseInt(document.getElementById('g-eff')?.value||68)/100;
+  const libGross=eff>0?Math.round(nsf/eff):0;
+  setText('b-cost',fmt$(displayCost));
+  setText('b-range',`Range: ${fmtM(lo)} — ${fmtM(displayCost)} — ${fmtM(hi)}`);
+  const escLbl=document.getElementById('b-esc-label');
+  if(escLbl)escLbl.style.display=showEsc?'block':'none';
   setText('b-var',fmt$(Math.abs(variance))+(variance>=0?' over':' under'));
   setText('b-var-pct',((variance/TARGET_GMP)*100).toFixed(1)+'%');
-  setText('b-psf',nsf>0?fmt$(costMid/nsf)+'/SF':'$0/SF');
-  setText('b-ph1',fmt$(ph1));setText('b-ph1-sf',fmtSF(ph1sf));
-  setText('b-ph2',fmt$(ph2));setText('b-ph2-sf',fmtSF(ph2sf));
+  setText('b-psf',libGross>0?fmt$(libCost*escFactor/libGross)+'/SF':'—');
+  setText('b-gsf',`${libGross.toLocaleString()} lib GSF`);
   setText('b-pct',pct.toFixed(0)+'%');
-  const absVPct=Math.abs(variance/TARGET_GMP*100);
   const vEl=document.getElementById('b-var');
-  if(vEl)vEl.className='bv '+(absVPct>10?'bad':absVPct>5?'warn':'ok');
+  if(vEl)vEl.className='bv '+(variance>0&&variance/TARGET_GMP>0.05?'bad':variance>0?'warn':'ok');
   const fill=document.getElementById('b-fill');
-  if(fill){fill.style.width=Math.min(pct,100)+'%';fill.style.background=pct>100?'#EF5350':'var(--red)'}
+  if(fill)fill.style.width=Math.min(pct,100)+'%';
+}
+function onSpreadChange(){
+  const v=document.getElementById('spread-slider').value;
+  document.getElementById('spread-label').textContent=`Showing ±${v}% spread`;
+  updateBudget();
 }
 
 /* ════════════════════════════════════
    GROSS-TO-NET
 ════════════════════════════════════ */
 function updateGTN(){
-  const{nsf}=calcTotals();
+  const{nsf,parkingSF}=calcTotals();
   const eff=parseInt(document.getElementById('g-eff').value)/100;
-  const grossSF=eff>0?Math.round(nsf/eff):0;
+  const libGross=eff>0?Math.round(nsf/eff):0;
+  const totalGross=libGross+parkingSF;
   const target=parseInt(document.getElementById('g-target').value)||TARGET_GSF;
-  const varSF=grossSF-target;
+  const varSF=libGross-target; // compare library gross vs target
   setText('g-nsf',nsf.toLocaleString()+' SF');
-  setText('g-gsf',grossSF.toLocaleString()+' SF');
+  setText('g-lib-gsf',libGross.toLocaleString()+' SF');
+  setText('g-park-sf',parkingSF.toLocaleString()+' SF');
+  setText('g-gsf',totalGross.toLocaleString()+' SF');
   const ve=document.getElementById('g-var');
   if(ve){ve.textContent=(varSF>=0?'+':'')+varSF.toLocaleString()+' SF';const a=Math.abs(varSF);ve.className='var-badge '+(a<=2000?'ok':a<=5000?'warn':'bad')}
   const we=document.getElementById('g-warn');
   if(we)Math.abs(varSF)>5000?we.classList.add('show'):we.classList.remove('show');
+  updateBudget(); // refresh cost/gsf
 }
 function onEffChange(v){setText('g-eff-val',v+'%');updateGTN()}
+
+/* ════════════════════════════════════
+   ESCALATION CALCULATOR
+════════════════════════════════════ */
+function updateEscalation(){
+  const startQ=document.getElementById('esc-start')?.value||'Q3 2027';
+  const rate=parseFloat(document.getElementById('esc-rate')?.value||5)/100;
+  const startMonths=ESC_OFFSETS[startQ]||15;
+  const midpointMonths=startMonths+12;
+  const factor=Math.pow(1+rate,midpointMonths/12);
+  const{costMid}=calcTotals();
+  const escDirect=costMid*factor;
+  const escTotal=TARGET_GMP*factor;
+  const delta=escTotal-TARGET_GMP;
+  setText('esc-months',midpointMonths+' mo');
+  setText('esc-factor',factor.toFixed(3)+'×');
+  setText('esc-direct',fmt$(escDirect));
+  setText('esc-total',fmt$(escTotal));
+  setText('esc-delta','+'+ fmt$(delta));
+  if(document.getElementById('show-escalated')?.checked)updateBudget();
+}
 
 /* ════════════════════════════════════
    CHANGE LOG
@@ -1016,7 +1275,7 @@ function renderLog(){
    ADJACENCY MATRIX
 ════════════════════════════════════ */
 function renderAdj(){
-  const spaces=program.filter(s=>!s.excluded);
+  const spaces=program.filter(s=>s.costType!=='lumpsum');
   const wrap=document.getElementById('adj-wrap');if(!wrap)return;
   const tbl=document.createElement('table');tbl.className='adj-tbl';
   const thead=document.createElement('thead');const hr=document.createElement('tr');
@@ -1046,7 +1305,7 @@ function cycleAdj(a,b){
   adjMatrix[key]=next;adjMatrix[keyR]=next;
 }
 function exportAdj(){
-  const spaces=program.filter(s=>!s.excluded),lines=['Adjacency Matrix — Burbank Central Library',''];
+  const spaces=program.filter(s=>s.costType!=='lumpsum'),lines=['Adjacency Matrix — Burbank Central Library',''];
   spaces.forEach(a=>spaces.forEach(b=>{
     if(a.id>=b.id)return;
     const state=adjMatrix[a.id+'-'+b.id]||'none';
@@ -1099,16 +1358,23 @@ function renderScenarios(){
     list.appendChild(card);
     const delta=baseStats?stats.costMid-baseStats.costMid:0;
     const dGMP=stats.costMid-TARGET_GMP;
-    const gsf=stats.nsf/0.68,psf=gsf>0?stats.costMid/gsf:0;
+    const eff=parseInt(document.getElementById('g-eff')?.value||68)/100;
+    const gsf=eff>0?stats.nsf/eff:stats.nsf;
+    const psf=gsf>0?stats.costMid/gsf:0;
     const tr=document.createElement('tr');
     tr.innerHTML=`<td>${escHtml(n)}${sc.baseline?' ★':''}</td><td class="num">${fmtSF(stats.nsf)}</td><td class="num">${fmtSF(Math.round(gsf))}</td><td class="num">${fmt$(stats.costMid)}</td><td class="num">${fmt$(psf)}/GSF</td><td class="num ${delta>0?'delta-p':delta<0?'delta-n':''}">${delta===0?'—':(delta>0?'+':'')+fmt$(delta)}</td><td class="num ${dGMP>0?'delta-p':'delta-n'}">${(dGMP>0?'+':'')+fmt$(dGMP)}</td>`;
     cmpBody.appendChild(tr);
   });
 }
 function compStats(prog){
-  let nsf=0,costMid=0;
-  prog.forEach(s=>{if(s.excluded)return;const tsf=(s.qty||1)*(s.unitSF||0);nsf+=tsf;costMid+=tsf*(s.unitCostMid||0)});
-  return{nsf,costMid};
+  let nsf=0,costMid=0,parkingSF=0;
+  prog.forEach(s=>{
+    const ct=s.costType||'persf';
+    if(ct==='lumpsum'){costMid+=s.unitCostMid||0}
+    else if(ct==='perstall'){const tsf=(s.qty||1)*(s.unitSF||0);parkingSF+=tsf;costMid+=(s.qty||1)*(s.unitCostMid||0)}
+    else{const tsf=(s.qty||1)*(s.unitSF||0);nsf+=tsf;costMid+=tsf*(s.unitCostMid||0)}
+  });
+  return{nsf,costMid,parkingSF};
 }
 
 /* ════════════════════════════════════
@@ -1121,7 +1387,7 @@ async function submitAI(){
   const errEl=document.getElementById('ai-err');
   errEl.classList.remove('show');document.getElementById('prev-box').classList.remove('show');
   btn.disabled=true;lbl.innerHTML='<span class="spinner"></span>Thinking…';
-  const curProg=program.map(s=>({id:s.id,category:s.category,name:s.name,qty:s.qty,unitSF:s.unitSF,unitCostMid:s.unitCostMid,phase:s.phase,notes:s.notes,excluded:s.excluded}));
+  const curProg=program.map(s=>({id:s.id,category:s.category,name:s.name,qty:s.qty,unitSF:s.unitSF,unitCostMid:s.unitCostMid,costType:s.costType,notes:s.notes}));
   try{
     const res=await fetch('/api/suggest',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({currentProgram:curProg,request:input})});
     const data=await res.json();
@@ -1140,7 +1406,8 @@ function applyPreviewHL(changes){
     if(ch.op==='delete'){const s=program.find(x=>x.id===ch.targetId);if(s)s._preview='del'}
     else if(ch.op==='modify'){const s=program.find(x=>x.id===ch.targetId);if(s)s._preview='mod'}
     else if(ch.op==='add'&&ch.space){
-      const tmp=Object.assign({},ch.space,{_preview:'add',_temp:true,excluded:ch.space.category==='Parking & Circulation'});
+      const ct=ch.space.category==='Parking & Circulation'?'perstall':ch.space.category==='Site Work'?'lumpsum':'persf';
+      const tmp=Object.assign({},ch.space,{_preview:'add',_temp:true,costType:ct});
       if(!tmp.id)tmp.id=uid();program.push(tmp);
     }
   });
@@ -1151,7 +1418,7 @@ function acceptPreview(){
     if(ch.op==='delete'){const s=program.find(x=>x.id===ch.targetId);if(s)logChange('del',s.name,'AI: '+(ch.rationale||''));program=program.filter(x=>x.id!==ch.targetId)}
     else if(ch.op==='modify'&&ch.space){
       const idx=program.findIndex(x=>x.id===ch.targetId);
-      if(idx!==-1){logChange('mod',program[idx].name,'AI: '+(ch.rationale||''));const m=ch.space.unitCostMid||program[idx].unitCostMid;program[idx]=Object.assign({},program[idx],ch.space,{unitCostLow:Math.round(m*0.85),unitCostHigh:Math.round(m*1.15)});delete program[idx]._preview;delete program[idx]._temp}
+      if(idx!==-1){logChange('mod',program[idx].name,'AI: '+(ch.rationale||''));program[idx]=Object.assign({},program[idx],ch.space);delete program[idx]._preview;delete program[idx]._temp}
     }else if(ch.op==='add'&&ch.space){
       const exists=program.find(x=>x._temp&&x.id===ch.space.id);
       if(exists){delete exists._preview;delete exists._temp;logChange('add',exists.name,'AI: '+(ch.rationale||''))}
@@ -1172,7 +1439,10 @@ async function submitGenerate(){
     const data=await res.json();
     if(!res.ok)throw new Error(data.error||'API error');
     if(!data.program?.spaces?.length)throw new Error('No program returned.');
-    program=data.program.spaces.map(s=>({...s,unitCostLow:Math.round((s.unitCostMid||0)*0.85),unitCostHigh:Math.round((s.unitCostMid||0)*1.15),excluded:s.category==='Parking & Circulation'}));
+    program=data.program.spaces.map(s=>{
+      const ct=s.category==='Parking & Circulation'?'perstall':s.category==='Site Work'?'lumpsum':'persf';
+      return{...s,costType:ct};
+    });
     currentScenario='AI Generated — '+document.getElementById('gen-type').value;
     logChange('sys','','Generated: '+program.length+' spaces');saveState();closeModal('gen-modal');renderAll();
   }catch(err){alert('Error: '+err.message)}
@@ -1204,14 +1474,321 @@ function md2html(text){
 function copyNarrative(){navigator.clipboard.writeText(narrativeText).then(()=>alert('Copied to clipboard.'))}
 
 /* ════════════════════════════════════
+   VISUALIZATION DRAWER
+════════════════════════════════════ */
+function toggleDrawer(){
+  drawerOpen=!drawerOpen;
+  if(drawerOpen)openDrawer();else closeDrawerFn();
+}
+function openDrawer(){
+  drawerOpen=true;
+  document.getElementById('viz-drawer').classList.add('open');
+  document.body.classList.add('drawer-open');
+  localStorage.setItem('pcl_drawer','1');
+  setTimeout(updateCharts,100);
+}
+function closeDrawerFn(){
+  drawerOpen=false;
+  document.getElementById('viz-drawer').classList.remove('open');
+  document.body.classList.remove('drawer-open');
+  localStorage.setItem('pcl_drawer','0');
+}
+function scheduleChartUpdate(){
+  clearTimeout(chartUpdateTimeout);
+  chartUpdateTimeout=setTimeout(()=>{if(drawerOpen)updateCharts()},200);
+}
+function updateCharts(){
+  initDonut();initCatBar();initGauge();initPsfBar();
+  if(!divChartDone){initDivBar();divChartDone=true;}
+}
+
+/* Extended totals for charts */
+function getChartTotals(){
+  let libCost=0,parkCost=0,siteCost=0;
+  program.forEach(s=>{
+    const ct=s.costType||'persf';
+    if(s.category==='Site Work'){siteCost+=s.unitCostMid||0}
+    else if(ct==='perstall'){parkCost+=(s.qty||1)*(s.unitCostMid||0)}
+    else{libCost+=(s.qty||1)*(s.unitSF||0)*(s.unitCostMid||0)}
+  });
+  const direct=libCost+parkCost+siteCost;
+  const cont=direct*CONTINGENCY_RATE;
+  const withCont=direct+cont;
+  const gcOhp=withCont*GCOHP_RATE;
+  const total=withCont+gcOhp;
+  return{libCost,parkCost,siteCost,direct,cont,gcOhp,total};
+}
+
+/* Chart 1: Cost Breakdown Donut */
+function initDonut(){
+  const ctx=document.getElementById('chart-donut');if(!ctx)return;
+  if(charts.donut){charts.donut.destroy();charts.donut=null;}
+  const{libCost,parkCost,siteCost,cont,gcOhp,total}=getChartTotals();
+  const centerTotal=total>0?fmtM(total):'$0';
+  charts.donut=new Chart(ctx,{
+    type:'doughnut',
+    data:{
+      labels:['Library Building','Parking Structure','Site Work','Contingency & Escalation','GC/GR/OHP/Design/CA'],
+      datasets:[{
+        data:[libCost,parkCost,siteCost,cont,gcOhp],
+        backgroundColor:['#006330','#6D6D6D','#8BC34A','#FFDF1B','#3D8B37'],
+        borderWidth:2,borderColor:'#fff'
+      }]
+    },
+    plugins:[{
+      id:'centerText',
+      afterDraw(chart){
+        const{ctx:c,chartArea}=chart;
+        const cx=(chartArea.left+chartArea.right)/2;
+        const cy=(chartArea.top+chartArea.bottom)/2;
+        c.save();
+        c.font='bold 18px Barlow';
+        c.fillStyle='#006330';
+        c.textAlign='center';
+        c.textBaseline='middle';
+        c.fillText(centerTotal,cx,cy);
+        c.restore();
+      }
+    }],
+    options:{
+      cutout:'65%',responsive:true,maintainAspectRatio:true,
+      plugins:{legend:{position:'bottom',labels:{font:{family:'Barlow',size:10},boxWidth:12,padding:8}},
+        tooltip:{callbacks:{label:function(c){return c.label+': '+fmt$(c.raw)}}}}
+    }
+  });
+}
+
+/* Chart 2: Horizontal Bar by Category */
+function initCatBar(){
+  const ctx=document.getElementById('chart-cat');if(!ctx)return;
+  if(charts.cat){charts.cat.destroy();charts.cat=null;}
+  const catCosts={};
+  CAT_ORDER.forEach(c=>catCosts[c]=0);
+  program.forEach(s=>{
+    const ct=s.costType||'persf';
+    let cost=0;
+    if(ct==='lumpsum')cost=s.unitCostMid||0;
+    else if(ct==='perstall')cost=(s.qty||1)*(s.unitCostMid||0);
+    else cost=(s.qty||1)*(s.unitSF||0)*(s.unitCostMid||0);
+    if(catCosts[s.category]!==undefined)catCosts[s.category]+=cost;
+  });
+  const labels=CAT_ORDER.filter(c=>catCosts[c]>0);
+  const data=labels.map(c=>catCosts[c]);
+  const bgColors=labels.map(c=>CAT_COLORS[c]||'#999');
+  charts.cat=new Chart(ctx,{
+    type:'bar',
+    data:{
+      labels,
+      datasets:[{data,backgroundColor:bgColors,borderWidth:0}]
+    },
+    options:{
+      indexAxis:'y',responsive:true,maintainAspectRatio:true,
+      plugins:{legend:{display:false},
+        tooltip:{callbacks:{label:c=>fmt$(c.raw)}}},
+      scales:{
+        x:{ticks:{callback:v=>fmtM(v),font:{family:'Barlow',size:10}},grid:{color:'rgba(0,0,0,0.05)'}},
+        y:{ticks:{font:{family:'Barlow',size:10}}}
+      }
+    }
+  });
+}
+
+/* Chart 3: Budget Utilization Gauge */
+function initGauge(){
+  const ctx=document.getElementById('chart-gauge');if(!ctx)return;
+  if(charts.gauge){charts.gauge.destroy();charts.gauge=null;}
+  const{costMid}=calcTotals();
+  const rawPct=TARGET_GMP>0?costMid/TARGET_GMP*100:0;
+  const pct=Math.min(rawPct,150);
+  const remaining=Math.max(0,100-pct);
+  const color=pct<=90?'#006330':pct<=100?'#FFDF1B':'#EF5350';
+  charts.gauge=new Chart(ctx,{
+    type:'doughnut',
+    data:{
+      datasets:[{
+        data:[pct,remaining,100],
+        backgroundColor:[color,'#004d24','transparent'],
+        borderWidth:0,
+        circumference:180,rotation:270
+      }]
+    },
+    plugins:[{
+      id:'gaugeLabel',
+      afterDraw(chart){
+        const{ctx:c,chartArea}=chart;
+        const cx=(chartArea.left+chartArea.right)/2;
+        const cy=(chartArea.top+chartArea.bottom)/2+20;
+        c.save();
+        c.font='bold 26px Barlow';
+        c.fillStyle=color;
+        c.textAlign='center';
+        c.textBaseline='middle';
+        c.fillText(Math.round(rawPct)+'%',cx,cy);
+        c.font='11px Barlow';
+        c.fillStyle='#6D6D6D';
+        c.fillText('of '+fmt$(TARGET_GMP).replace(/,\d{3}$/,'M').replace(/^\$(\d+),.*$/,'$$$1M'),cx,cy+22);
+        c.restore();
+      }
+    }],
+    options:{
+      cutout:'72%',responsive:true,maintainAspectRatio:true,
+      plugins:{legend:{display:false},tooltip:{enabled:false}}
+    }
+  });
+}
+
+/* Chart 4: Cost per SF (live) */
+function initPsfBar(){
+  const ctx=document.getElementById('chart-psf');if(!ctx)return;
+  if(charts.psf){charts.psf.destroy();charts.psf=null;}
+  const rows=program.filter(s=>s.costType==='persf'&&(s.unitSF||0)>0);
+  const labels=rows.map(s=>s.name.length>22?s.name.slice(0,20)+'…':s.name);
+  const data=rows.map(s=>s.unitCostMid||0);
+  const bgColors=data.map(v=>v>PCL_BASELINE_PSF?'#FFDF1B':'#3D8B37');
+  charts.psf=new Chart(ctx,{
+    type:'bar',
+    data:{
+      labels,
+      datasets:[
+        {label:'$/SF Mid',data,backgroundColor:bgColors,borderWidth:0},
+        {label:'PCL Baseline $1,267/SF',data:rows.map(()=>PCL_BASELINE_PSF),type:'line',borderColor:'#006330',borderWidth:2,pointRadius:0,borderDash:[4,4],fill:false,order:0}
+      ]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{
+        legend:{display:true,position:'top',labels:{font:{family:'Barlow',size:10},boxWidth:12}},
+        tooltip:{callbacks:{label:c=>fmt$(c.raw)+'/SF'}}
+      },
+      scales:{
+        x:{ticks:{font:{family:'Barlow',size:9},maxRotation:45,minRotation:30},grid:{display:false}},
+        y:{ticks:{callback:v=>'$'+v+'/SF',font:{family:'Barlow',size:10}},grid:{color:'rgba(0,0,0,0.05)'}}
+      }
+    }
+  });
+}
+
+/* Chart 5: Building Divisions (static) */
+function initDivBar(){
+  const ctx=document.getElementById('chart-div');if(!ctx)return;
+  if(charts.div){charts.div.destroy();charts.div=null;}
+  const divData=[
+    {label:'Structure (03+05)',v:15844725,c:'#006330'},
+    {label:'Enclosure (07+08)',v:11156925,c:'#3D8B37'},
+    {label:'Finishes (09)',v:12061725,c:'#4A9B6F'},
+    {label:'Furnishings (12)',v:7008300,c:'#8BC34A'},
+    {label:'MEP/FP (21-26)',v:26056875,c:'#FFDF1B'},
+    {label:'Specialties (10+11)',v:1849575,c:'#6D6D6D'},
+    {label:'Conveying (14)',v:3520000,c:'#004d24'},
+    {label:'Other (04+06)',v:1947075,c:'#C8C8C8'}
+  ];
+  charts.div=new Chart(ctx,{
+    type:'bar',
+    data:{
+      labels:['Library Building'],
+      datasets:divData.map(d=>({label:d.label,data:[d.v],backgroundColor:d.c,borderWidth:0}))
+    },
+    options:{
+      indexAxis:'y',responsive:true,maintainAspectRatio:true,
+      plugins:{legend:{position:'right',labels:{font:{family:'Barlow',size:9},boxWidth:10,padding:6}},
+        tooltip:{callbacks:{label:c=>c.dataset.label+': '+fmt$(c.raw)}}},
+      scales:{
+        x:{stacked:true,ticks:{callback:v=>fmtM(v),font:{family:'Barlow',size:9}},grid:{display:false}},
+        y:{stacked:true,display:false}
+      }
+    }
+  });
+}
+
+/* ════════════════════════════════════
+   PRINT SUMMARY
+════════════════════════════════════ */
+function printSummary(){
+  updatePrintSummary();
+  const pw=document.getElementById('page-wrapper');
+  const vd=document.getElementById('viz-drawer');
+  const vt=document.getElementById('viz-tab');
+  const ps=document.getElementById('print-summary');
+  pw.style.display='none';
+  vd.style.display='none';
+  vt.style.display='none';
+  ps.style.display='block';
+  const restore=()=>{
+    pw.style.display='';vd.style.display='';vt.style.display='';ps.style.display='none';
+    window.removeEventListener('afterprint',restore);
+  };
+  window.addEventListener('afterprint',restore);
+  window.print();
+}
+function updatePrintSummary(){
+  const{costMid,nsf,parkingSF}=calcTotals();
+  const spread=getSpread();
+  const escFactor=getEscalationFactor();
+  const escPct=((escFactor-1)*100).toFixed(1)+'%';
+  const eff=parseInt(document.getElementById('g-eff')?.value||68)/100;
+  const libGross=eff>0?Math.round(nsf/eff):0;
+  // Date
+  const el=document.getElementById('ps-date');
+  if(el)el.textContent=new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
+  // Summary grid
+  const gridData=[
+    {label:'Total Budget',value:fmt$(TARGET_GMP)},
+    {label:'Library Building',value:'$79,445,200 ($814.82/GSF)'},
+    {label:'Parking Structure',value:'$15,500,000 ($50K/stall)'},
+    {label:'Site Work',value:'$13,830,255'},
+    {label:'Contingency (14.64%)',value:'$18,656,732'},
+    {label:'GC/GR/OHP (28%)',value:'$35,681,012'},
+    {label:'Construction Start',value:'Summer 2027'},
+    {label:'Library GSF',value:(libGross||97500).toLocaleString()+' SF'},
+    {label:'Parking GSF',value:parkingSF.toLocaleString()+' SF (310 stalls)'}
+  ];
+  const grid=document.getElementById('ps-summary-grid');
+  if(grid){
+    grid.innerHTML=gridData.map(d=>`<div class="ps-grid-item"><div class="ps-grid-label">${escHtml(d.label)}</div><div class="ps-grid-value">${escHtml(d.value)}</div></div>`).join('');
+  }
+  // Cost by category table
+  const catCosts={};CAT_ORDER.forEach(c=>catCosts[c]={sf:0,cost:0,cnt:0,rates:[]});
+  program.forEach(s=>{
+    const ct=s.costType||'persf';
+    let sf=0,cost=0;
+    if(ct==='lumpsum'){cost=s.unitCostMid||0}
+    else if(ct==='perstall'){sf=(s.qty||1)*(s.unitSF||0);cost=(s.qty||1)*(s.unitCostMid||0)}
+    else{sf=(s.qty||1)*(s.unitSF||0);cost=sf*(s.unitCostMid||0);if(s.unitCostMid)catCosts[s.category].rates.push(s.unitCostMid)}
+    if(catCosts[s.category]){catCosts[s.category].sf+=sf;catCosts[s.category].cost+=cost;catCosts[s.category].cnt++}
+  });
+  const ctbody=document.getElementById('ps-cost-tbody');
+  if(ctbody){
+    ctbody.innerHTML=CAT_ORDER.filter(c=>catCosts[c].cost>0).map(c=>{
+      const d=catCosts[c];
+      const avgPsf=d.rates.length>0?Math.round(d.rates.reduce((a,b)=>a+b,0)/d.rates.length):0;
+      return`<tr><td>${escHtml(c)}</td><td class="num">${d.sf>0?d.sf.toLocaleString()+' SF':'—'}</td><td class="num">${avgPsf>0?'$'+avgPsf+'/SF':'Lump Sum'}</td><td class="num">${fmt$(d.cost)}</td></tr>`;
+    }).join('');
+    // Totals row
+    const totalSF=CAT_ORDER.reduce((a,c)=>a+(catCosts[c].sf||0),0);
+    const totalCost=CAT_ORDER.reduce((a,c)=>a+(catCosts[c].cost||0),0);
+    ctbody.innerHTML+=`<tr style="font-weight:700;border-top:2px solid #006330"><td>TOTAL PROGRAMMED</td><td class="num">${totalSF.toLocaleString()} SF</td><td class="num">—</td><td class="num">${fmt$(totalCost)}</td></tr>`;
+  }
+  // Assumptions
+  const aEl=document.getElementById('assumptions-text');
+  const aOut=document.getElementById('ps-assumptions');
+  if(aEl&&aOut){
+    const txt=aEl.value;
+    aOut.textContent=txt+'\n• Escalation: '+escPct+' above base costs ('+document.getElementById('esc-start')?.value+' start at '+document.getElementById('esc-rate')?.value+'%/yr)';
+  }
+}
+
+/* ════════════════════════════════════
    EXPORT
 ════════════════════════════════════ */
 function exportCSV(){
-  const hdrs=['Category','Space Name','Qty','Unit SF','Total SF','$/SF Low','$/SF Mid','$/SF High','Total Cost Mid','Phase','Notes','Excluded'];
+  const hdrs=['Category','Space Name','Qty','Unit SF','Total SF','$/SF Mid (or Unit)','Total Cost Mid','Cost Type','Notes'];
   const rows=program.map(s=>{
-    const lo=Math.round((s.unitCostMid||0)*0.85),hi=Math.round((s.unitCostMid||0)*1.15);
-    const tsf=(s.qty||1)*(s.unitSF||0);
-    return[s.category,s.name,s.qty,s.unitSF||0,tsf,lo,s.unitCostMid||0,hi,s.excluded?0:tsf*(s.unitCostMid||0),s.phase,s.notes||'',s.excluded?'Yes':'No'];
+    const ct=s.costType||'persf';
+    let tsf=0,cost=0,psfLabel='';
+    if(ct==='lumpsum'){cost=s.unitCostMid||0;psfLabel='Lump Sum'}
+    else if(ct==='perstall'){tsf=(s.qty||1)*(s.unitSF||0);cost=(s.qty||1)*(s.unitCostMid||0);psfLabel=(s.unitCostMid||0)+'/stall'}
+    else{tsf=(s.qty||1)*(s.unitSF||0);cost=tsf*(s.unitCostMid||0);psfLabel=(s.unitCostMid||0)+'/SF'}
+    return[s.category,s.name,ct==='lumpsum'?'':s.qty,ct==='lumpsum'?'':s.unitSF||0,ct==='lumpsum'?'':tsf,psfLabel,cost,ct,s.notes||''];
   });
   download([hdrs,...rows].map(r=>r.map(v=>`"${String(v||'').replace(/"/g,'""')}"`).join(',')).join('\n'),'burbank-program.csv','text/csv');
 }
@@ -1244,15 +1821,6 @@ function switchTab(name,btn){
   document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));
   btn.classList.add('active');document.getElementById('tab-'+name).classList.add('active');
   if(name==='adj')renderAdj();
-}
-function setupPills(){
-  document.querySelectorAll('.phase-pill').forEach(pill=>{
-    pill.addEventListener('click',function(){
-      document.querySelectorAll('.phase-pill').forEach(p=>p.classList.remove('active'));
-      this.classList.add('active');activeFilter=this.dataset.filter;
-      renderTable();updateBudget();updateGTN();
-    });
-  });
 }
 function setupChips(){
   document.querySelectorAll('.chip').forEach(c=>{
