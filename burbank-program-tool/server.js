@@ -9,8 +9,10 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json({ limit: '2mb' }));
 
-// 1. Serve static files first (js/, css/, index.html, etc.)
-app.use(express.static(path.join(__dirname)));
+// 1. Serve static assets explicitly before any wildcard routes
+app.use('/js',     express.static(path.join(__dirname, 'js')));
+app.use('/css',    express.static(path.join(__dirname, 'css')));
+app.use('/assets', express.static(path.join(__dirname, 'assets')));
 
 const API_KEY = process.env.ANTHROPIC_API_KEY || '';
 const client = new Anthropic({ apiKey: API_KEY });
@@ -196,8 +198,9 @@ Under 500 words. Return only the markdown text.`
 app.get('/health',     (req, res) => res.json({ status: 'ok', model: MODEL, keyPresent: !!API_KEY }));
 app.get('/api/health', (req, res) => res.json({ status: 'ok', model: MODEL, keyPresent: !!API_KEY }));
 
-// 4. Catch-all — serve index.html for any non-file, non-api route
+// 4. Catch-all — serve index.html only for non-file routes
 app.get('/{*path}', (req, res) => {
+  if (req.path.includes('.')) return res.status(404).end();
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
